@@ -1,6 +1,5 @@
 
 import type { Metadata } from "next"
-import { FranceMap } from "@/components/france-map"
 import { fetchGroupesLocaux } from "@/lib/wordpress"
 import { convertToLocations } from "@/lib/locations"
 
@@ -25,9 +24,6 @@ export default async function CartographiePage() {
           plus d'informations.
         </p>
       </div>
-
-      <FranceMap locations={locations} height="600px" />
-
       <div className="mt-12 space-y-6">
         <h2 className="text-2xl font-bold">Notre réseau national</h2>
         <p>
