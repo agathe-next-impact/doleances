@@ -88,24 +88,11 @@ export default function ClientLayout({
                                 window.dispatchEvent(closeEvent)
                               }}
                             >
-                              <FileText className="mr-2 h-4 w-4" />
-                              Actualités
-                            </Link>
-                          </li>
-                          <li>
-                            <Link
-                              href="/categories"
-                              className="flex items-center text-sm font-medium hover:text-primary"
-                              onClick={(e) => {
-                                // Close the sheet when a link is clicked
-                                const closeEvent = new CustomEvent("close-sheet")
-                                window.dispatchEvent(closeEvent)
-                              }}
-                            >
                               <Library className="mr-2 h-4 w-4" />
-                              Consulter les doléances
+                              Archives des doléances
                             </Link>
                           </li>
+
                           <li>
                             <Link
                               href="/cartographie"
@@ -146,6 +133,20 @@ export default function ClientLayout({
                             >
                               <Info className="mr-2 h-4 w-4" />
                               A propos
+                            </Link>
+                          </li>
+                          <li>
+                            <Link
+                              href="/categories"
+                              className="flex items-center text-sm font-medium hover:text-primary"
+                              onClick={(e) => {
+                                // Close the sheet when a link is clicked
+                                const closeEvent = new CustomEvent("close-sheet")
+                                window.dispatchEvent(closeEvent)
+                              }}
+                            >
+                              <FileText className="mr-2 h-4 w-4" />
+                              Actualités
                             </Link>
                           </li>
                         </ul>
