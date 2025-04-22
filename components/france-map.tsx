@@ -82,8 +82,13 @@ export function FranceMap({ locations, height = "600px", className = "" }: Franc
                   zoom={6}
                   style={{ height: "100%", width: "100%", borderRadius: "0.5rem" }}
                   zoomControl={false}
-                  whenReady={(map) => {
-                    mapRef.current = map.target
+                  whenReady={() => {
+                    if (mapRef.current) {
+                      mapRef.current.invalidateSize();
+                    }
+                  }}
+                  onReady={(map) => {
+                    mapRef.current = map.target;
                   }}
                 >
                   <TileLayer
@@ -95,7 +100,7 @@ export function FranceMap({ locations, height = "600px", className = "" }: Franc
                     <Marker
                       key={location.id}
                       position={location.coordinates}
-                      icon={createCustomIcon(location.type)}
+                      icon={createCustomIcon(location.type)} 
                       eventHandlers={{
                         click: () => {
                           setSelectedLocation(location)
