@@ -1,3 +1,4 @@
+
 import type { Metadata } from "next"
 import { FranceMap } from "@/components/france-map"
 import { fetchGroupesLocaux } from "@/lib/wordpress"

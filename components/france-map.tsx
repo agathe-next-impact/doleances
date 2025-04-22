@@ -36,6 +36,7 @@ export function FranceMap({ locations, height = "600px", className = "" }: Franc
   const [selectedLocation, setSelectedLocation] = useState<Location | null>(null)
   const [mapReady, setMapReady] = useState(false)
   const mapRef = useRef<L.Map | null>(null)
+  
 
   // Fixer les icônes Leaflet au chargement
   useEffect(() => {
@@ -82,13 +83,8 @@ export function FranceMap({ locations, height = "600px", className = "" }: Franc
                   zoom={6}
                   style={{ height: "100%", width: "100%", borderRadius: "0.5rem" }}
                   zoomControl={false}
-                  whenReady={() => {
-                    if (mapRef.current) {
-                      mapRef.current.invalidateSize();
-                    }
-                  }}
-                  onReady={(map) => {
-                    mapRef.current = map.target;
+                  whenReady={(map) => {
+                    mapRef.current = map.target
                   }}
                 >
                   <TileLayer
@@ -97,24 +93,24 @@ export function FranceMap({ locations, height = "600px", className = "" }: Franc
                   />
                   <ZoomControl position="bottomright" />
                   {locations.map((location) => (
-                    <Marker
-                      key={location.id}
-                      position={location.coordinates}
-                      icon={createCustomIcon(location.type)} 
-                      eventHandlers={{
-                        click: () => {
-                          setSelectedLocation(location)
-                        },
-                      }}
-                    >
-                      <Popup>
-                        <div className="text-sm">
-                          <h3 className="font-bold">{location.name}</h3>
-                          <p>{location.description}</p>
-                        </div>
-                      </Popup>
-                    </Marker>
-                  ))}
+                      <Marker
+                        key={location.id}
+                        position={location.coordinates}
+                        icon={createCustomIcon(location.type)}
+                        eventHandlers={{
+                          click: () => {
+                            centerMapOnLocation(location); // Centre la carte sur le marqueur cliqué
+                          },
+                        }}
+                      >
+                        <Popup>
+                          <div className="text-sm">
+                            <h3 className="font-bold">{location.name}</h3>
+                            <p>{location.description}</p>
+                          </div>
+                        </Popup>
+                      </Marker>
+                    ))}
                 </MapContainer>
               </div>
             )}
@@ -152,7 +148,7 @@ export function FranceMap({ locations, height = "600px", className = "" }: Franc
                   key={location.id}
                   variant={selectedLocation?.id === location.id ? "default" : "outline"}
                   className="w-full justify-start"
-                  onClick={() => centerMapOnLocation(location)}
+                  onClick={() => centerMapOnLocation(location)} // Centre la carte sur la localisation
                 >
                   <div
                     className="mr-2 h-3 w-3 rounded-full"
