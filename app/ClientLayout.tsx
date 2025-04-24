@@ -74,7 +74,7 @@ export default function ClientLayout({
                     <SheetContent side="left" className="w-[250px] sm:w-[300px]">
                       <SheetHeader>
                         <LottieAnimation animationPath="/animations/earth.json" width="80px" height="80px" loop="false"/>
-                        <SheetTitle className="text-left">Les doléances</SheetTitle>
+                        <SheetTitle className="text-left font-light text-2xl">Les doléances</SheetTitle>
                       </SheetHeader>
                       <nav className="mt-6">
                         <ul className="space-y-4">
@@ -109,7 +109,7 @@ export default function ClientLayout({
                           </li>
                           <li>
                             <Link
-                              href="/pages/contribuer"
+                              href="/contribuer"
                               className="flex items-center text-sm font-medium hover:text-primary"
                               onClick={(e) => {
                                 // Close the sheet when a link is clicked
@@ -153,7 +153,7 @@ export default function ClientLayout({
                       </nav>
                     </SheetContent>
                   </Sheet>
-                  <Link href="/" className="flex items-center gap-2 text-2xl font-serif font-bold">
+                  <Link href="/" className="flex items-center gap-2 text-2xl font-serif font-ligth">
                   <LottieAnimation animationPath="/animations/earth.json" width="40px" height="40px" loop="false" />
                     Les doléances
                   </Link>
@@ -177,7 +177,7 @@ export default function ClientLayout({
               <div className="container mx-auto px-4">
                 <div className="grid gap-8 md:grid-cols-3">
                   <div>
-                    <h3 className="mb-3 text-lg font-semibold">Les doléances</h3>
+                    <h3 className="mb-3 text-lg font-light">Les doléances</h3>
                     <p className="text-sm text-muted-foreground">
                       Archives des doléances de la convention citoyenne. 
                     </p>

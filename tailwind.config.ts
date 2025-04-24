@@ -11,7 +11,7 @@ const config: Config = {
   theme: {
   	extend: {
 		fontFamily: {
-			serif: ['Libre Baskerville', 'serif'],
+			serif: ['Crimson Pro', 'serif'],
 			sansserif: ['Open Sans', 'sans-serif'],
 		},
   		colors: {

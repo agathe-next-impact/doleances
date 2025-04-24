@@ -38,21 +38,21 @@ export function ArticleCard({ article }: ArticleCardProps) {
             src={article.featuredImage || "/placeholder.svg?height=192&width=384&query=article"}
             alt={article.title}
             fill
-            className="object-cover"
+            className="object-contain object-left"
           />
         </div>
       )}
-      <CardHeader>
+      <CardHeader className="pl-0">
         <CardTitle className="line-clamp-2">
           <Link href={`/articles/${article.slug}`} className="hover:underline">
             {article.title}
           </Link>
         </CardTitle>
       </CardHeader>
-      <CardContent className="flex-grow">
+      <CardContent className="flex-grow pl-0">
         <p className="line-clamp-3 text-muted-foreground">{cleanExcerpt}</p>
       </CardContent>
-      <CardFooter className="flex flex-col items-start gap-2">
+      <CardFooter className="flex flex-col items-start gap-2 pl-0">
         <div className="flex flex-wrap gap-2">
           {article.categories.map((category, index) => (
             <Badge key={`cat-${index}`} variant="secondary">

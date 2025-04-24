@@ -33,9 +33,9 @@ export function PageCard({ page }: PageCardProps) {
           <Image src={page.featuredImage || "/placeholder.svg"} alt={page.title} fill className="object-cover" />
         </div>
       )}
-      <CardHeader>
-        <CardTitle className="line-clamp-2">
-          <Link href={`/pages/${page.slug}`} className="hover:underline font-serif uppercase text-2xl font-bold">
+      <CardHeader className="pb-0">
+        <CardTitle className="w-full mb-4 pb-3 text-2xl font-serif font-light uppercase border-b-[1px]">
+          <Link href={`/pages/${page.slug}`} className="hover:underline font-serif uppercase text-2xl font-light">
             {page.title}
           </Link>
         </CardTitle>

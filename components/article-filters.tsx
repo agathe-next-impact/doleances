@@ -144,7 +144,7 @@ export function ArticleFilters({ categories, tags, selectedFilters }: ArticleFil
 
   return (
     <div className="space-y-6">
-      <div>
+      {/*<div>
         <h2 className="mb-4 text-lg font-semibold">Search</h2>
         <SearchAutocomplete
           placeholder="Rechercher des articles..."
@@ -152,8 +152,8 @@ export function ArticleFilters({ categories, tags, selectedFilters }: ArticleFil
           redirectOnSelect={false}
           showButton={true}
         />
-      </div>
-
+      </div>*/}
+{/*}
       <div>
         <h2 className="mb-4 text-lg font-semibold">Filters</h2>
         <div className="space-y-4">
@@ -263,7 +263,7 @@ export function ArticleFilters({ categories, tags, selectedFilters }: ArticleFil
             ))}
           </div>
         </div>
-      )}
+      )}*/}
 
       <Accordion type="single" collapsible className="w-full">
         <AccordionItem value="categories">
