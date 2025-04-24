@@ -29,10 +29,7 @@ export default async function Home() {
         <h1 className="mb-4 text-4xl font-light tracking-tight md:text-5xl">Les doléances</h1> 
         <p className="mx-auto mb-6 max-w-2xl text-lg text-muted-foreground">
             Wiki des doléances de la convention citoyenne
-        </p>{/*
-        <div className="mx-auto max-w-md">
-          <SearchAutocomplete placeholder="Rechercher des articles" buttonLabel="Rechercher" />
-        </div>*/}
+        </p>
       </div>
 
       <section className="mb-12 grid gap-8 md:grid-cols-6 md:grid-rows-3">
@@ -117,7 +114,7 @@ export default async function Home() {
                 <>
                     <p className="mb-6 line-clamp-3 text-muted-foreground">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut pellentesque tristique dolor, dictum mollis neque. Morbi nisl nisi, tempor vitae turpis id, posuere venenatis augue. Nam consectetur purus eu mi malesuada, venenatis congue felis interdum. Nullam vehicula est vitae est dictum, vel lobortis nisl fermentum. Donec dapibus sed lorem a convallis. Sed in risus augue. Aliquam a tortor sit amet nisl tincidunt porta rhoncus quis mauris. Quisque in suscipit nibh.</p>
                   <Button variant="outline" asChild>
-                    <Link href={`/articles/${stickyArticle.slug}`}>Localiser les groupes</Link>
+                    <Link href='/cartographie'>Localiser les groupes</Link>
                   </Button>
                 </>
             )}
@@ -130,7 +127,7 @@ export default async function Home() {
                 <>
                     <p className="mb-6 line-clamp-3 text-muted-foreground">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut pellentesque tristique dolor, dictum mollis neque. Morbi nisl nisi, tempor vitae turpis id, posuere venenatis augue. Nam consectetur purus eu mi malesuada, venenatis congue felis interdum. Nullam vehicula est vitae est dictum, vel lobortis nisl fermentum. Donec dapibus sed lorem a convallis. Sed in risus augue. Aliquam a tortor sit amet nisl tincidunt porta rhoncus quis mauris. Quisque in suscipit nibh.</p>
                   <Button variant="outline" asChild>
-                    <Link href={`/articles/${stickyArticle.slug}`}>Consulter les archives</Link>
+                    <Link href='/articles'>Consulter les archives</Link>
                   </Button>
                 </>
             )}
