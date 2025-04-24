@@ -1,19 +1,21 @@
 
 import type { Metadata } from "next"
 import { fetchGroupesLocaux } from "@/lib/wordpress"
-import { convertToLocations } from "@/lib/locations"
+import MapComponent from "@/components/map-component"
+
 
 export const metadata: Metadata = {
   title: "Cartographie - WikiPress",
   description: "Explorez notre réseau de bureaux, agences et partenaires à travers la France",
 }
 
+
 export default async function CartographiePage() {
   // Récupérer les données des groupes locaux depuis WordPress
-  const groupesLocaux = await fetchGroupesLocaux()
+  {/*const groupesLocaux = await fetchGroupesLocaux()
 
   // Convertir les données au format attendu par le composant FranceMap
-  const locations = convertToLocations(groupesLocaux)
+  const locations = convertToLocations(groupesLocaux)*/}
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -23,6 +25,7 @@ export default async function CartographiePage() {
           Explorez notre réseau de bureaux, agences et partenaires à travers la France. Cliquez sur les marqueurs pour
           plus d'informations.
         </p>
+        <MapComponent />
       </div>
       <div className="mt-12 space-y-6">
         <h2 className="text-2xl font-bold">Notre réseau national</h2>
@@ -59,3 +62,6 @@ export default async function CartographiePage() {
     </div>
   )
 }
+  
+
+
