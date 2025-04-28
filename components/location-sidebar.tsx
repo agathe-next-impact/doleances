@@ -1,18 +1,21 @@
 "use client"
 
-import { Phone, Mail, Globe, MapPin, X } from "lucide-react"
+import { Phone, Mail, Globe, MapPin, X, Building, Home, Users, Briefcase } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
+import { useState } from "react"
 
 interface Location {
   id: string
-  name: string
+  title: string
   position: { lat: number; lng: number }
   address: string
-  description: string
+  content?: string
   phone?: string
   email?: string
   website?: string
+  type: string
+  thumbnail?: string
 }
 
 interface LocationSidebarProps {
@@ -22,28 +25,93 @@ interface LocationSidebarProps {
   onLocationSelect: (location: Location) => void
 }
 
+// Fonction pour obtenir l'icône en fonction du type
+const getTypeIcon = (type: string) => {
+  switch (type) {
+    case "bureau":
+      return <Building className="h-4 w-4" />
+    case "agence":
+      return <Home className="h-4 w-4" />
+    case "partenaire":
+      return <Users className="h-4 w-4" />
+    case "projet":
+      return <Briefcase className="h-4 w-4" />
+    default:
+      return <MapPin className="h-4 w-4" />
+  }
+}
+
+// Fonction pour obtenir le label du type
+const getTypeLabel = (type: string) => {
+  const labels: Record<string, string> = {
+    bureau: "Bureau",
+    agence: "Agence",
+    partenaire: "Partenaire",
+    projet: "Projet",
+  }
+  return labels[type] || type
+}
+
 export default function LocationSidebar({ location, locations, onClose, onLocationSelect }: LocationSidebarProps) {
+  const [imageError, setImageError] = useState<Record<string, boolean>>({})
+
+  // Fonction pour gérer les erreurs de chargement d'image
+  const handleImageError = (locationId: string) => {
+    setImageError((prev) => ({ ...prev, [locationId]: true }))
+  }
+
+  // Fonction pour nettoyer le HTML
+  const createMarkup = (htmlContent: string) => {
+    return { __html: htmlContent }
+  }
+
   return (
     <div className="w-full md:w-1/3 bg-white border-l border-gray-200">
       {location ? (
         <div className="p-4 h-full flex flex-col">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-bold">{location.name}</h2>
+            <h2 className="text-xl font-bold">{location.title}</h2>
             <Button variant="ghost" size="icon" onClick={onClose}>
               <X className="h-4 w-4" />
               <span className="sr-only">Fermer</span>
             </Button>
           </div>
 
-          <div className="space-y-4 flex-1">
-            <div className="flex items-start gap-2">
-              <MapPin className="h-5 w-5 text-gray-500 mt-0.5" />
-              <p>{location.address}</p>
+          {location.thumbnail && !imageError[location.id] && (
+            <div className="mb-4 relative h-48 rounded-lg overflow-hidden">
+              {/* Utiliser une image standard au lieu de Next.js Image pour éviter les problèmes CORS */}
+              <img
+                src={location.thumbnail || "/placeholder.svg"}
+                alt={location.title}
+                className="w-full h-full object-cover"
+                onError={() => handleImageError(location.id)}
+              />
             </div>
+          )}
 
-            <div className="border-t border-gray-200 pt-4">
-              <p className="text-gray-700">{location.description}</p>
-            </div>
+          <div className="flex items-center gap-2 mb-4">
+            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary/10 text-primary">
+              {getTypeIcon(location.type)}
+              <span className="ml-1">{getTypeLabel(location.type)}</span>
+            </span>
+          </div>
+
+          <div className="space-y-4 flex-1">
+            {location.address && (
+              <div className="flex items-start gap-2">
+                <MapPin className="h-5 w-5 text-gray-500 mt-0.5" />
+                <p>{location.address}</p>
+              </div>
+            )}
+
+            {location.content && (
+              <div className="border-t border-gray-200 pt-4">
+                <div
+                  className="text-gray-700 prose prose-sm max-w-none"
+                  dangerouslySetInnerHTML={createMarkup(location.content)}
+                />
+              </div>
+            )}
 
             {location.phone && (
               <div className="flex items-center gap-2">
@@ -89,12 +157,17 @@ export default function LocationSidebar({ location, locations, onClose, onLocati
                   className="p-3 border border-gray-200 rounded-md hover:bg-gray-50 cursor-pointer"
                   onClick={() => onLocationSelect(loc)}
                 >
-                  <h3 className="font-medium">{loc.name}</h3>
-                  <p className="text-sm text-gray-500 truncate">{loc.address}</p>
+                  <div className="flex items-center gap-2">
+                    {getTypeIcon(loc.type)}
+                    <h3 className="font-medium">{loc.title}</h3>
+                  </div>
+                  {loc.address && <p className="text-sm text-gray-500 truncate mt-1">{loc.address}</p>}
                 </div>
               ))}
 
-              {locations.length === 0 && <p className="text-gray-500 italic">Aucune localisation dans cette région</p>}
+              {locations.length === 0 && (
+                <p className="text-gray-500 italic">Aucune localisation dans cette catégorie</p>
+              )}
             </div>
           </ScrollArea>
         </div>

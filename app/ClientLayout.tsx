@@ -73,7 +73,7 @@ export default function ClientLayout({
                     </SheetTrigger>
                     <SheetContent side="left" className="w-[250px] sm:w-[300px]">
                       <SheetHeader>
-                        <LottieAnimation animationPath="/animations/earth.json" width="80px" height="80px" loop="false"/>
+                        <LottieAnimation animationPath="/animations/note.json" width="80px" height="80px"/>
                         <SheetTitle className="text-left font-light text-2xl">Les doléances</SheetTitle>
                       </SheetHeader>
                       <nav className="mt-6">
@@ -154,7 +154,7 @@ export default function ClientLayout({
                     </SheetContent>
                   </Sheet>
                   <Link href="/" className="flex items-center gap-2 text-2xl font-serif font-ligth">
-                  <LottieAnimation animationPath="/animations/earth.json" width="40px" height="40px" loop="false" />
+                  <LottieAnimation animationPath="/animations/note.json" width="50px" height="50px"/>
                     Les doléances
                   </Link>
                 </div>

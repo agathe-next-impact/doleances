@@ -28,7 +28,7 @@ export default async function Home() {
       <div className="mb-12 text-center">
         <h1 className="mb-4 text-4xl font-light tracking-tight md:text-5xl">Les doléances</h1> 
         <p className="mx-auto mb-6 max-w-2xl text-lg text-muted-foreground">
-            Wiki des doléances de la convention citoyenne
+        Wiki du corpus des doléances de 2018/2019
         </p>
       </div>
 
