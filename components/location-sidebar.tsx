@@ -14,7 +14,7 @@ interface Location {
   phone?: string
   email?: string
   website?: string
-  type: string
+  region: string
   thumbnail?: string
 }
 
@@ -25,31 +25,28 @@ interface LocationSidebarProps {
   onLocationSelect: (location: Location) => void
 }
 
-// Fonction pour obtenir l'icône en fonction du type
-const getTypeIcon = (type: string) => {
-  switch (type) {
-    case "bureau":
+// Fonction pour obtenir l'icône en fonction de la région
+const getRegionIcon = (region: string) => {
+  switch (region) {
+    case "ileDeFrance":
       return <Building className="h-4 w-4" />
-    case "agence":
+    case "oise":
       return <Home className="h-4 w-4" />
-    case "partenaire":
+    case "auvergne":
       return <Users className="h-4 w-4" />
-    case "projet":
-      return <Briefcase className="h-4 w-4" />
     default:
       return <MapPin className="h-4 w-4" />
   }
 }
 
-// Fonction pour obtenir le label du type
-const getTypeLabel = (type: string) => {
+// Fonction pour obtenir le label du région
+const getRegionLabel = (region: string) => {
   const labels: Record<string, string> = {
-    bureau: "Bureau",
-    agence: "Agence",
-    partenaire: "Partenaire",
-    projet: "Projet",
+    ileDeFrance: "Ile de France",
+    oise: "Oise",
+    auvergne: "Auvergne",
   }
-  return labels[type] || type
+  return labels[region] || region
 }
 
 export default function LocationSidebar({ location, locations, onClose, onLocationSelect }: LocationSidebarProps) {
@@ -91,8 +88,8 @@ export default function LocationSidebar({ location, locations, onClose, onLocati
 
           <div className="flex items-center gap-2 mb-4">
             <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary/10 text-primary">
-              {getTypeIcon(location.type)}
-              <span className="ml-1">{getTypeLabel(location.type)}</span>
+              {getRegionIcon(location.region)}
+              <span className="ml-1">{getRegionLabel(location.region)}</span>
             </span>
           </div>
 
@@ -158,7 +155,7 @@ export default function LocationSidebar({ location, locations, onClose, onLocati
                   onClick={() => onLocationSelect(loc)}
                 >
                   <div className="flex items-center gap-2">
-                    {getTypeIcon(loc.type)}
+                    {getRegionIcon(loc.region)}
                     <h3 className="font-medium">{loc.title}</h3>
                   </div>
                   {loc.address && <p className="text-sm text-gray-500 truncate mt-1">{loc.address}</p>}

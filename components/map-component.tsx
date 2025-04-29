@@ -17,7 +17,7 @@ interface Location {
       lng: string | number
       address?: string
     }
-    type: string
+    region: string
     adresse: string
     telephone: string
     email: string
@@ -41,11 +41,11 @@ interface ProcessedLocation {
   phone?: string
   email?: string
   website?: string
-  type: string
+  region: string
   thumbnail?: string
 }
 
-interface GroupType {
+interface GroupRegion {
   id: string
   name: string
   center: { lat: number; lng: number }
@@ -60,11 +60,10 @@ const containerStyle = {
 }
 
 // Mapping des types en français
-const typeLabels: Record<string, string> = {
-  bureau: "Bureaux",
-  agence: "Agences",
-  partenaire: "Partenaires",
-  projet: "Projets",
+const regionLabels: Record<string, string> = {
+  ileDeFrancefrance: "Ile de France",
+  oise: "Oise",
+  auvergne: "Auvergne",
 }
 
 // Coordonnées par défaut pour la France
@@ -75,9 +74,9 @@ const defaultZoom = 5
 const googleMapsApiKey = "AIzaSyA1lJXqXBc0-w5WUVO1KhvggK05FCbi7Yg" // Remplacez par votre clé API
 
 export default function MapComponent() {
-  const [selectedType, setSelectedType] = useState<string | null>(null)
+  const [selectedRegion, setSelectedRegion] = useState<string | null>(null)
   const [selectedLocation, setSelectedLocation] = useState<ProcessedLocation | null>(null)
-  const [groupTypes, setGroupTypes] = useState<GroupType[]>([])
+  const [groupRegions, setGroupRegions] = useState<GroupRegion[]>([])
   const [loading, setLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | null>(null)
   const mapRef = useRef<google.maps.Map | null>(null)
@@ -137,6 +136,7 @@ export default function MapComponent() {
                 ? Number.parseFloat(item.acf.localisation.lng)
                 : item.acf.localisation.lng
 
+
             // Vérifier que les coordonnées sont valides
             if (isNaN(lat) || isNaN(lng)) {
               console.warn(`Coordonnées invalides pour ${item.id}:`, item.acf.localisation)
@@ -153,7 +153,7 @@ export default function MapComponent() {
               phone: item.acf.telephone || "",
               email: item.acf.email || "",
               website: item.acf.site_web || "",
-              type: item.acf.type || "autre",
+              region: item.acf.region || "autre",
               thumbnail: item._embedded?.["wp:featuredmedia"]?.[0]?.source_url,
             }
           })
@@ -166,18 +166,18 @@ export default function MapComponent() {
           return
         }
 
-        // Regrouper les localisations par type
-        const typeGroups: Record<string, ProcessedLocation[]> = {}
+        // Regrouper les localisations par région
+        const regionGroups: Record<string, ProcessedLocation[]> = {}
 
         processedLocations.forEach((location) => {
-          if (!typeGroups[location.type]) {
-            typeGroups[location.type] = []
+          if (!regionGroups[location.region]) {
+            regionGroups[location.region] = []
           }
-          typeGroups[location.type].push(location)
+          regionGroups[location.region].push(location)
         })
 
-        // Créer les groupes de types
-        const groups: GroupType[] = Object.entries(typeGroups).map(([type, locations]) => {
+        // Créer les groupes de régions
+        const groups: GroupRegion[] = Object.entries(regionGroups).map(([region, locations]) => {
           // Calculer le centre du groupe (moyenne des coordonnées)
           const center = locations.reduce(
             (acc, loc) => {
@@ -190,19 +190,19 @@ export default function MapComponent() {
           )
 
           return {
-            id: type,
-            name: typeLabels[type] || type,
+            id: region,
+            name: regionLabels[region] || region,
             center,
             zoom: 7,
             locations,
           }
         })
 
-        setGroupTypes(groups)
+        setGroupRegions(groups)
 
-        // Sélectionner le premier type par défaut s'il existe
-        if (groups.length > 0 && !selectedType) {
-          setSelectedType(groups[0].id)
+        // Sélectionner le premier région par défaut s'il existe
+        if (groups.length > 0 && !selectedRegion) {
+          setSelectedRegion(groups[0].id)
         }
 
         setLoading(false)
@@ -216,24 +216,30 @@ export default function MapComponent() {
     fetchGroupesLocaux()
   }, [])
 
-  // Handle type change
-  const handleTypeChange = useCallback(
-    (typeId: string) => {
-      setSelectedType(typeId)
+  // Handle région change
+  const handleRegionChange = useCallback(
+    (regionId: string) => {
+      setSelectedRegion(regionId)
       setSelectedLocation(null)
 
-      const group = groupTypes.find((g) => g.id === typeId)
+      const group = groupRegions.find((g) => g.id === regionId)
       if (group && mapRef.current) {
         mapRef.current.panTo(group.center)
         mapRef.current.setZoom(group.zoom)
       }
     },
-    [groupTypes],
+    [groupRegions],
   )
 
   // Handle marker click
   const handleMarkerClick = useCallback((location: ProcessedLocation) => {
     setSelectedLocation(location)
+    
+    // Centrer la carte sur la localisation sélectionnée
+    if (mapRef.current) {
+      mapRef.current.panTo(location.position)
+      mapRef.current.setZoom(14) // Zoom approprié pour voir les détails
+    }
   }, [])
 
   // Handle map load
@@ -241,20 +247,20 @@ export default function MapComponent() {
     (map: google.maps.Map) => {
       mapRef.current = map
 
-      // Set initial view if a type is selected
-      if (selectedType) {
-        const group = groupTypes.find((g) => g.id === selectedType)
+      // Set initial view if a région is selected
+      if (selectedRegion) {
+        const group = groupRegions.find((g) => g.id === selectedRegion)
         if (group) {
           map.panTo(group.center)
           map.setZoom(group.zoom)
         }
       }
     },
-    [groupTypes, selectedType],
+    [groupRegions, selectedRegion],
   )
 
   // Get current group
-  const currentGroup = groupTypes.find((g) => g.id === selectedType)
+  const currentGroup = groupRegions.find((g) => g.id === selectedRegion)
   const locations = currentGroup ? currentGroup.locations : []
 
   // Afficher une erreur si le chargement de l'API Google Maps a échoué
@@ -312,12 +318,12 @@ export default function MapComponent() {
     <div className="flex flex-col h-screen">
       <div className="p-4 bg-white shadow-md">
         <h1 className="text-2xl font-bold mb-4">Carte des Groupes Locaux</h1>
-        <Select value={selectedType || ""} onValueChange={handleTypeChange}>
+        <Select value={selectedRegion || ""} onValueChange={handleRegionChange}>
           <SelectTrigger className="w-full md:w-[300px]">
-            <SelectValue placeholder="Sélectionnez un type" />
+            <SelectValue placeholder="Sélectionnez une région" />
           </SelectTrigger>
           <SelectContent>
-            {groupTypes.map((group) => (
+            {groupRegions.map((group) => (
               <SelectItem key={group.id} value={group.id}>
                 {group.name} ({group.locations.length})
               </SelectItem>
