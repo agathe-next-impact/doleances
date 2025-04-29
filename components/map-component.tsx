@@ -67,7 +67,7 @@ const regionLabels: Record<string, string> = {
 }
 
 // Coordonnées par défaut pour la France
-const defaultCenter = { lat: 46.603354, lng: 1.888334 }
+const defaultCenter = { lat: 46.603354, lng: 2.3522 }
 const defaultZoom = 5
 
 // Clé API Google Maps
@@ -79,7 +79,8 @@ export default function MapComponent() {
   const [groupRegions, setGroupRegions] = useState<GroupRegion[]>([])
   const [loading, setLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | null>(null)
-  const mapRef = useRef<google.maps.Map | null>(null)
+  const mapRef = useRef<google.maps.Map | null>(null)  
+  const [viewingAllFrance, setViewingAllFrance] = useState<boolean>(true)
 
   // Utiliser useJsApiLoader au lieu de LoadScript pour une meilleure gestion des erreurs
   const { isLoaded, loadError } = useJsApiLoader({
@@ -201,9 +202,7 @@ export default function MapComponent() {
         setGroupRegions(groups)
 
         // Sélectionner le premier région par défaut s'il existe
-        if (groups.length > 0 && !selectedRegion) {
-          setSelectedRegion(groups[0].id)
-        }
+        setLoading(false)
 
         setLoading(false)
       } catch (err) {
@@ -215,6 +214,17 @@ export default function MapComponent() {
 
     fetchGroupesLocaux()
   }, [])
+
+    // Fonction pour réinitialiser la vue à l'ensemble de la France
+    const resetToFranceView = useCallback(() => {
+      if (mapRef.current) {
+        mapRef.current.panTo(defaultCenter)
+        mapRef.current.setZoom(defaultZoom)
+        setSelectedLocation(null)
+        setSelectedRegion(null)
+        setViewingAllFrance(true)
+      }
+    }, [])
 
   // Handle région change
   const handleRegionChange = useCallback(
@@ -243,25 +253,18 @@ export default function MapComponent() {
   }, [])
 
   // Handle map load
-  const onMapLoad = useCallback(
-    (map: google.maps.Map) => {
-      mapRef.current = map
+  const onMapLoad = useCallback((map: google.maps.Map) => {
+    mapRef.current = map
 
-      // Set initial view if a région is selected
-      if (selectedRegion) {
-        const group = groupRegions.find((g) => g.id === selectedRegion)
-        if (group) {
-          map.panTo(group.center)
-          map.setZoom(group.zoom)
-        }
-      }
-    },
-    [groupRegions, selectedRegion],
-  )
+    // Initialiser la carte pour voir l'ensemble de la France
+    map.panTo(defaultCenter)
+    map.setZoom(defaultZoom)
+  }, [])
 
   // Get current group
   const currentGroup = groupRegions.find((g) => g.id === selectedRegion)
-  const locations = currentGroup ? currentGroup.locations : []
+  const locations = currentGroup ? currentGroup.locations : groupRegions.flatMap((g) => g.locations);
+
 
   // Afficher une erreur si le chargement de l'API Google Maps a échoué
   if (loadError) {
@@ -317,19 +320,26 @@ export default function MapComponent() {
   return (
     <div className="flex flex-col h-screen">
       <div className="p-4 bg-white shadow-md">
-        <h1 className="text-2xl font-bold mb-4">Carte des Groupes Locaux</h1>
-        <Select value={selectedRegion || ""} onValueChange={handleRegionChange}>
-          <SelectTrigger className="w-full md:w-[300px]">
-            <SelectValue placeholder="Sélectionnez une région" />
-          </SelectTrigger>
-          <SelectContent>
-            {groupRegions.map((group) => (
-              <SelectItem key={group.id} value={group.id}>
-                {group.name} ({group.locations.length})
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <h1 className="text-2xl font-bold mb-4">Carte des Groupes Locaux</h1>      
+          <Select value={selectedRegion || ""} onValueChange={(value) => {
+            if (value === "all") {
+              resetToFranceView(); // Réinitialiser la vue à l'ensemble de la France
+            } else {
+              handleRegionChange(value); // Gérer le changement de région
+            }
+          }}>
+            <SelectTrigger className="w-full md:w-[300px]">
+              <SelectValue placeholder="Sélectionnez une région" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Toutes les régions</SelectItem> {/* Option pour toutes les régions */}
+              {groupRegions.map((group) => (
+                <SelectItem key={group.id} value={group.id}>
+                  {group.name} ({group.locations.length})
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
       </div>
 
       <div className="flex flex-col md:flex-row flex-1 h-full">
