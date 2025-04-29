@@ -4,6 +4,8 @@ import { Phone, Mail, Globe, MapPin, X, Building, Home, Users, Briefcase } from 
 import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { useState } from "react"
+import { Fragment } from "react";
+
 
 interface Location {
   id: string
@@ -51,12 +53,26 @@ const getRegionLabel = (region: string) => {
 
 export default function LocationSidebar({ location, locations, onClose, onLocationSelect }: LocationSidebarProps) {
   const [selectedRegion, setSelectedRegion] = useState<string>("Toutes les régions");
-  const [imageError, setImageError] = useState<Record<string, boolean>>({})
+  const [imageError, setImageError] = useState<Record<string, boolean>>({});
 
   // Fonction pour gérer les erreurs de chargement d'image
   const handleImageError = (locationId: string) => {
-    setImageError((prev) => ({ ...prev, [locationId]: true }))
-  }
+    setImageError((prev) => ({ ...prev, [locationId]: true }));
+  };
+
+  // Fonction pour regrouper les localisations par région
+  const groupLocationsByRegion = (locations: Location[]) => {
+    return locations.reduce((groups: Record<string, Location[]>, location) => {
+      const region = location.region || "Autre";
+      if (!groups[region]) {
+        groups[region] = [];
+      }
+      groups[region].push(location);
+      return groups;
+    }, {});
+  };
+
+  const groupedLocations = groupLocationsByRegion(locations);
 
   // Fonction pour nettoyer le HTML
   const createMarkup = (htmlContent: string) => {
@@ -151,19 +167,26 @@ export default function LocationSidebar({ location, locations, onClose, onLocati
             {locations.length > 0 && <span className="text-sm font-normal ml-2">({locations.length})</span>}
           </h2>
           <ScrollArea className="h-[calc(100vh-200px)]">
-            <div className="space-y-2">
-              {locations.map((loc) => (
-                <div
-                  key={loc.id}
-                  className="p-3 border border-gray-200 rounded-md hover:bg-gray-50 cursor-pointer"
-                  onClick={() => onLocationSelect(loc)}
-                >
-                  <div className="flex items-center gap-2">
-                    {getRegionIcon(loc.region)}
-                    <h3 className="font-medium">{loc.title}</h3>
+            <div className="space-y-4">
+              {Object.entries(groupedLocations).map(([region, regionLocations]) => (
+                <Fragment key={region}>
+                  <h3 className="text-lg font-semibold">{getRegionLabel(region)}</h3>
+                  <div className="space-y-2">
+                    {regionLocations.map((loc) => (
+                      <div
+                        key={loc.id}
+                        className="p-3 border border-gray-200 rounded-md hover:bg-gray-50 cursor-pointer"
+                        onClick={() => onLocationSelect(loc)}
+                      >
+                        <div className="flex items-center gap-2">
+                          {getRegionIcon(loc.region)}
+                          <h3 className="font-medium">{loc.title}</h3>
+                        </div>
+                        {loc.address && <p className="text-sm text-gray-500 truncate mt-1">{loc.address}</p>}
+                      </div>
+                    ))}
                   </div>
-                  {loc.address && <p className="text-sm text-gray-500 truncate mt-1">{loc.address}</p>}
-                </div>
+                </Fragment>
               ))}
 
               {locations.length === 0 && (
