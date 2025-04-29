@@ -1046,7 +1046,6 @@ interface GroupeLocal {
   id: number
   title: string
   slug: string
-  description: string
   coordinates: [number, number]
   type: string
   address: string
@@ -1076,14 +1075,13 @@ export async function fetchGroupesLocaux(): Promise<GroupeLocal[]> {
     }
 
     const posts = await response.json()
-
+    
     // Transform WordPress posts to our GroupeLocal format
     return posts.map((post: any) => ({
       id: post.id,
       title: post.title.rendered,
       slug: post.slug,
-      description: post.excerpt.rendered.replace(/<[^>]*>/g, ""),
-      coordinates: [Number.parseFloat(post.acf.latitude || "0"), Number.parseFloat(post.acf.longitude || "0")],
+      coordinates: [Number.parseFloat(post.acf.localisation.lat), Number.parseFloat(post.acf.localisation.lng)],
       type: post.acf.type || "bureau",
       address: post.acf.adresse || "",
       phone: post.acf.telephone,
@@ -1104,7 +1102,6 @@ function getMockGroupesLocaux(): GroupeLocal[] {
       id: 1,
       title: "Paris",
       slug: "paris",
-      description: "Siège social et bureau principal",
       coordinates: [48.8566, 2.3522],
       type: "bureau",
       address: "12 Rue de Rivoli, 75001 Paris",
@@ -1117,7 +1114,6 @@ function getMockGroupesLocaux(): GroupeLocal[] {
       id: 2,
       title: "Lyon",
       slug: "lyon",
-      description: "Bureau régional Sud-Est",
       coordinates: [45.7578, 4.832],
       type: "bureau",
       address: "45 Rue de la République, 69002 Lyon",
@@ -1129,7 +1125,6 @@ function getMockGroupesLocaux(): GroupeLocal[] {
       id: 3,
       title: "Marseille",
       slug: "marseille",
-      description: "Bureau régional Méditerranée",
       coordinates: [43.2965, 5.3698],
       type: "bureau",
       address: "123 La Canebière, 13001 Marseille",
@@ -1140,7 +1135,6 @@ function getMockGroupesLocaux(): GroupeLocal[] {
       id: 4,
       title: "Bordeaux",
       slug: "bordeaux",
-      description: "Bureau régional Sud-Ouest",
       coordinates: [44.8378, -0.5792],
       type: "bureau",
       address: "56 Cours de l'Intendance, 33000 Bordeaux",
@@ -1152,7 +1146,6 @@ function getMockGroupesLocaux(): GroupeLocal[] {
       id: 5,
       title: "Lille",
       slug: "lille",
-      description: "Bureau régional Nord",
       coordinates: [50.6292, 3.0573],
       type: "bureau",
       address: "34 Rue Faidherbe, 59000 Lille",

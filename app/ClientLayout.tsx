@@ -73,8 +73,8 @@ export default function ClientLayout({
                     </SheetTrigger>
                     <SheetContent side="left" className="w-[250px] sm:w-[300px]">
                       <SheetHeader>
-                        <LottieAnimation animationPath="/animations/earth.json" width="80px" height="80px" loop="false"/>
-                        <SheetTitle className="text-left">Les doléances</SheetTitle>
+                        <LottieAnimation animationPath="/animations/note.json" width="80px" height="80px"/>
+                        <SheetTitle className="text-left font-light text-2xl">Les doléances</SheetTitle>
                       </SheetHeader>
                       <nav className="mt-6">
                         <ul className="space-y-4">
@@ -88,24 +88,11 @@ export default function ClientLayout({
                                 window.dispatchEvent(closeEvent)
                               }}
                             >
-                              <FileText className="mr-2 h-4 w-4" />
-                              Actualités
-                            </Link>
-                          </li>
-                          <li>
-                            <Link
-                              href="/categories"
-                              className="flex items-center text-sm font-medium hover:text-primary"
-                              onClick={(e) => {
-                                // Close the sheet when a link is clicked
-                                const closeEvent = new CustomEvent("close-sheet")
-                                window.dispatchEvent(closeEvent)
-                              }}
-                            >
                               <Library className="mr-2 h-4 w-4" />
-                              Consulter les doléances
+                              Archives des doléances
                             </Link>
                           </li>
+
                           <li>
                             <Link
                               href="/cartographie"
@@ -122,7 +109,7 @@ export default function ClientLayout({
                           </li>
                           <li>
                             <Link
-                              href="/pages/contribuer"
+                              href="/contribuer"
                               className="flex items-center text-sm font-medium hover:text-primary"
                               onClick={(e) => {
                                 // Close the sheet when a link is clicked
@@ -148,12 +135,26 @@ export default function ClientLayout({
                               A propos
                             </Link>
                           </li>
+                          <li>
+                            <Link
+                              href="/categories"
+                              className="flex items-center text-sm font-medium hover:text-primary"
+                              onClick={(e) => {
+                                // Close the sheet when a link is clicked
+                                const closeEvent = new CustomEvent("close-sheet")
+                                window.dispatchEvent(closeEvent)
+                              }}
+                            >
+                              <FileText className="mr-2 h-4 w-4" />
+                              Actualités
+                            </Link>
+                          </li>
                         </ul>
                       </nav>
                     </SheetContent>
                   </Sheet>
-                  <Link href="/" className="flex items-center gap-2 text-2xl font-serif font-bold">
-                  <LottieAnimation animationPath="/animations/earth.json" width="40px" height="40px" loop="false" />
+                  <Link href="/" className="flex items-center gap-2 text-2xl font-serif font-ligth">
+                  <LottieAnimation animationPath="/animations/note.json" width="50px" height="50px"/>
                     Les doléances
                   </Link>
                 </div>
@@ -176,7 +177,7 @@ export default function ClientLayout({
               <div className="container mx-auto px-4">
                 <div className="grid gap-8 md:grid-cols-3">
                   <div>
-                    <h3 className="mb-3 text-lg font-semibold">Les doléances</h3>
+                    <h3 className="mb-3 text-lg font-light">Les doléances</h3>
                     <p className="text-sm text-muted-foreground">
                       Archives des doléances de la convention citoyenne. 
                     </p>

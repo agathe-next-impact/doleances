@@ -26,19 +26,16 @@ export default async function Home() {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="mb-12 text-center">
-        <h1 className="mb-4 text-4xl font-bold tracking-tight md:text-5xl">Les doléances</h1> 
+        <h1 className="mb-4 text-4xl font-light tracking-tight md:text-5xl">Les doléances</h1> 
         <p className="mx-auto mb-6 max-w-2xl text-lg text-muted-foreground">
-            Le réveil des revendications citoyennes
-        </p>{/*
-        <div className="mx-auto max-w-md">
-          <SearchAutocomplete placeholder="Rechercher des articles" buttonLabel="Rechercher" />
-        </div>*/}
+        Wiki du corpus des doléances de 2018/2019
+        </p>
       </div>
 
       <section className="mb-12 grid gap-8 md:grid-cols-6 md:grid-rows-3">
         <div className="flex flex-col col-span-4 row-span-3 rounded-lg border bg-card shadow-lg overflow-hidden">
             <div className="flex flex-col p-6">
-              <h2 className="w-full mb-4 pb-3 text-2xl font-serif font-bold uppercase border-b-[1px]">L'association Les doléances</h2>
+              <h2 className="w-full mb-4 pb-3 text-2xl font-serif font-light uppercase border-b-[1px]">L'association Les doléances</h2>
               <div className="flex flex-col gap-4 mb-4 flex-grow text-sm text-muted-foreground">
                   <p>Le 27 novembre 1903, Jean Jaurès interpella les députés : « Ces
                   documents sont dispersés dans les archives ; ils ne sont même pas
@@ -70,12 +67,12 @@ export default async function Home() {
                 src={stickyArticle.featuredImage || "/placeholder.svg"}
                 alt={stickyArticle.title}
                 fill
-                className="object-cover"
+                className="object-cover object-top"
               />
             </div>
           )}
           <div className="flex flex-col flex-grow p-6">
-            <h2 className="w-full mb-4 pb-3 text-2xl font-serif font-bold uppercase border-b-[1px]">à la une</h2>
+            <h2 className="w-full mb-4 pb-3 text-2xl font-serif font-light uppercase border-b-[1px]">à la une</h2>
             {stickyArticle && (
               <>
                 <h3 className="mb-2 font-medium">{stickyArticle.title}</h3>
@@ -91,45 +88,57 @@ export default async function Home() {
           </div>
         </div>
         <div className="flex flex-col col-span-2 row-span-1 rounded-lg border bg-card shadow-lg overflow-hidden">
-          {stickyArticle && stickyArticle.featuredImage && (
-            <div className="relative h-48 w-full">
-              <Image
-                src={stickyArticle.featuredImage || "/placeholder.svg"}
-                alt={stickyArticle.title}
-                fill
-                className="object-cover"
-              />
-            </div>
-          )}
           <div className="flex flex-col flex-grow p-6">
-            <h2 className="w-full mb-4 pb-3 text-2xl font-serif font-bold uppercase border-b-[1px]">Contribuer</h2>
-            {stickyArticle && (
-              <>
+            <h2 className="w-full mb-4 pb-3 text-2xl font-serif font-light uppercase border-b-[1px]">Contribuer</h2>
                 <h3 className="mb-2 font-medium">Participer à la démarche</h3>
                 <div
-                  className="mb-4 flex-grow line-clamp-3 text-sm text-muted-foreground"/>
+                  className="mb-4 flex-grow line-clamp-3 text-sm text-muted-foreground">
+                  <p>Vous pouvez contribuer à la démarche en nous aidant à
+                  collecter les doléances, en nous aidant à les publier, ou en
+                  participant à la rédaction d'articles.</p>
+                  <p>Nous avons besoin de vous pour faire vivre cette plateforme et
+                  la rendre accessible à tous.</p>
+                  </div>
                 <Button variant="outline" asChild>
-                  <Link href={`/articles/${stickyArticle.slug}`}>Contribuer</Link>
+                  <Link href={`/contribuer`}>Contribuer</Link>
                 </Button>
-              </>
-            )}
           </div>
         </div>
+      </section> 
+
+      <section className="mb-8 grid gap-8 grid-cols-2">
+      <div className="flex flex-col rounded-lg border bg-card shadow-lg overflow-hidden">
+        <div className="flex flex-col flex-grow p-6">
+            <h2 className="w-full mb-4 pb-3 text-2xl font-serif font-light uppercase border-b-[1px]">Cartographie des groupes locaux</h2>
+            {stickyArticle && (
+                <>
+                    <p className="mb-6 line-clamp-3 text-muted-foreground">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut pellentesque tristique dolor, dictum mollis neque. Morbi nisl nisi, tempor vitae turpis id, posuere venenatis augue. Nam consectetur purus eu mi malesuada, venenatis congue felis interdum. Nullam vehicula est vitae est dictum, vel lobortis nisl fermentum. Donec dapibus sed lorem a convallis. Sed in risus augue. Aliquam a tortor sit amet nisl tincidunt porta rhoncus quis mauris. Quisque in suscipit nibh.</p>
+                  <Button variant="outline" asChild>
+                    <Link href='/cartographie'>Localiser les groupes</Link>
+                  </Button>
+                </>
+            )}
+          </div>
+          </div>
+        <div className="flex flex-col rounded-lg border bg-card shadow-lg overflow-hidden">
+        <div className="flex flex-col flex-grow p-6">
+            <h2 className="w-full mb-4 pb-3 text-2xl font-serif font-light uppercase border-b-[1px]">Les archives des doléances</h2>
+            {stickyArticle && (
+                <>
+                    <p className="mb-6 line-clamp-3 text-muted-foreground">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut pellentesque tristique dolor, dictum mollis neque. Morbi nisl nisi, tempor vitae turpis id, posuere venenatis augue. Nam consectetur purus eu mi malesuada, venenatis congue felis interdum. Nullam vehicula est vitae est dictum, vel lobortis nisl fermentum. Donec dapibus sed lorem a convallis. Sed in risus augue. Aliquam a tortor sit amet nisl tincidunt porta rhoncus quis mauris. Quisque in suscipit nibh.</p>
+                  <Button variant="outline" asChild>
+                    <Link href='/articles'>Consulter les archives</Link>
+                  </Button>
+                </>
+            )}
+          </div>
+          </div>
       </section>
 
-      <section className="mb-8 grid gap-8 md:grid-cols-2">
-        {cartographiePage && <PageCard page={cartographiePage} />}
-        {consulterPage && <PageCard page={consulterPage} />}
-      </section>
-
-      <section className="grid gap-8 md:grid-cols-2">
-        {aboutPage && <PageCard page={aboutPage} />}
-        {contributePage && <PageCard page={contributePage} />}
-      </section>
 
       <section className="mb-12 p-6 rounded-lg shadow-lg">
         <div className="mb-6 flex items-center justify-between border-b-[1px] pb-3">
-          <h2 className="text-2xl font-serif font-bold uppercase">Actualités</h2>
+          <h2 className="text-2xl font-serif font-light uppercase">Actualités</h2>
           <Link href="/articles" className="flex items-center text-sm font-medium text-lime-600">
             Voir tous les articles
             <ArrowRight className="ml-1 h-4 w-4" />
