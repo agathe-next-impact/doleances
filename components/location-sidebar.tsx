@@ -50,6 +50,7 @@ const getRegionLabel = (region: string) => {
 }
 
 export default function LocationSidebar({ location, locations, onClose, onLocationSelect }: LocationSidebarProps) {
+  const [selectedRegion, setSelectedRegion] = useState<string>("Toutes les régions");
   const [imageError, setImageError] = useState<Record<string, boolean>>({})
 
   // Fonction pour gérer les erreurs de chargement d'image
@@ -145,7 +146,10 @@ export default function LocationSidebar({ location, locations, onClose, onLocati
         </div>
       ) : (
         <div className="p-4 h-full">
-          <h2 className="text-xl font-bold mb-4">Localisations</h2>
+          <h2 className="text-xl font-bold mb-4">
+            {selectedRegion === "Toutes les régions" ? "Toutes les localisations" : selectedRegion}
+            {locations.length > 0 && <span className="text-sm font-normal ml-2">({locations.length})</span>}
+          </h2>
           <ScrollArea className="h-[calc(100vh-200px)]">
             <div className="space-y-2">
               {locations.map((loc) => (
