@@ -137,7 +137,7 @@ export default function ClientLayout({
                           </li>
                           <li>
                             <Link
-                              href="/categories"
+                              href="/category"
                               className="flex items-center text-sm font-medium hover:text-primary"
                               onClick={(e) => {
                                 // Close the sheet when a link is clicked
@@ -186,12 +186,12 @@ export default function ClientLayout({
                     <h3 className="mb-3 text-lg font-semibold">Liens</h3>
                     <ul className="space-y-2 text-sm">
                       <li>
-                        <Link href="/articles" className="text-muted-foreground hover:underline">
+                        <Link href="/category" className="text-muted-foreground hover:underline">
                           Actualités
                         </Link>
                       </li>
                       <li>
-                        <Link href="/categories" className="text-muted-foreground hover:underline">
+                        <Link href="/articles" className="text-muted-foreground hover:underline">
                           Doléances
                         </Link>
                       </li>

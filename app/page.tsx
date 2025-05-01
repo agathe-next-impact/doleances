@@ -3,7 +3,7 @@ import Image from "next/image"
 import { ArrowRight, Video } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
-import { ArticleCard } from "@/components/article-card"
+import { ArticleCardHome } from "@/components/article-card-home"
 import { PageCard } from "@/components/page-card"
 import { fetchFeaturedArticles, fetchPages } from "@/lib/wordpress"
 import { SearchAutocomplete } from "@/components/search-autocomplete"
@@ -146,7 +146,7 @@ export default async function Home() {
         </div>
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {articles.map((article) => (
-            <ArticleCard key={article.id} article={article} />
+            <ArticleCardHome key={article.id} article={article} />
           ))}
         </div>
       </section>

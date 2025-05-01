@@ -97,7 +97,7 @@ export default function MapComponent() {
         setLoading(true)
         // Utiliser l'endpoint spécifié et inclure les médias associés
         const response = await fetch(
-          "https://palegreen-capybara-652133.hostingersite.com/wp-json/wp/v2/groupe-local?_embed",
+          "https://palegreen-capybara-652133.hostingersite.com/wp-json/wp/v2/groupe_local?_embed",
           {
             // Ajouter ces options pour éviter les problèmes CORS
             mode: "cors",
