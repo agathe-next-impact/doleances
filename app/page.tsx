@@ -1,7 +1,7 @@
 import Link from "next/link"
 import Image from "next/image"
 import { ArrowRight, Video } from "lucide-react"
-import { Badge, CalendarIcon, User2 } from "lucide-react"
+import { CalendarIcon, User2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { formatDate } from "@/lib/utils"
 import { ArticleCardHome } from "@/components/article-card-home"
@@ -9,6 +9,7 @@ import { PageCard } from "@/components/page-card"
 import { fetchFeaturedArticles, fetchPages } from "@/lib/wordpress"
 import { SearchAutocomplete } from "@/components/search-autocomplete"
 import YouTubeEmbed from "@/components/ui/video"
+import { Badge } from "@/components/ui/badge"
 
 export default async function Home() {
   const articles = await fetchFeaturedArticles()
@@ -75,18 +76,21 @@ export default async function Home() {
             <h2 className="w-full mb-4 pb-3 text-2xl font-serif font-light uppercase border-b-[1px]">à la une</h2>
             {stickyArticle && (
               <>
-                <h3 className="mb-2 font-medium">{stickyArticle.title}</h3>
+                <h3 className="mb-2 font-medium">
+                  <Link href={`/article/${stickyArticle.id}`}>
+                    {stickyArticle.title}
+                  </Link></h3>
                 <div
                   className="mb-4 flex-grow line-clamp-3 text-sm text-muted-foreground"
                   dangerouslySetInnerHTML={{ __html: stickyArticle.excerpt }}
                 />
                     <div className="flex flex-wrap gap-2 pt-2">
                     {stickyArticle.categories.map((category, index) => (
-                      <span key={`cat-${index}`} className="badge badge-secondary">              
+                      <Badge key={`cat-${index}`} variant="secondary">            
                         <Link href={`/article/${stickyArticle.categoriesId[index]}`}>
                         {category}
                         </Link>
-                      </span>
+                      </Badge>
                     ))}
                     {stickyArticle.tags.slice(0, 2).map((tag, index, id) => (
                       <Badge key={`tag-${index}`} variant="outline">
