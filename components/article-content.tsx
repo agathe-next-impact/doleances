@@ -156,7 +156,7 @@ export default function ArticleContent({ post }: ArticleContentProps) {
   })()
 
   return (
-    <div className="max-w-3xl mx-auto">
+    <div className="px-4 py-8 mx-auto">
       {/* Nouvelle mise en page pour les événements avec image à gauche (50%) et détails à droite (50%) */}
       {isEvent ? (
         <div className="mb-8">
@@ -284,7 +284,7 @@ export default function ArticleContent({ post }: ArticleContentProps) {
               />
             </div>
           )}
-          <div className="max-w-3xl mx-auto mb-8">
+          <div className=" px-4 py-8 mx-auto mb-8">
             <h1
               className="text-3xl md:text-4xl font-bold mb-4"
               dangerouslySetInnerHTML={{ __html: post.title.rendered }}

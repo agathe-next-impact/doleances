@@ -6,7 +6,7 @@ export default async function Home() {
 
   return (
     <main className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-8 text-center">Catégories d'articles</h1>
+      <h1 className="text-3xl font-bold mb-8 text-center">L'actualité des Doléances</h1>
       {categories.length === 0 ? (
         <div className="text-center py-12">
           <p className="text-lg text-muted-foreground">Aucune catégorie disponible pour le moment.</p>

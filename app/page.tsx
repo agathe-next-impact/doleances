@@ -1,8 +1,9 @@
 import Link from "next/link"
 import Image from "next/image"
 import { ArrowRight, Video } from "lucide-react"
-
+import { Badge, CalendarIcon, User2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { formatDate } from "@/lib/utils"
 import { ArticleCardHome } from "@/components/article-card-home"
 import { PageCard } from "@/components/page-card"
 import { fetchFeaturedArticles, fetchPages } from "@/lib/wordpress"
@@ -16,7 +17,6 @@ export default async function Home() {
   // Get specific pages by slug
   const presentationPage = pages.find((page) => page.slug === "presentation")
   const stickyArticle = articles[0]
-
   // Get pages for the different sections
   const cartographiePage = pages.find((page) => page.slug === "cartographie")
   const consulterPage = pages.find((page) => page.slug === "consulter")
@@ -33,7 +33,7 @@ export default async function Home() {
       </div>
 
       <section className="mb-12 grid gap-8 md:grid-cols-6 md:grid-rows-3">
-        <div className="flex flex-col col-span-4 row-span-3 rounded-lg border bg-card shadow-lg overflow-hidden">
+        <div className="flex flex-col col-span-4 row-span-3 justify-between rounded-lg border bg-card shadow-lg overflow-hidden">
             <div className="flex flex-col p-6">
               <h2 className="w-full mb-4 pb-3 text-2xl font-serif font-light uppercase border-b-[1px]">L'association Les doléances</h2>
               <div className="flex flex-col gap-4 mb-4 flex-grow text-sm text-muted-foreground">
@@ -55,9 +55,9 @@ export default async function Home() {
                   <p>La création le 17 novembre 2024 de l'association
                   Les doléances vise à tenir cette promesse.</p>
               </div>
-          </div>
+            </div>
             <div className="relative w-full">
-            <YouTubeEmbed videoLink="https://www.youtube.com/embed/9S0VA52zcxM?si=HEBQ9HPu5MDNm2uI" />
+            <YouTubeEmbed videoLink="https://www.youtube.com/embed/8bof5Anluk4?si=H5M7BGGsvWFUODBM" />
             </div>
         </div>
         <div className="flex flex-col col-span-2 row-span-2 rounded-lg border bg-card shadow-lg overflow-hidden">
@@ -67,7 +67,7 @@ export default async function Home() {
                 src={stickyArticle.featuredImage || "/placeholder.svg"}
                 alt={stickyArticle.title}
                 fill
-                className="object-cover object-top"
+                className="object-cover object-center"
               />
             </div>
           )}
@@ -80,8 +80,32 @@ export default async function Home() {
                   className="mb-4 flex-grow line-clamp-3 text-sm text-muted-foreground"
                   dangerouslySetInnerHTML={{ __html: stickyArticle.excerpt }}
                 />
+                    <div className="flex flex-wrap gap-2 pt-2">
+                    {stickyArticle.categories.map((category, index) => (
+                      <span key={`cat-${index}`} className="badge badge-secondary">              
+                        <Link href={`/article/${stickyArticle.categoriesId[index]}`}>
+                        {category}
+                        </Link>
+                      </span>
+                    ))}
+                    {stickyArticle.tags.slice(0, 2).map((tag, index, id) => (
+                      <Badge key={`tag-${index}`} variant="outline">
+                        <Link href={`article/?tag=${id}`}>{tag}</Link>
+                      </Badge>
+                    ))}
+                  </div>
+                  <div className="flex w-full items-center justify-between p-2 text-xs text-muted-foreground">
+                    <div className="flex items-center gap-1">
+                      <User2 className="h-3 w-3" />
+                      <span>{stickyArticle.author}</span>
+                    </div>
+                    <div className="flex items-center gap-1 pb-2">
+                      <CalendarIcon className="h-3 w-3" />
+                      <span>{formatDate(stickyArticle.date)}</span>
+                    </div>
+                  </div>
                 <Button variant="outline" asChild>
-                  <Link href={`/articles/${stickyArticle.slug}`}>Lire plus</Link>
+                  <Link href={`/article/${stickyArticle.id}`}>Lire plus</Link>
                 </Button>
               </>
             )}
@@ -140,7 +164,7 @@ export default async function Home() {
         <div className="mb-6 flex items-center justify-between border-b-[1px] pb-3">
           <h2 className="text-2xl font-serif font-light uppercase">Actualités</h2>
           <Link href="/articles" className="flex items-center text-sm font-medium text-lime-600">
-            Voir tous les articles
+            Voir toute l'actualité
             <ArrowRight className="ml-1 h-4 w-4" />
           </Link>
         </div>

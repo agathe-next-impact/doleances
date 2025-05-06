@@ -1,6 +1,5 @@
 import { fetchPost } from "@/lib/api"
 import { notFound } from "next/navigation"
-import ArticleHero from "@/components/article-hero"
 import ArticleContent from "@/components/article-content"
 
 export default async function ArticlePage({ params }: { params: { id: string } }) {
@@ -20,7 +19,6 @@ export default async function ArticlePage({ params }: { params: { id: string } }
 
     return (
       <div className="container mx-auto px-4 py-8">
-        <ArticleHero post={post} />
         <ArticleContent post={post} />
       </div>
     )

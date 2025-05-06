@@ -1,6 +1,7 @@
 // Types for WordPress API responses
 export interface Category {
   id: number
+  slug: string
   name: string
   description: string
   count: number
@@ -23,6 +24,7 @@ export interface Post {
   excerpt: {
     rendered: string
   }
+  slug: string
   link: string
   categories?: number[]
   acf?: {

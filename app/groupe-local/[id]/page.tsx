@@ -179,7 +179,7 @@ export default async function GroupeLocalPage({ params }: { params: { id: string
 
     return (
       <div className="container mx-auto px-4 py-8">
-        <div className="max-w-4xl mx-auto">
+        <div className="px-4 py-8 mx-auto">
           {/* En-tête du groupe local avec image de fond et overlay */}
           <div className="relative rounded-lg overflow-hidden mb-8">
             <div className="relative h-64 w-full">

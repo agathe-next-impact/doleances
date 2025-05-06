@@ -14,6 +14,7 @@ interface Article {
   date: string
   author: string
   categories: string[]
+  categoriesId: number[]
   tags: string[]
   featuredImage?: string
 }
@@ -30,6 +31,8 @@ export function ArticleCardHome({ article }: ArticleCardProps) {
     .replace(/\s+/g, " ") // Replace multiple spaces with a single space
     .trim()
 
+  console.log(article.categories + "et" + article.categoriesId)
+
   return (
     <Card className="flex flex-col overflow-hidden border-none shadow-none">
       {article.featuredImage && (
@@ -38,13 +41,13 @@ export function ArticleCardHome({ article }: ArticleCardProps) {
             src={article.featuredImage || "/placeholder.svg?height=192&width=384&query=article"}
             alt={article.title}
             fill
-            className="object-contain object-left"
+            className="object-cover object-center rounded"
           />
         </div>
       )}
       <CardHeader className="pl-0">
         <CardTitle className="line-clamp-2">
-          <Link href={`/articles/${article.slug}`} className="hover:underline">
+          <Link href={`/article/${article.id}`} className="hover:underline">
             {article.title}
           </Link>
         </CardTitle>
@@ -55,13 +58,15 @@ export function ArticleCardHome({ article }: ArticleCardProps) {
       <CardFooter className="flex flex-col items-start gap-2 pl-0">
         <div className="flex flex-wrap gap-2">
           {article.categories.map((category, index) => (
-            <Badge key={`cat-${index}`} variant="secondary">
-              <Link href={`/articles?category=${category.toLowerCase()}`}>{category}</Link>
+            <Badge key={`cat-${index}`} variant="secondary">              
+              <Link href={`/category/${article.categoriesId[index]}`}>
+              {category}
+              </Link>
             </Badge>
           ))}
-          {article.tags.slice(0, 2).map((tag, index) => (
+          {article.tags.slice(0, 2).map((tag, index, id) => (
             <Badge key={`tag-${index}`} variant="outline">
-              <Link href={`/articles?tag=${tag.toLowerCase()}`}>{tag}</Link>
+              <Link href={`/articles?tag=${id}`}>{tag}</Link>
             </Badge>
           ))}
         </div>

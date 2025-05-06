@@ -78,9 +78,9 @@ export default function ClientLayout({
                       </SheetHeader>
                       <nav className="mt-6">
                         <ul className="space-y-4">
-                          <li>
+                        <li>
                             <Link
-                              href="/articles"
+                              href="/category"
                               className="flex items-center text-sm font-medium hover:text-primary"
                               onClick={(e) => {
                                 // Close the sheet when a link is clicked
@@ -88,11 +88,10 @@ export default function ClientLayout({
                                 window.dispatchEvent(closeEvent)
                               }}
                             >
-                              <Library className="mr-2 h-4 w-4" />
-                              Archives des doléances
+                              <FileText className="mr-2 h-4 w-4" />
+                              Actualités
                             </Link>
                           </li>
-
                           <li>
                             <Link
                               href="/cartographie"
@@ -137,7 +136,7 @@ export default function ClientLayout({
                           </li>
                           <li>
                             <Link
-                              href="/category"
+                              href="/doleances"
                               className="flex items-center text-sm font-medium hover:text-primary"
                               onClick={(e) => {
                                 // Close the sheet when a link is clicked
@@ -145,8 +144,8 @@ export default function ClientLayout({
                                 window.dispatchEvent(closeEvent)
                               }}
                             >
-                              <FileText className="mr-2 h-4 w-4" />
-                              Actualités
+                              <Library className="mr-2 h-4 w-4" />
+                              Les doléances
                             </Link>
                           </li>
                         </ul>
@@ -160,7 +159,7 @@ export default function ClientLayout({
                 </div>
                 <div className="flex items-center gap-4">
                   <div className="relative hidden md:block">
-                    <SearchAutocomplete placeholder="Rechercher des articles..." className="w-64" showButton={false} />
+                    <SearchAutocomplete placeholder="Rechercher des doléances..." className="w-64" showButton={false} />
                   </div>
                   <Button variant="outline" size="sm" asChild>
                     <Link href="https://palegreen-capybara-652133.hostingersite.com/wp-admin" target="_blank">
