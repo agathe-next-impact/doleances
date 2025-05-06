@@ -1,29 +1,20 @@
-"use client"
+"use client";
 
-import type React from "react"
-
-import { useState, useRef, useEffect } from "react"
-import { useRouter } from "next/navigation"
-import { Search, Loader2, FileText, File } from "lucide-react"
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
-import { fetchSearchSuggestions } from "@/lib/wordpress"
-import { cn } from "@/lib/utils"
-
-interface SearchSuggestion {
-  id: number
-  title: string
-  slug: string
-  type: "article" | "page"
-}
+import { useState, useRef, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { Search, Loader2, FileText } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { fetchSearchSuggestions } from "@/lib/wordpress";
+import { cn } from "@/lib/utils";
 
 interface SearchAutocompleteProps {
-  placeholder?: string
-  className?: string
-  onSearch?: (term: string) => void
-  redirectOnSelect?: boolean
-  buttonLabel?: string
-  showButton?: boolean
+  placeholder?: string;
+  className?: string;
+  onSearch?: (term: string) => void;
+  redirectOnSelect?: boolean;
+  buttonLabel?: string;
+  showButton?: boolean;
 }
 
 export function SearchAutocomplete({
@@ -34,103 +25,69 @@ export function SearchAutocomplete({
   buttonLabel = "Rechercher",
   showButton = true,
 }: SearchAutocompleteProps) {
-  const [searchTerm, setSearchTerm] = useState("")
-  const [suggestions, setSuggestions] = useState<SearchSuggestion[]>([])
-  const [isLoading, setIsLoading] = useState(false)
-  const [selectedIndex, setSelectedIndex] = useState(-1)
-  const [showSuggestions, setShowSuggestions] = useState(false)
-  const searchRef = useRef<HTMLDivElement>(null)
-  const router = useRouter()
+  const [searchTerm, setSearchTerm] = useState("");
+  const [groupedSuggestions, setGroupedSuggestions] = useState<{
+    [category: string]: { id: number; title: string; slug: string }[];
+  }>({});
+  const [isLoading, setIsLoading] = useState(false);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const searchRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
 
   // Debounce search term
   useEffect(() => {
     if (searchTerm.trim().length < 2) {
-      setSuggestions([])
-      return
+      setGroupedSuggestions({});
+      return;
     }
 
     const timer = setTimeout(async () => {
-      setIsLoading(true)
+      setIsLoading(true);
       try {
-        const results = await fetchSearchSuggestions(searchTerm)
-        const combinedResults = [...results.articles, ...results.pages]
-        setSuggestions(combinedResults)
+        const results = await fetchSearchSuggestions(searchTerm);
+        setGroupedSuggestions(results.groupedArticles);
       } catch (error) {
-        console.error("Error fetching suggestions:", error)
-        setSuggestions([])
+        console.error("Error fetching suggestions:", error);
+        setGroupedSuggestions({});
       } finally {
-        setIsLoading(false)
+        setIsLoading(false);
       }
-    }, 300)
+    }, 300);
 
-    return () => clearTimeout(timer)
-  }, [searchTerm])
+    return () => clearTimeout(timer);
+  }, [searchTerm]);
 
   // Handle click outside to close suggestions
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
-        setShowSuggestions(false)
+        setShowSuggestions(false);
       }
     }
 
-    document.addEventListener("mousedown", handleClickOutside)
-    return () => document.removeEventListener("mousedown", handleClickOutside)
-  }, [])
-
-  // Handle keyboard navigation
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (!showSuggestions || suggestions.length === 0) return
-
-    // Arrow down
-    if (e.key === "ArrowDown") {
-      e.preventDefault()
-      setSelectedIndex((prevIndex) => (prevIndex < suggestions.length - 1 ? prevIndex + 1 : prevIndex))
-    }
-    // Arrow up
-    else if (e.key === "ArrowUp") {
-      e.preventDefault()
-      setSelectedIndex((prevIndex) => (prevIndex > 0 ? prevIndex - 1 : 0))
-    }
-    // Enter
-    else if (e.key === "Enter") {
-      e.preventDefault()
-      if (selectedIndex >= 0) {
-        handleSuggestionSelect(suggestions[selectedIndex])
-      } else {
-        handleSearch()
-      }
-    }
-    // Escape
-    else if (e.key === "Escape") {
-      setShowSuggestions(false)
-    }
-  }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   const handleSearch = () => {
     if (searchTerm.trim()) {
       if (onSearch) {
-        onSearch(searchTerm)
+        onSearch(searchTerm);
       } else if (redirectOnSelect) {
-        router.push(`/articles?search=${encodeURIComponent(searchTerm)}`)
+        router.push(`/article?search=${encodeURIComponent(searchTerm)}`);
       }
-      setShowSuggestions(false)
+      setShowSuggestions(false);
     }
-  }
+  };
 
-  const handleSuggestionSelect = (suggestion: SearchSuggestion) => {
+  const handleSuggestionSelect = (slug: string) => {
     if (redirectOnSelect) {
-      if (suggestion.type === "article") {
-        router.push(`/articles/${suggestion.slug}`)
-      } else {
-        router.push(`/pages/${suggestion.slug}`)
-      }
+      router.push(`/article/${slug}`);
     } else if (onSearch) {
-      onSearch(suggestion.title)
-      setSearchTerm(suggestion.title)
+      onSearch(slug);
     }
-    setShowSuggestions(false)
-  }
+    setShowSuggestions(false);
+  };
 
   return (
     <div className={cn("relative", className)} ref={searchRef}>
@@ -143,53 +100,49 @@ export function SearchAutocomplete({
             className="pl-8"
             value={searchTerm}
             onChange={(e) => {
-              setSearchTerm(e.target.value)
-              setShowSuggestions(true)
-              setSelectedIndex(-1)
+              setSearchTerm(e.target.value);
+              setShowSuggestions(true);
             }}
             onFocus={() => setShowSuggestions(true)}
-            onKeyDown={handleKeyDown}
           />
           {isLoading && (
             <Loader2 className="absolute right-2.5 top-1/2 h-4 w-4 -translate-y-1/2 animate-spin text-muted-foreground" />
           )}
         </div>
         {showButton && (
-          <Button type="button" onClick={handleSearch} className="ml-2 bg-lime-600 text-white hover:bg-lime-600/80">
+          <Button
+            type="button"
+            onClick={handleSearch}
+            className="ml-2 bg-lime-600 text-white hover:bg-lime-600/80"
+          >
             {buttonLabel}
           </Button>
         )}
       </div>
 
-      {showSuggestions && suggestions.length > 0 && (
+      {showSuggestions && Object.keys(groupedSuggestions).length > 0 && (
         <div className="absolute z-50 mt-1 w-full rounded-md border bg-background shadow-lg">
           <ul className="py-1">
-            {suggestions.map((suggestion, index) => (
-              <li key={`${suggestion.type}-${suggestion.id}`}>
-                <button
-                  className={cn(
-                    "flex w-full items-center px-4 py-2 text-left text-sm hover:bg-accent",
-                    selectedIndex === index && "bg-accent",
-                  )}
-                  onClick={() => handleSuggestionSelect(suggestion)}
-                >
-                  {suggestion.type === "article" ? (
+            {Object.entries(groupedSuggestions).map(([category, articles]) => (
+              <li key={category}>
+                <div className="px-4 py-2 text-sm font-semibold text-muted-foreground">
+                  {category}
+                </div>
+                {articles.map((article) => (
+                  <button
+                    key={article.id}
+                    className="flex w-full items-center px-4 py-2 text-left text-sm hover:bg-accent"
+                    onClick={() => handleSuggestionSelect(article.slug)}
+                  >
                     <FileText className="mr-2 h-4 w-4 text-muted-foreground" />
-                  ) : (
-                    <File className="mr-2 h-4 w-4 text-muted-foreground" />
-                  )}
-                  <span>
-                    {suggestion.title}
-                    <span className="ml-2 text-xs text-muted-foreground">
-                      {suggestion.type === "article" ? "Article" : "Page"}
-                    </span>
-                  </span>
-                </button>
+                    {article.title}
+                  </button>
+                ))}
               </li>
             ))}
           </ul>
         </div>
       )}
     </div>
-  )
+  );
 }
