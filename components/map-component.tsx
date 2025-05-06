@@ -97,7 +97,7 @@ export default function MapComponent() {
         setLoading(true)
         // Utiliser l'endpoint spécifié et inclure les médias associés
         const response = await fetch(
-          "https://palegreen-capybara-652133.hostingersite.com/wp-json/wp/v2/groupe-local?_embed",
+          "https://palegreen-capybara-652133.hostingersite.com/wp-json/wp/v2/groupe_local?_embed",
           {
             // Ajouter ces options pour éviter les problèmes CORS
             mode: "cors",
@@ -265,6 +265,16 @@ export default function MapComponent() {
   const currentGroup = groupRegions.find((g) => g.id === selectedRegion)
   const locations = currentGroup ? currentGroup.locations : groupRegions.flatMap((g) => g.locations);
 
+  // Fonction pour gérer la fermeture d'une localisation
+  const handleCloseLocation = useCallback(() => {
+    setSelectedLocation(null); // Réinitialiser la localisation sélectionnée
+  
+    // Recentrer la carte sur la vue par défaut (toutes les régions)
+    if (mapRef.current) {
+      mapRef.current.panTo(defaultCenter);
+      mapRef.current.setZoom(defaultZoom);
+    }
+  }, [setSelectedLocation]);
 
   // Afficher une erreur si le chargement de l'API Google Maps a échoué
   if (loadError) {
@@ -375,7 +385,7 @@ export default function MapComponent() {
 
         <LocationSidebar
           location={selectedLocation}
-          onClose={() => setSelectedLocation(null)}
+          onClose={handleCloseLocation}
           locations={locations}
           onLocationSelect={handleMarkerClick}
         />
