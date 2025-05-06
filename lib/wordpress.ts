@@ -1068,7 +1068,7 @@ export async function fetchGroupesLocaux(): Promise<GroupeLocal[]> {
     const apiUrl = ensureCorrectApiUrl(WORDPRESS_API_URL)
 
     // Fetch data from the WordPress API
-    const response = await fetch(`${apiUrl}/groupe-local?_embed&per_page=100`)
+    const response = await fetch(`${apiUrl}/groupe_local?_embed&per_page=100`)
 
     if (!response.ok) {
       throw new Error(`Failed to fetch groupes locaux: ${response.status}`)
