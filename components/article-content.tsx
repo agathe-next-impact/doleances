@@ -176,7 +176,7 @@ export default function ArticleContent({ post }: ArticleContentProps) {
                 alt=""
                 fill
                 className="object-cover"
-                sizes="(max-width: 768px) 100vw, 50vw"
+                sizes="(max-width: 768px) 40vw, 50vw"
               />
             </div>
 
@@ -272,19 +272,19 @@ export default function ArticleContent({ post }: ArticleContentProps) {
         </div>
       ) : (
         // Affichage standard pour les articles non-événements
-        <>
+        <div className="flex">
           {featuredImage && (
-            <div className="relative h-64 md:h-96 w-full mb-8">
+            <div className="relative h-64 md:h-96 w-1/3 mb-8">
               <Image
                 src={featuredImage || "/placeholder.svg"}
                 alt=""
                 fill
                 className="object-cover rounded-lg"
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 768px, 1024px"
+                sizes="(max-width: 768px) 40vw, (max-width: 1200px) 768px, 1024px"
               />
             </div>
           )}
-          <div className=" px-4 py-8 mx-auto mb-8">
+          <div className="w-2/3 px-12 py-8 mx-auto mb-8">
             <h1
               className="text-3xl md:text-4xl font-bold mb-4"
               dangerouslySetInnerHTML={{ __html: post.title.rendered }}
@@ -303,7 +303,7 @@ export default function ArticleContent({ post }: ArticleContentProps) {
               )}
             </div>
           </div>
-        </>
+        </div>
       )}
 
       <article className="prose prose-lg max-w-none mb-8">

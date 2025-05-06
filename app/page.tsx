@@ -134,33 +134,30 @@ export default async function Home() {
         </div>
       </section> 
 
-      <section className="mb-8 grid gap-8 grid-cols-2">
-      <div className="flex flex-col rounded-lg border bg-card shadow-lg overflow-hidden">
-        <div className="flex flex-col flex-grow p-6">
+      <section className="mb-8 grid gap-8 grid-cols-3">
+      <div className="col-span-1 flex flex-col rounded-lg border bg-card shadow-lg overflow-hidden">
+        <div className="flex flex-col flex-grow justify-between p-6">
+          <div>
             <h2 className="w-full mb-4 pb-3 text-2xl font-serif font-light uppercase border-b-[1px]">Cartographie des groupes locaux</h2>
-            {stickyArticle && (
-                <>
-                    <p className="mb-6 line-clamp-3 text-muted-foreground">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut pellentesque tristique dolor, dictum mollis neque. Morbi nisl nisi, tempor vitae turpis id, posuere venenatis augue. Nam consectetur purus eu mi malesuada, venenatis congue felis interdum. Nullam vehicula est vitae est dictum, vel lobortis nisl fermentum. Donec dapibus sed lorem a convallis. Sed in risus augue. Aliquam a tortor sit amet nisl tincidunt porta rhoncus quis mauris. Quisque in suscipit nibh.</p>
-                  <Button variant="outline" asChild>
-                    <Link href='/cartographie'>Localiser les groupes</Link>
-                  </Button>
-                </>
-            )}
+              <p className="mb-6 line-clamp-3 text-muted-foreground">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut pellentesque tristique dolor, dictum mollis neque. Morbi nisl nisi, tempor vitae turpis id, posuere venenatis augue. Nam consectetur purus eu mi malesuada, venenatis congue felis interdum. Nullam vehicula est vitae est dictum, vel lobortis nisl fermentum. Donec dapibus sed lorem a convallis. Sed in risus augue. Aliquam a tortor sit amet nisl tincidunt porta rhoncus quis mauris. Quisque in suscipit nibh.</p>
+            </div>
+            <Button variant="outline" asChild>
+              <Link href='/cartographie'>Localiser les groupes</Link>
+            </Button>
           </div>
           </div>
-        <div className="flex flex-col rounded-lg border bg-card shadow-lg overflow-hidden">
-        <div className="flex flex-col flex-grow p-6">
-            <h2 className="w-full mb-4 pb-3 text-2xl font-serif font-light uppercase border-b-[1px]">Les archives des doléances</h2>
-            {stickyArticle && (
-                <>
-                    <p className="mb-6 line-clamp-3 text-muted-foreground">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut pellentesque tristique dolor, dictum mollis neque. Morbi nisl nisi, tempor vitae turpis id, posuere venenatis augue. Nam consectetur purus eu mi malesuada, venenatis congue felis interdum. Nullam vehicula est vitae est dictum, vel lobortis nisl fermentum. Donec dapibus sed lorem a convallis. Sed in risus augue. Aliquam a tortor sit amet nisl tincidunt porta rhoncus quis mauris. Quisque in suscipit nibh.</p>
-                  <Button variant="outline" asChild>
-                    <Link href='/articles'>Consulter les archives</Link>
-                  </Button>
-                </>
-            )}
+        <div className="col-span-1 flex flex-col rounded-lg border bg-card shadow-lg overflow-hidden">
+        <div className="flex flex-col flex-grow justify-between p-6">
+          <div>
+            <h2 className="w-full mb-4 pb-3 text-2xl font-serif font-light uppercase border-b-[1px]">La recherche scientifique</h2>
+            <p className="mb-6 line-clamp-3 text-muted-foreground">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut pellentesque tristique dolor, dictum mollis neque. Morbi nisl nisi, tempor vitae turpis id, posuere venenatis augue. Nam consectetur purus eu mi malesuada, venenatis congue felis interdum. Nullam vehicula est vitae est dictum, vel lobortis nisl fermentum. Donec dapibus sed lorem a convallis. Sed in risus augue. Aliquam a tortor sit amet nisl tincidunt porta rhoncus quis mauris. Quisque in suscipit nibh.</p>
+          </div>
+          <Button variant="outline" asChild>
+            <Link href='/articles'>Consulter les publications scientifiques</Link>
+          </Button>  
           </div>
           </div>
+
       </section>
 
 
@@ -173,9 +170,9 @@ export default async function Home() {
           </Link>
         </div>
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {articles.map((article) => (
+            {articles.slice(1).map((article) => (
             <ArticleCardHome key={article.id} article={article} />
-          ))}
+            ))}
         </div>
       </section>
 
