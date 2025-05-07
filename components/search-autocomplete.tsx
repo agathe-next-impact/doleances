@@ -80,9 +80,9 @@ export function SearchAutocomplete({
     }
   };
 
-  const handleSuggestionSelect = (slug: string) => {
+  const handleSuggestionSelect = (id: number) => {
     if (redirectOnSelect) {
-      router.push(`/article/${slug}`);
+      router.push(`/article/${id}`);
     } else if (onSearch) {
       onSearch(slug);
     }
@@ -132,7 +132,7 @@ export function SearchAutocomplete({
                   <button
                     key={article.id}
                     className="flex w-full items-center px-4 py-2 text-left text-sm hover:bg-accent"
-                    onClick={() => handleSuggestionSelect(article.slug)}
+                    onClick={() => handleSuggestionSelect(article.id)}
                   >
                     <FileText className="mr-2 h-4 w-4 text-muted-foreground" />
                     {article.title}

@@ -126,7 +126,7 @@ export async function fetchCategories(): Promise<Category[]> {
     }
 
     const response = await fetch(`${API_BASE_URL}/categories?per_page=100`, {
-      cache: "no-store",
+      cache: "no-store", 
       headers: {
         Accept: "application/json",
       },

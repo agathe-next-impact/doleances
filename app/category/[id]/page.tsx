@@ -6,9 +6,14 @@ import SearchFilter from "@/components/search-filter"
 import { Suspense } from "react"
 import Link from "next/link"
 
-export default async function CategoryPage({ params }: { params: { id: string } }) {
+export default async function CategoryPage(context: { params: { id: string } }) {
   try {
-    const categoryId = Number.parseInt(params.id)
+    // Récupérer l'ID de la catégorie à partir des paramètres de l'URL
+    
+    const categoryId = Number.parseInt(context.params.id)
+    if (isNaN(categoryId)) {
+      throw new Error(`Invalid category ID: ${context.params.id}`)
+    }
 
     // Fetch category data with better error handling
     let category
@@ -19,15 +24,16 @@ export default async function CategoryPage({ params }: { params: { id: string } 
       // Provide a fallback category
       category = {
         id: categoryId,
+        slug: `categorie-${categoryId}`, // Add a default slug
         name: `Catégorie ${categoryId}`,
         description: "",
         count: 0,
-        link: "",
+        link: "", 
       }
     }
 
     // Fetch posts for this category with better error handling
-    let posts = []
+    let posts: Array<{ id: number; title?: string; acf?: { date_de_levenement?: string }; date: string }> = []
     try {
       posts = await fetchPostsByCategory(categoryId)
     } catch (error) {
@@ -76,7 +82,7 @@ export default async function CategoryPage({ params }: { params: { id: string } 
       // Filtrer les dates uniques et les trier
       dates = [...new Set(eventDates)].sort((a, b) => {
         try {
-          const [monthA, yearA] = a.split("/").map(Number)
+          const [monthA, yearA] = (a?.includes("/") ? a.split("/") : ["0", "0"]).map(Number)
           const [monthB, yearB] = b.split("/").map(Number)
 
           // Trier par année décroissante, puis par mois décroissant
@@ -127,14 +133,25 @@ export default async function CategoryPage({ params }: { params: { id: string } 
         <div className="my-8">
           <Suspense fallback={<div>Chargement des filtres...</div>}>
             <SearchFilter
-              dates={dates}
+              dates={dates.filter((date): date is string => date !== null)}
               groupesLocauxCPT={groupesLocauxCPT}
               categoryId={categoryId}
               isEventCategory={isEventCategory}
             />
           </Suspense>
         </div>
-        <ArticleList initialPosts={posts} categoryId={categoryId} isEventCategory={isEventCategory} />
+        <ArticleList
+          initialPosts={posts.map((post) => ({
+            ...post,
+            title: post.title || "Titre par défaut",
+            content: post.content || "Contenu par défaut",
+            excerpt: post.excerpt || "Extrait par défaut",
+            slug: post.slug || `post-${post.id}`,
+            link: post.link || "#",
+          }))}
+          categoryId={categoryId}
+          isEventCategory={isEventCategory}
+        />
       </div>
     )
   } catch (error) {

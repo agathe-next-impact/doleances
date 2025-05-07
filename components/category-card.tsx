@@ -44,9 +44,6 @@ export default function CategoryCard({ category }: CategoryCardProps) {
     }
   }, [category.id])
 
-  const imageUrl =
-    category.acf?.image_categorie || `/placeholder.svg?height=200&width=400&query=Category ${category.name}`
-
 console.log(recentPosts)
 
   return (
