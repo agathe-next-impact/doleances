@@ -72,6 +72,7 @@ export interface Post {
       }>
     >
   }
+  featured_media?: number // Add this property to match the usage in the code
 }
 
 // Interface pour le custom post type "groupe_local"
@@ -339,7 +340,34 @@ export async function fetchRecentPostsByCategory(categoryId: number): Promise<Po
       throw new Error(`Failed to fetch recent posts: ${response.status}`)
     }
 
-    return response.json()
+    const posts: Post[] = await response.json()
+
+    // Fetch the featured media URL for each post
+    const postsWithMedia = await Promise.all(
+      posts.map(async (post) => {
+        if (post.featured_media) {
+          try {
+            const mediaResponse = await fetch(`${API_BASE_URL}/media/${post.featured_media}`, {
+              cache: "no-store",
+              headers: {
+                Accept: "application/json",
+              },
+            })
+
+            if (mediaResponse.ok) {
+              const mediaData = await mediaResponse.json()
+              post._embedded = post._embedded || {}
+              post._embedded["wp:featuredmedia"] = [{ source_url: mediaData.source_url }]
+            }
+          } catch (error) {
+            console.error(`Error fetching media for post ${post.id}:`, error)
+          }
+        }
+        return post
+      }),
+    )
+
+    return postsWithMedia
   } catch (error) {
     console.error(`Error fetching recent posts for category ${categoryId}:`, error)
     return []

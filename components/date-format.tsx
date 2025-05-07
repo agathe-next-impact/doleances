@@ -38,3 +38,29 @@ interface DateFormatProps {
   };
   
   export default DateFormat;
+
+
+  // Formatage des heures pour l'affichage 
+  // format d'entrée : 00:00:00 ou 00:00:00.000Z
+  // format de sortie : "HH:mm"
+
+interface TimeFormatProps {
+    timeStr: string; // format attendu : "00:00:00" ou "00:00:00.000Z"
+}
+
+export const TimeFormat: React.FC<TimeFormatProps> = ({ timeStr }) => {
+    const date = new Date(`1970-01-01T${timeStr}Z`); // Ajout d'une date fictive pour créer un objet Date valide
+
+    // Vérifie que l'heure est valide
+    if (isNaN(date.getTime())) {
+        return <span>Heure invalide</span>;
+    }
+
+    // Formatage de l'heure en "HH:mm"
+    const formattedTime = new Intl.DateTimeFormat("fr-FR", {
+        hour: "2-digit",
+        minute: "2-digit",
+    }).format(date);
+    return <span>{formattedTime}</span>;
+}
+// export default TimeFormat    
