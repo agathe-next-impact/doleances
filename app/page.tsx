@@ -10,6 +10,7 @@ import { fetchFeaturedArticles, fetchPages } from "@/lib/wordpress"
 import { SearchAutocomplete } from "@/components/search-autocomplete"
 import YouTubeEmbed from "@/components/ui/video"
 import { Badge } from "@/components/ui/badge"
+import Verbatim from "@/components/ui/verbatim"
 
 export default async function Home() {
   const articles = await fetchFeaturedArticles()
@@ -157,7 +158,11 @@ export default async function Home() {
           </Button>  
           </div>
           </div>
-
+          <div className="col-span-1 flex flex-col overflow-hidden">
+          <div className="flex flex-col flex-grow justify-between p-6">
+          <Verbatim />
+        </div>
+        </div>
       </section>
 
 

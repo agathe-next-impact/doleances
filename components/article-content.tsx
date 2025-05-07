@@ -7,6 +7,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { MapPin, Calendar, Users } from "lucide-react"
 import StaticMap from "@/components/static-map"
+import DateFormat from "@/components/date-format"
 
 interface ArticleContentProps {
   post: Post
@@ -190,27 +191,22 @@ export default function ArticleContent({ post }: ArticleContentProps) {
                 </div>
 
                 <div className="p-4 bg-muted/50 rounded-md">
-                  {dateTimeFields.length > 0 ? (
-                    <div className="space-y-2">
-                      {dateTimeFields.map(([key, value]) => (
-                        <div key={key} className="flex items-start gap-2">
-                          <span className="font-medium capitalize">{key.replace(/_/g, " ")}:</span>
-                          <span>{String(value)}</span>
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    // Fallback aux champs standard si aucun champ date/heure n'est trouvé dans les informations complémentaires
                     <>
                       {post.acf?.date_de_levenement ? (
                         <div className="flex items-center gap-2 mb-2">
-                          <span className="font-medium">Date:</span>
-                          <span>{post.acf.date_de_levenement}</span>
+                          <span className="font-medium">Date :</span>
+                          {post.acf?.date_de_levenement ? (
+                            <DateFormat dateStr={post.acf.date_de_levenement} />
+                          ) : (
+                            <span>Non précisée</span>
+                          )}
                         </div>
                       ) : (
-                        <div className="text-muted-foreground">Date non précisée</div>
+                        <div className="flex items-center gap-2 mb-2">
+                          <span className="font-medium">Date :</span>
+                          <span>Non précisée</span>
+                        </div>
                       )}
-
                       {post.acf?.heure_evenement && (
                         <div className="flex items-center gap-2">
                           <span className="font-medium">Heure:</span>
@@ -218,7 +214,6 @@ export default function ArticleContent({ post }: ArticleContentProps) {
                         </div>
                       )}
                     </>
-                  )}
                 </div>
               </div>
 
@@ -290,7 +285,7 @@ export default function ArticleContent({ post }: ArticleContentProps) {
               dangerouslySetInnerHTML={{ __html: post.title.rendered }}
             />
             <div className="flex flex-wrap gap-3 text-sm text-muted-foreground mb-6">
-              <div>{new Date(post.date).toLocaleDateString("fr-FR")}</div>
+              <div><DateFormat dateStr={post.date} /></div>
 
               {/* Groupe local avec lien */}
               {groupeLocalPost && (

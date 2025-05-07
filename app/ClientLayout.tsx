@@ -83,9 +83,14 @@ export default function ClientLayout({
                               href="/category"
                               className="flex items-center text-sm font-medium hover:text-primary"
                               onClick={(e) => {
-                                // Close the sheet when a link is clicked
-                                const closeEvent = new CustomEvent("close-sheet")
-                                window.dispatchEvent(closeEvent)
+                                e.preventDefault(); // Empêche la navigation immédiate
+                                const closeEvent = new CustomEvent("close-sheet");
+                                window.dispatchEvent(closeEvent);
+                            
+                                // Attendre un court instant pour que le Sheet se ferme avant de naviguer
+                                setTimeout(() => {
+                                  window.location.href = "/category"; // Naviguer manuellement
+                                }, 300); // Ajustez le délai si nécessaire
                               }}
                             >
                               <FileText className="mr-2 h-4 w-4" />
@@ -97,9 +102,14 @@ export default function ClientLayout({
                               href="/cartographie"
                               className="flex items-center text-sm font-medium hover:text-primary"
                               onClick={(e) => {
-                                // Close the sheet when a link is clicked
-                                const closeEvent = new CustomEvent("close-sheet")
-                                window.dispatchEvent(closeEvent)
+                                e.preventDefault(); // Empêche la navigation immédiate
+                                const closeEvent = new CustomEvent("close-sheet");
+                                window.dispatchEvent(closeEvent);
+                            
+                                // Attendre un court instant pour que le Sheet se ferme avant de naviguer
+                                setTimeout(() => {
+                                  window.location.href = "/cartographie"; // Naviguer manuellement
+                                }, 300); // Ajustez le délai si nécessaire
                               }}
                             >
                               <Map className="mr-2 h-4 w-4" />
@@ -111,9 +121,14 @@ export default function ClientLayout({
                               href="/contribuer"
                               className="flex items-center text-sm font-medium hover:text-primary"
                               onClick={(e) => {
-                                // Close the sheet when a link is clicked
-                                const closeEvent = new CustomEvent("close-sheet")
-                                window.dispatchEvent(closeEvent)
+                                e.preventDefault(); // Empêche la navigation immédiate
+                                const closeEvent = new CustomEvent("close-sheet");
+                                window.dispatchEvent(closeEvent);
+                            
+                                // Attendre un court instant pour que le Sheet se ferme avant de naviguer
+                                setTimeout(() => {
+                                  window.location.href = "/contribuer"; // Naviguer manuellement
+                                }, 300); // Ajustez le délai si nécessaire
                               }}
                             >
                               <Pen className="mr-2 h-4 w-4" />
@@ -125,9 +140,14 @@ export default function ClientLayout({
                               href="/pages/a-propos"
                               className="flex items-center text-sm font-medium hover:text-primary"
                               onClick={(e) => {
-                                // Close the sheet when a link is clicked
-                                const closeEvent = new CustomEvent("close-sheet")
-                                window.dispatchEvent(closeEvent)
+                                e.preventDefault(); // Empêche la navigation immédiate
+                                const closeEvent = new CustomEvent("close-sheet");
+                                window.dispatchEvent(closeEvent);
+                            
+                                // Attendre un court instant pour que le Sheet se ferme avant de naviguer
+                                setTimeout(() => {
+                                  window.location.href = "/a-propos"; // Naviguer manuellement
+                                }, 300); // Ajustez le délai si nécessaire
                               }}
                             >
                               <Info className="mr-2 h-4 w-4" />
@@ -139,9 +159,14 @@ export default function ClientLayout({
                               href="/doleances"
                               className="flex items-center text-sm font-medium hover:text-primary"
                               onClick={(e) => {
-                                // Close the sheet when a link is clicked
-                                const closeEvent = new CustomEvent("close-sheet")
-                                window.dispatchEvent(closeEvent)
+                                e.preventDefault(); // Empêche la navigation immédiate
+                                const closeEvent = new CustomEvent("close-sheet");
+                                window.dispatchEvent(closeEvent);
+                            
+                                // Attendre un court instant pour que le Sheet se ferme avant de naviguer
+                                setTimeout(() => {
+                                  window.location.href = "/doleances"; // Naviguer manuellement
+                                }, 300); // Ajustez le délai si nécessaire
                               }}
                             >
                               <Library className="mr-2 h-4 w-4" />
@@ -159,7 +184,7 @@ export default function ClientLayout({
                 </div>
                 <div className="flex items-center gap-4">
                   <div className="relative hidden md:block">
-                    <SearchAutocomplete placeholder="Rechercher des doléances..." className="w-64" showButton={false} />
+                    <SearchAutocomplete placeholder="Rechercher dans notre actu..." className="w-64" showButton={false} />
                   </div>
                   <Button variant="outline" size="sm" asChild>
                     <Link href="https://palegreen-capybara-652133.hostingersite.com/wp-admin" target="_blank">
@@ -176,9 +201,10 @@ export default function ClientLayout({
               <div className="container mx-auto px-4">
                 <div className="grid gap-8 md:grid-cols-3">
                   <div>
-                    <h3 className="mb-3 text-lg font-light">Les doléances</h3>
+                    <LottieAnimation animationPath="/animations/note.json" width="80px" height="80px"/>
+                    <h3 className="mb-3 text-xl font-serif font-light">Les doléances</h3>
                     <p className="text-sm text-muted-foreground">
-                      Archives des doléances de la convention citoyenne. 
+                    Wiki du corpus des doléances de 2018/2019 
                     </p>
                   </div>
                   <div>
@@ -217,7 +243,7 @@ export default function ClientLayout({
                     </ul>
                   </div>
                 </div>
-                <div className="mt-8 border-t pt-4 text-center text-sm text-muted-foreground">
+                <div className="mt-8 border-t pt-4 font-serif text-center">
                   © {new Date().getFullYear()} Les doléances
                 </div>
               </div>

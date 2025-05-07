@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge"
 import { Calendar, Clock, MapPin, Users } from "lucide-react"
 import { useState, useEffect } from "react"
 import { fetchGroupeLocalById } from "@/lib/api"
+import DateFormat from "@/components/date-format"
 
 interface ArticleCardProps {
   post: Post
@@ -151,7 +152,7 @@ export default function ArticleCard({ post }: ArticleCardProps) {
             {post.acf?.date_de_levenement && (
               <div className="flex items-center gap-1.5">
                 <Calendar className="h-4 w-4 text-muted-foreground" />
-                <span>{post.acf.date_de_levenement}</span>
+                <DateFormat dateStr={post.acf.date_de_levenement}/>
               </div>
             )}
             {post.acf?.heure_evenement && (

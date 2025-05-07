@@ -746,3 +746,42 @@ export async function extractGroupesLocauxCPTFromCategory(categoryId: number): P
     return []
   }
 }
+
+export interface Verbatim {
+  id: number;
+  acf: {
+    texte_du_verbatim?: Node[];
+    date?: string;
+    departement?: string;
+    groupe_local?: string;
+  };
+}
+
+export async function fetchRandomVerbatim(): Promise<Verbatim | null> {
+  
+  try {
+    const response = await fetch(`${API_BASE_URL}/verbatim`, {
+      cache: "no-store",
+      headers: {
+        Accept: "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch verbatim: ${response.status}`);
+    }
+
+    const verbatims: Verbatim[] = await response.json();
+
+    if (verbatims.length === 0) {
+      return null;
+    }
+
+    // Sélectionner un verbatim aléatoire
+    const randomIndex = Math.floor(Math.random() * verbatims.length);
+    return verbatims[randomIndex];
+  } catch (error) {
+    console.error("Error fetching random verbatim:", error);
+    return null;
+  }
+}

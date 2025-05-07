@@ -6,10 +6,11 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function formatDate(dateString: string): string {
-  const date = new Date(dateString)
+  const date = new Date(dateString) // dateString should be in ISO 8601 format (e.g., "YYYY-MM-DD" or "YYYY-MM-DDTHH:mm:ss.sssZ")
   return new Intl.DateTimeFormat("fr-FR", {
     year: "numeric",
-    month: "long",
+    month: "short",
     day: "numeric",
-  }).format(date)
+  }).format(date).replace('.', '') // Remove period from short month
 }
+
