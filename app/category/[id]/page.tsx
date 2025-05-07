@@ -4,6 +4,7 @@ import ArticleList from "@/components/article-list"
 import CategoryHero from "@/components/category-hero"
 import SearchFilter from "@/components/search-filter"
 import { Suspense } from "react"
+import Link from "next/link"
 
 export default async function CategoryPage({ params }: { params: { id: string } }) {
   try {
@@ -119,6 +120,9 @@ export default async function CategoryPage({ params }: { params: { id: string } 
 
     return (
       <div className="container mx-auto px-4 py-8">
+        <Link href="/category" className="text-sm text-muted-foreground flex items-center mb-4">
+            <span>Toutes les actualités</span>
+        </Link>
         <CategoryHero category={category} />
         <div className="my-8">
           <Suspense fallback={<div>Chargement des filtres...</div>}>
