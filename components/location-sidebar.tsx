@@ -97,7 +97,7 @@ export default function LocationSidebar({ location, locations, onClose, onLocati
             <div className="mb-4 relative h-48 rounded-lg overflow-hidden">
               {/* Utiliser une image standard au lieu de Next.js Image pour éviter les problèmes CORS */}
               <img
-                src={location.thumbnail || "/placeholder.svg"}
+                src={location.thumbnail || ""}
                 alt={location.title}
                 className="w-full h-full object-cover"
                 onError={() => handleImageError(location.id)}
@@ -156,7 +156,7 @@ export default function LocationSidebar({ location, locations, onClose, onLocati
                   rel="noopener noreferrer"
                   className="text-primary hover:underline"
                 >
-                  Visiter le site web
+                  Voir l'activité du groupe local
                 </a>
               </div>
             )}

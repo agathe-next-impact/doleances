@@ -48,8 +48,8 @@ export default function Verbatim() {
   return (
     <div className="p-4">
       <div className="text-gray-700 prose prose-sm max-w-none">
-        <div className="italic text-2xl pb-4" dangerouslySetInnerHTML={{ __html: verbatim.acf.texte_du_verbatim }} />
-        <p className="font-serif font-bold text-2xl text-right">{verbatim.acf.departement}</p>
+        <div className="italic text-2xl font-handwritten pb-8"> {verbatim.acf.texte_du_verbatim || ""} </div>
+        <p className="font-sansserif font-medium text-2xl text-right">{verbatim.acf.departement}</p>
         <p className="font-serif text-xl text-right"><DateFormat dateStr={verbatim.acf.date || ""} short={true} /></p>
     </div>
     </div>

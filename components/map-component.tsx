@@ -336,8 +336,7 @@ export default function MapComponent() {
 
   return (
     <div className="flex flex-col h-screen">
-      <div className="p-4 bg-white shadow-md">
-        <h1 className="text-2xl font-bold mb-4">Carte des Groupes Locaux</h1>      
+      <div className="py-4 bg-white">      
           <Select value={selectedRegion || ""} onValueChange={(value) => {
             if (value === "all") {
               resetToFranceView(); // Réinitialiser la vue à l'ensemble de la France
