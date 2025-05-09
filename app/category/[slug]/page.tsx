@@ -1,37 +1,41 @@
 // Améliorer la gestion des erreurs et ajouter des fallbacks pour les données manquantes
-import { fetchCategory, fetchPostsByCategory, extractGroupesLocauxCPTFromCategory } from "@/lib/api"
+import { fetchCategory, fetchPostsByCategory, extractGroupesLocauxCPTFromCategory, fetchCategoryBySlug } from "@/lib/api"
 import ArticleList from "@/components/article-list"
 import CategoryHero from "@/components/category-hero"
 import SearchFilter from "@/components/search-filter"
 import { Suspense } from "react"
 
-export default async function CategoryPage({ params }: { params: { id: string } }) {
+export default async function CategoryPage({ params }: { params: { slug: string } }) {
   try {
-    const categoryId = Number.parseInt(params.id)
+
+    const categorySlug = params.slug
+    console.log(`Récupération de la catégorie avec le slug ${categorySlug}`)
 
     // Fetch category data with better error handling
     let category
     try {
-      category = await fetchCategory(categoryId)
+      category = await fetchCategoryBySlug(categorySlug)
     } catch (error) {
-      console.error(`Error fetching category ${categoryId}:`, error)
+      console.error(`Error fetching category ${categorySlug}:`, error)
       // Provide a fallback category
       category = {
-        id: categoryId,
-        name: `Catégorie ${categoryId}`,
-        description: "",
+        id: category?.id,
+        name: `Catégorie ${category?.name}`,
+        description: category?.description || "",
         count: 0,
         link: "",
       }
     }
 
+
     // Fetch posts for this category with better error handling
-    let posts = []
+    let posts: any[] = []
     try {
-      posts = await fetchPostsByCategory(categoryId)
+      posts = await fetchPostsByCategory(category?.id)
     } catch (error) {
-      console.error(`Error fetching posts for category ${categoryId}:`, error)
+      console.error(`Error fetching posts for category ${category?.id}:`, error)
     }
+
 
     // Déterminer si c'est une catégorie d'événements
     // Pour simplifier, nous considérons que toute catégorie avec au moins un article
@@ -115,22 +119,22 @@ export default async function CategoryPage({ params }: { params: { id: string } 
     }
 
     // Récupérer les CPT groupe_local associés aux articles de cette catégorie
-    const groupesLocauxCPT = await extractGroupesLocauxCPTFromCategory(categoryId)
+    const groupesLocauxCPT = await extractGroupesLocauxCPTFromCategory(category?.id)
 
     return (
       <div className="container mx-auto px-4 py-8">
-        <CategoryHero category={category} />
+        <CategoryHero category={category?.name} description={category?.description } />
         <div className="my-8">
           <Suspense fallback={<div>Chargement des filtres...</div>}>
             <SearchFilter
               dates={dates}
               groupesLocauxCPT={groupesLocauxCPT}
-              categoryId={categoryId}
+              categoryId={category?.id}
               isEventCategory={isEventCategory}
             />
           </Suspense>
         </div>
-        <ArticleList initialPosts={posts} categoryId={categoryId} isEventCategory={isEventCategory} />
+        <ArticleList initialPosts={posts} categoryId={category?.id} isEventCategory={isEventCategory} />
       </div>
     )
   } catch (error) {

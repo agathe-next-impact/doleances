@@ -15,6 +15,7 @@ interface Article {
   author: string
   categories: string[]
   categoriesId: number[]
+  categoriesSlug: string[]
   tags: string[]
   featuredImage?: string
 }
@@ -47,7 +48,7 @@ export function ArticleCardHome({ article }: ArticleCardProps) {
       )}
       <CardHeader className="pl-0">
         <CardTitle className="line-clamp-2">
-          <Link href={`/article/${article.id}`} className="hover:underline">
+          <Link href={`/article/${article.slug}`} className="hover:underline">
             {article.title}
           </Link>
         </CardTitle>
@@ -59,7 +60,7 @@ export function ArticleCardHome({ article }: ArticleCardProps) {
         <div className="flex flex-wrap gap-2">
           {article.categories.map((category, index) => (
             <Badge key={`cat-${index}`} variant="secondary">              
-              <Link href={`/category/${article.categoriesId[index]}`}>
+              <Link href={`/category/${article.categoriesSlug[index]}`}>
               {category}
               </Link>
             </Badge>

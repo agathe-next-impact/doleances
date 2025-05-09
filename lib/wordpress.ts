@@ -10,6 +10,7 @@ interface Article {
   author: string;
   categories: string[];
   categoriesId: number[];
+  categoriesSlug: string[];
   tags: string[];
   featuredImage?: string;
   readingTime: number;
@@ -129,6 +130,7 @@ export async function fetchFeaturedArticles(): Promise<Article[]> {
       author: post._embedded?.author?.[0]?.name || "Unknown Author",
       categories: post._embedded?.["wp:term"]?.[0]?.map((term: any) => term.name) || [],
       categoriesId: post._embedded?.["wp:term"]?.[0]?.map((term: any) => term.id) || [],
+      categoriesSlug: post._embedded?.["wp:term"]?.[0]?.map((term: any) => term.slug) || [],
       tags: post._embedded?.["wp:term"]?.[1]?.map((term: any) => term.name) || [],
       featuredImage: post._embedded?.["wp:featuredmedia"]?.[0]?.source_url || null,
       readingTime: calculateReadingTime(post.content.rendered),

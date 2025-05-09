@@ -9,6 +9,7 @@ import { Fragment } from "react";
 
 interface Location {
   id: string
+  slug?: string
   title: string
   position: { lat: number; lng: number }
   address: string
@@ -71,6 +72,7 @@ export default function LocationSidebar({ location, locations, onClose, onLocati
       return groups;
     }, {});
   };
+
 
   const groupedLocations = groupLocationsByRegion(locations);
 
@@ -145,12 +147,12 @@ export default function LocationSidebar({ location, locations, onClose, onLocati
               </div>
             )}
 
-            {location.website && (
+            {location.slug && (
               <div className="flex items-center gap-2">
                 <Globe className="h-5 w-5 text-gray-500" />
                 <a
-                  href={location.website}
-                  target="_blank"
+                  href={location.slug ? `/groupe-local/${location.slug}` : "#"}
+                  
                   rel="noopener noreferrer"
                   className="text-primary hover:underline"
                 >
@@ -158,6 +160,7 @@ export default function LocationSidebar({ location, locations, onClose, onLocati
                 </a>
               </div>
             )}
+
           </div>
         </div>
       ) : (

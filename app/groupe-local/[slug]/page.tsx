@@ -1,4 +1,4 @@
-import { fetchGroupeLocalById, fetchPostsByGroupeLocalTax, fetchCategory } from "@/lib/api"
+import { fetchGroupeLocalBySlug, fetchPostsByGroupeLocalTax, fetchCategory } from "@/lib/api"
 import { notFound } from "next/navigation"
 import Image from "next/image"
 import Link from "next/link"
@@ -15,39 +15,38 @@ interface PostsByCategory {
   posts: Post[]
 }
 
-export default async function GroupeLocalPage({ params }: { params: { id: string } }) {
+export default async function GroupeLocalPage({ params }: { params: { slug: string } }) {
   try {
-    const groupeLocalId = Number.parseInt(params.id)
-    const groupeLocal = await fetchGroupeLocalById(groupeLocalId)
+    const groupeLocal = await fetchGroupeLocalBySlug(params.slug)
 
     if (!groupeLocal) {
-      console.log(`Groupe local avec l'ID ${groupeLocalId} non trouvé`)
+      console.log(`Groupe local avec l'ID ${params.slug} non trouvé`)
       notFound()
     }
 
     // Vérifier que les propriétés nécessaires existent
     if (!groupeLocal.title || typeof groupeLocal.title !== "object") {
-      console.error(`Le groupe local ${groupeLocalId} a une structure de titre invalide:`, groupeLocal.title)
-      groupeLocal.title = { rendered: `Groupe Local ${groupeLocalId}` }
+      console.error(`Le groupe local ${params.slug} a une structure de titre invalide:`, groupeLocal.title)
+      groupeLocal.title = { rendered: `Groupe Local ${params.slug}` }
     }
 
     if (!groupeLocal.content || typeof groupeLocal.content !== "object") {
-      console.error(`Le groupe local ${groupeLocalId} a une structure de contenu invalide:`, groupeLocal.content)
+      console.error(`Le groupe local ${params.slug} a une structure de contenu invalide:`, groupeLocal.content)
       groupeLocal.content = { rendered: "" }
     }
 
     console.log("Groupe local récupéré:", groupeLocal)
 
     // Récupérer les articles liés à ce groupe local via le champ tax_groupe_local
-    const relatedPosts = await fetchPostsByGroupeLocalTax(groupeLocalId)
-    console.log(`Nombre d'articles associés au groupe local ${groupeLocalId}: ${relatedPosts.length}`)
+    const relatedPosts = await fetchPostsByGroupeLocalTax(groupeLocal.id)
+    console.log(`Nombre d'articles associés au groupe local ${params.slug}: ${relatedPosts.length}`)
 
     // Récupérer l'image du groupe local si disponible
     const featuredImage = (() => {
       try {
         return (
           groupeLocal._embedded?.["wp:featuredmedia"]?.[0]?.source_url ||
-          `/placeholder.svg?height=400&width=800&query=Groupe local ${encodeURIComponent(groupeLocal.title.rendered || `Groupe Local ${groupeLocalId}`)}`
+          `/placeholder.svg?height=400&width=800&query=Groupe local ${encodeURIComponent(groupeLocal.title.rendered || `Groupe Local ${params.slug}`)}`
         )
       } catch (error) {
         return `/placeholder.svg?height=400&width=800&query=Groupe local`
@@ -185,7 +184,7 @@ export default async function GroupeLocalPage({ params }: { params: { id: string
             <div className="relative h-64 w-full">
               <Image
                 src={featuredImage || "/placeholder.svg"}
-                alt={groupeLocal.title?.rendered || `Groupe Local ${groupeLocalId}`}
+                alt={groupeLocal.title?.rendered || `Groupe Local ${params.slug}`}
                 fill
                 className="object-cover"
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
@@ -198,7 +197,7 @@ export default async function GroupeLocalPage({ params }: { params: { id: string
             <div className="absolute inset-0 flex flex-col justify-end p-6 text-white">
               <h1
                 className="text-3xl md:text-4xl font-bold mb-2 drop-shadow-md"
-                dangerouslySetInnerHTML={{ __html: groupeLocal.title?.rendered || `Groupe Local ${groupeLocalId}` }}
+                dangerouslySetInnerHTML={{ __html: groupeLocal.title?.rendered || `Groupe Local ${params.slug}` }}
               />
               {groupeLocal.acf?.description && (
                 <div className="text-sm md:text-base max-w-2xl drop-shadow-md">{groupeLocal.acf.description}</div>

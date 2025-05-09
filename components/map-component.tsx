@@ -10,6 +10,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 // Types
 interface Location {
   id: string
+  slug: string
   title: { rendered: string }
   acf: {
     localisation: {
@@ -34,6 +35,7 @@ interface Location {
 
 interface ProcessedLocation {
   id: string
+  slug?: string
   title: string
   position: { lat: number; lng: number }
   address: string
@@ -65,6 +67,8 @@ const regionLabels: Record<string, string> = {
   oise: "Oise",
   auvergne: "Auvergne",
 }
+
+
 
 // Coordonnées par défaut pour la France
 const defaultCenter = { lat: 46.603354, lng: 2.3522 }
@@ -147,6 +151,7 @@ export default function MapComponent() {
 
             return {
               id: item.id.toString(),
+              slug: item.slug,
               title: item.title?.rendered || "Sans titre",
               position: { lat, lng },
               address: item.acf.adresse || "",
@@ -159,6 +164,7 @@ export default function MapComponent() {
             }
           })
           .filter(Boolean) as ProcessedLocation[] // Filtrer les éléments null
+  
 
         // Si aucune localisation valide n'a été trouvée
         if (processedLocations.length === 0) {
@@ -200,6 +206,7 @@ export default function MapComponent() {
         })
 
         setGroupRegions(groups)
+
 
         // Sélectionner le premier région par défaut s'il existe
         setLoading(false)
