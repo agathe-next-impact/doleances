@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge"
 import { Calendar, Clock, MapPin, Users } from "lucide-react"
 import { useState, useEffect } from "react"
 import { fetchGroupeLocalById } from "@/lib/api"
+import DateFormat from "@/components/date-format"
 
 interface ArticleCardProps {
   post: Post
@@ -16,6 +17,7 @@ interface ArticleCardProps {
 
 export default function ArticleCard({ post }: ArticleCardProps) {
   const [groupeLocalName, setGroupeLocalName] = useState<string | null>(null)
+  const [groupeLocalSlug, setGroupeLocalSlug] = useState<string | null>(null)
   const [isLoadingGroupe, setIsLoadingGroupe] = useState(false)
 
   // Get featured image if available
@@ -33,6 +35,7 @@ export default function ArticleCard({ post }: ArticleCardProps) {
   // Récupérer l'ID du groupe local depuis les champs ACF (utiliser tax_groupe_local ou groupe_local_tax)
   const groupeLocalId = post.acf?.tax_groupe_local || post.acf?.groupe_local_tax || null
 
+
   // Charger le nom du groupe local si on a un ID
   useEffect(() => {
     const loadGroupeLocalName = async () => {
@@ -42,6 +45,7 @@ export default function ArticleCard({ post }: ArticleCardProps) {
           const groupe = await fetchGroupeLocalById(groupeLocalId)
           if (groupe) {
             setGroupeLocalName(groupe.title.rendered)
+            setGroupeLocalSlug(groupe.slug)
           }
         } catch (error) {
           console.error(`Erreur lors du chargement du groupe local ${groupeLocalId}:`, error)
@@ -140,7 +144,7 @@ export default function ArticleCard({ post }: ArticleCardProps) {
       </div>
       <CardHeader className="pb-2">
         <CardTitle className="text-lg">
-          <Link href={`/article/${post.id}`} className="hover:underline">
+          <Link href={`/article/${post.slug}`} className="hover:underline">
             <span dangerouslySetInnerHTML={{ __html: post.title.rendered }} />
           </Link>
         </CardTitle>
@@ -151,7 +155,7 @@ export default function ArticleCard({ post }: ArticleCardProps) {
             {post.acf?.date_de_levenement && (
               <div className="flex items-center gap-1.5">
                 <Calendar className="h-4 w-4 text-muted-foreground" />
-                <span>{post.acf.date_de_levenement}</span>
+                <DateFormat dateStr={post.acf.date_de_levenement}/>
               </div>
             )}
             {post.acf?.heure_evenement && (
@@ -183,7 +187,7 @@ export default function ArticleCard({ post }: ArticleCardProps) {
               {isLoadingGroupe ? (
                 <span className="text-muted-foreground">Chargement du groupe local...</span>
               ) : (
-                <Link href={`/groupe-local/${groupeLocalId}`} className="text-primary hover:underline font-medium">
+                <Link href={`/groupe-local/${groupeLocalSlug}`} className="text-primary hover:underline font-medium">
                   {groupeLocalName || "Voir le groupe local"}
                 </Link>
               )}

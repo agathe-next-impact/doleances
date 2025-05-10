@@ -10,6 +10,7 @@ import { fetchFeaturedArticles, fetchPages } from "@/lib/wordpress"
 import { SearchAutocomplete } from "@/components/search-autocomplete"
 import YouTubeEmbed from "@/components/ui/video"
 import { Badge } from "@/components/ui/badge"
+import Verbatim from "@/components/verbatim"
 
 export default async function Home() {
   const articles = await fetchFeaturedArticles()
@@ -77,7 +78,7 @@ export default async function Home() {
             {stickyArticle && (
               <>
                 <h3 className="mb-2 font-medium">
-                  <Link href={`/article/${stickyArticle.id}`}>
+                  <Link href={`/article/${stickyArticle.slug}`}>
                     {stickyArticle.title}
                   </Link></h3>
                 <div
@@ -87,7 +88,7 @@ export default async function Home() {
                     <div className="flex flex-wrap gap-2 pt-2">
                     {stickyArticle.categories.map((category, index) => (
                       <Badge key={`cat-${index}`} variant="secondary">            
-                        <Link href={`/article/${stickyArticle.categoriesId[index]}`}>
+                        <Link href={`/category/${stickyArticle.categoriesSlug[index]}`}>
                         {category}
                         </Link>
                       </Badge>
@@ -109,16 +110,47 @@ export default async function Home() {
                     </div>
                   </div>
                 <Button variant="outline" asChild>
-                  <Link href={`/article/${stickyArticle.id}`}>Lire plus</Link>
+                  <Link href={`/article/${stickyArticle.slug}`}>Lire plus</Link>
                 </Button>
               </>
             )}
           </div>
         </div>
-        <div className="flex flex-col col-span-2 row-span-1 rounded-lg border bg-card shadow-lg overflow-hidden">
+        <div className="flex flex-col col-span-2 row-span-1 overflow-hidden">
           <div className="flex flex-col flex-grow p-6">
-            <h2 className="w-full mb-4 pb-3 text-2xl font-serif font-light uppercase border-b-[1px]">Contribuer</h2>
-                <h3 className="mb-2 font-medium">Participer à la démarche</h3>
+            <Verbatim />
+          </div>
+          </div>
+      </section> 
+
+      <section className="mb-8 grid gap-8 grid-cols-2">
+      <div className="flex flex-col rounded-lg border bg-card shadow-lg overflow-hidden">
+        <div className="flex flex-col flex-grow justify-between p-6">
+                <div>
+                <h2 className="w-full mb-4 pb-3 text-2xl font-serif font-light uppercase border-b-[1px]">Cartographie des groupes locaux</h2>
+                <p className="mb-6 line-clamp-3 text-muted-foreground">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut pellentesque tristique dolor, dictum mollis neque. Morbi nisl nisi, tempor vitae turpis id, posuere venenatis augue. Nam consectetur purus eu mi malesuada, venenatis congue felis interdum. Nullam vehicula est vitae est dictum, vel lobortis nisl fermentum. Donec dapibus sed lorem a convallis. Sed in risus augue. Aliquam a tortor sit amet nisl tincidunt porta rhoncus quis mauris. Quisque in suscipit nibh.</p>
+               </div>  
+                  <Button variant="outline" asChild>
+                    <Link href='/cartographie'>Localiser les groupes</Link>
+                  </Button>
+          </div>
+          </div>
+        {/*<div className="flex flex-col rounded-lg border bg-card shadow-lg overflow-hidden">
+        <div className="flex flex-col flex-grow p-6">
+            <h2 className="w-full mb-4 pb-3 text-2xl font-serif font-light uppercase border-b-[1px]">Les archives des doléances</h2>
+            {stickyArticle && (
+                <>
+                    <p className="mb-6 line-clamp-3 text-muted-foreground">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut pellentesque tristique dolor, dictum mollis neque. Morbi nisl nisi, tempor vitae turpis id, posuere venenatis augue. Nam consectetur purus eu mi malesuada, venenatis congue felis interdum. Nullam vehicula est vitae est dictum, vel lobortis nisl fermentum. Donec dapibus sed lorem a convallis. Sed in risus augue. Aliquam a tortor sit amet nisl tincidunt porta rhoncus quis mauris. Quisque in suscipit nibh.</p>
+                  <Button variant="outline" asChild>
+                    <Link href='/articles'>Consulter les archives</Link>
+                  </Button>
+                </>
+            )}
+          </div>
+          </div>*/}
+        <div className="flex flex-col row-span-1 rounded-lg border bg-card shadow-lg overflow-hidden">
+          <div className="flex flex-col flex-grow p-6">
+            <h2 className="w-full mb-4 pb-3 text-2xl font-serif font-light uppercase border-b-[1px]">Participer à la démarche</h2>
                 <div
                   className="mb-4 flex-grow line-clamp-3 text-sm text-muted-foreground">
                   <p>Vous pouvez contribuer à la démarche en nous aidant à
@@ -132,50 +164,21 @@ export default async function Home() {
                 </Button>
           </div>
         </div>
-      </section> 
-
-      <section className="mb-8 grid gap-8 grid-cols-2">
-      <div className="flex flex-col rounded-lg border bg-card shadow-lg overflow-hidden">
-        <div className="flex flex-col flex-grow p-6">
-            <h2 className="w-full mb-4 pb-3 text-2xl font-serif font-light uppercase border-b-[1px]">Cartographie des groupes locaux</h2>
-            {stickyArticle && (
-                <>
-                    <p className="mb-6 line-clamp-3 text-muted-foreground">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut pellentesque tristique dolor, dictum mollis neque. Morbi nisl nisi, tempor vitae turpis id, posuere venenatis augue. Nam consectetur purus eu mi malesuada, venenatis congue felis interdum. Nullam vehicula est vitae est dictum, vel lobortis nisl fermentum. Donec dapibus sed lorem a convallis. Sed in risus augue. Aliquam a tortor sit amet nisl tincidunt porta rhoncus quis mauris. Quisque in suscipit nibh.</p>
-                  <Button variant="outline" asChild>
-                    <Link href='/cartographie'>Localiser les groupes</Link>
-                  </Button>
-                </>
-            )}
-          </div>
-          </div>
-        <div className="flex flex-col rounded-lg border bg-card shadow-lg overflow-hidden">
-        <div className="flex flex-col flex-grow p-6">
-            <h2 className="w-full mb-4 pb-3 text-2xl font-serif font-light uppercase border-b-[1px]">Les archives des doléances</h2>
-            {stickyArticle && (
-                <>
-                    <p className="mb-6 line-clamp-3 text-muted-foreground">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut pellentesque tristique dolor, dictum mollis neque. Morbi nisl nisi, tempor vitae turpis id, posuere venenatis augue. Nam consectetur purus eu mi malesuada, venenatis congue felis interdum. Nullam vehicula est vitae est dictum, vel lobortis nisl fermentum. Donec dapibus sed lorem a convallis. Sed in risus augue. Aliquam a tortor sit amet nisl tincidunt porta rhoncus quis mauris. Quisque in suscipit nibh.</p>
-                  <Button variant="outline" asChild>
-                    <Link href='/articles'>Consulter les archives</Link>
-                  </Button>
-                </>
-            )}
-          </div>
-          </div>
       </section>
 
 
       <section className="mb-12 p-6 rounded-lg shadow-lg">
         <div className="mb-6 flex items-center justify-between border-b-[1px] pb-3">
           <h2 className="text-2xl font-serif font-light uppercase">Actualités</h2>
-          <Link href="/articles" className="flex items-center text-sm font-medium text-lime-600">
+          <Link href="/category" className="flex items-center text-sm font-medium text-lime-600">
             Voir toute l'actualité
             <ArrowRight className="ml-1 h-4 w-4" />
           </Link>
         </div>
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {articles.map((article) => (
+            {articles.slice(1).map((article) => (
             <ArticleCardHome key={article.id} article={article} />
-          ))}
+            ))}
         </div>
       </section>
 

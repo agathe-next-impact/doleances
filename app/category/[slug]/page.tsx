@@ -1,37 +1,42 @@
 // Améliorer la gestion des erreurs et ajouter des fallbacks pour les données manquantes
-import { fetchCategory, fetchPostsByCategory, extractGroupesLocauxCPTFromCategory } from "@/lib/api"
+import { fetchCategory, fetchPostsByCategory, extractGroupesLocauxCPTFromCategory, fetchCategoryBySlug } from "@/lib/api"
 import ArticleList from "@/components/article-list"
 import CategoryHero from "@/components/category-hero"
 import SearchFilter from "@/components/search-filter"
 import { Suspense } from "react"
+import Link from "next/link"
 
-export default async function CategoryPage({ params }: { params: { id: string } }) {
+export default async function CategoryPage({ params }: { params: { slug: string } }) {
   try {
-    const categoryId = Number.parseInt(params.id)
+
+    const categorySlug = params.slug
+    console.log(`Récupération de la catégorie avec le slug ${categorySlug}`)
 
     // Fetch category data with better error handling
     let category
     try {
-      category = await fetchCategory(categoryId)
+      category = await fetchCategoryBySlug(categorySlug)
     } catch (error) {
-      console.error(`Error fetching category ${categoryId}:`, error)
+      console.error(`Error fetching category ${categorySlug}:`, error)
       // Provide a fallback category
       category = {
-        id: categoryId,
-        name: `Catégorie ${categoryId}`,
-        description: "",
+        id: category?.id,
+        name: `Catégorie ${category?.name}`,
+        description: category?.description || "",
         count: 0,
-        link: "",
+        link: "", 
       }
     }
 
+
     // Fetch posts for this category with better error handling
-    let posts = []
+    let posts: any[] = []
     try {
-      posts = await fetchPostsByCategory(categoryId)
+      posts = await fetchPostsByCategory(category?.id)
     } catch (error) {
-      console.error(`Error fetching posts for category ${categoryId}:`, error)
+      console.error(`Error fetching posts for category ${category?.id}:`, error)
     }
+
 
     // Déterminer si c'est une catégorie d'événements
     // Pour simplifier, nous considérons que toute catégorie avec au moins un article
@@ -51,11 +56,11 @@ export default async function CategoryPage({ params }: { params: { id: string } 
       for (const post of posts) {
         if (post.acf?.date_de_levenement) {
           try {
-            // Format attendu pour date_de_levenement: DD/MM/YYYY
-            const dateParts = post.acf.date_de_levenement.split("/")
-            if (dateParts && dateParts.length === 3) {
-              const month = dateParts[1]
-              const year = dateParts[2]
+            // Format attendu pour date_de_levenement: YYYYMMDD
+            const dateParts = post.acf.date_de_levenement
+            if (dateParts.length === 8) {
+              const month = dateParts.slice(4, 6)
+              const year = dateParts.slice(0, 4)
 
               // Ajouter la date au format MM/YYYY pour le filtrage (comme pour les publications)
               const monthYearFormat = `${month}/${year}`
@@ -75,7 +80,7 @@ export default async function CategoryPage({ params }: { params: { id: string } 
       // Filtrer les dates uniques et les trier
       dates = [...new Set(eventDates)].sort((a, b) => {
         try {
-          const [monthA, yearA] = a.split("/").map(Number)
+          const [monthA, yearA] = (a?.includes("/") ? a.split("/") : ["0", "0"]).map(Number)
           const [monthB, yearB] = b.split("/").map(Number)
 
           // Trier par année décroissante, puis par mois décroissant
@@ -115,22 +120,22 @@ export default async function CategoryPage({ params }: { params: { id: string } 
     }
 
     // Récupérer les CPT groupe_local associés aux articles de cette catégorie
-    const groupesLocauxCPT = await extractGroupesLocauxCPTFromCategory(categoryId)
+    const groupesLocauxCPT = await extractGroupesLocauxCPTFromCategory(category?.id)
 
     return (
       <div className="container mx-auto px-4 py-8">
-        <CategoryHero category={category} />
+        <CategoryHero category={category?.name} description={category?.description } />
         <div className="my-8">
           <Suspense fallback={<div>Chargement des filtres...</div>}>
             <SearchFilter
-              dates={dates}
+              dates={dates.filter((date): date is string => date !== null)}
               groupesLocauxCPT={groupesLocauxCPT}
-              categoryId={categoryId}
+              categoryId={category?.id}
               isEventCategory={isEventCategory}
             />
           </Suspense>
         </div>
-        <ArticleList initialPosts={posts} categoryId={categoryId} isEventCategory={isEventCategory} />
+        <ArticleList initialPosts={posts} categoryId={category?.id} isEventCategory={isEventCategory} />
       </div>
     )
   } catch (error) {

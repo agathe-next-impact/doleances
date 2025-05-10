@@ -35,6 +35,7 @@ export interface Post {
     heure_evenement?: string
     lieu_evenement?: string
     adresse_evenement?: string
+    descriptif?: string
     adress?: string
     adresse?: string
     latitude?: string | number
@@ -72,6 +73,7 @@ export interface Post {
       }>
     >
   }
+  featured_media?: number // Add this property to match the usage in the code
 }
 
 // Interface pour le custom post type "groupe_local"
@@ -125,7 +127,7 @@ export async function fetchCategories(): Promise<Category[]> {
     }
 
     const response = await fetch(`${API_BASE_URL}/categories?per_page=100`, {
-      cache: "no-store",
+      cache: "no-store", 
       headers: {
         Accept: "application/json",
       },
@@ -147,6 +149,31 @@ export async function fetchCategories(): Promise<Category[]> {
     return []
   }
 }
+
+// Fetch a specific category by slug
+export async function fetchCategoryBySlug(slug: string): Promise<Category | null> {
+  try {
+    const response = await fetch(`${API_BASE_URL}/categories?slug=${slug}`, {
+      cache: "no-store",
+      headers: {
+        Accept: "application/json",
+      },
+    })
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch category by slug: ${response.status}`)
+    }
+
+    const categories = await response.json()
+
+    // Check if a category was found
+    return categories.length > 0 ? categories[0] : null
+  } catch (error) {
+    console.error(`Error fetching category by slug ${slug}:`, error)
+    return null
+  }
+}
+
 
 // Fetch a specific category by ID
 export async function fetchCategory(id: number): Promise<Category> {
@@ -296,10 +323,10 @@ export async function fetchPostsByCategory(categoryId: number): Promise<Post[]> 
   }
 }
 
-// Fetch a specific post by ID
-export async function fetchPost(id: number): Promise<Post> {
+// Fetch a specific post by slug
+export async function fetchPostBySlug(slug: string): Promise<Post | null> {
   try {
-    const response = await fetch(`${API_BASE_URL}/posts/${id}?_embed`, {
+    const response = await fetch(`${API_BASE_URL}/posts?slug=${slug}&_embed`, {
       cache: "no-store",
       headers: {
         Accept: "application/json",
@@ -307,21 +334,16 @@ export async function fetchPost(id: number): Promise<Post> {
     })
 
     if (!response.ok) {
-      throw new Error(`Failed to fetch post: ${response.status}`)
+      throw new Error(`Failed to fetch post by slug: ${response.status}`)
     }
 
-    const post = await response.json()
+    const posts = await response.json()
 
-    // Ajouter un log pour déboguer la structure des données
-    console.log("Structure ACF du post:", post.acf)
-    if (post.acf?.lieu_de_levenement) {
-      console.log("Structure lieu_de_levenement:", post.acf.lieu_de_levenement)
-    }
-
-    return post
+    // Vérifier si un post correspondant a été trouvé
+    return posts.length > 0 ? posts[0] : null
   } catch (error) {
-    console.error(`Error fetching post ${id}:`, error)
-    throw error
+    console.error(`Error fetching post by slug ${slug}:`, error)
+    return null
   }
 }
 
@@ -339,7 +361,34 @@ export async function fetchRecentPostsByCategory(categoryId: number): Promise<Po
       throw new Error(`Failed to fetch recent posts: ${response.status}`)
     }
 
-    return response.json()
+    const posts: Post[] = await response.json()
+
+    // Fetch the featured media URL for each post
+    const postsWithMedia = await Promise.all(
+      posts.map(async (post) => {
+        if (post.featured_media) {
+          try {
+            const mediaResponse = await fetch(`${API_BASE_URL}/media/${post.featured_media}`, {
+              cache: "no-store",
+              headers: {
+                Accept: "application/json",
+              },
+            })
+
+            if (mediaResponse.ok) {
+              const mediaData = await mediaResponse.json()
+              post._embedded = post._embedded || {}
+              post._embedded["wp:featuredmedia"] = [{ source_url: mediaData.source_url }]
+            }
+          } catch (error) {
+            console.error(`Error fetching media for post ${post.id}:`, error)
+          }
+        }
+        return post
+      }),
+    )
+
+    return postsWithMedia
   } catch (error) {
     console.error(`Error fetching recent posts for category ${categoryId}:`, error)
     return []
@@ -744,5 +793,44 @@ export async function extractGroupesLocauxCPTFromCategory(categoryId: number): P
   } catch (error) {
     console.error(`Error extracting groupe_local CPTs from category ${categoryId}:`, error)
     return []
+  }
+}
+
+export interface Verbatim {
+  id: number;
+  acf: {
+    texte_du_verbatim?: Node[];
+    date?: string;
+    departement?: string;
+    groupe_local?: string;
+  };
+}
+
+export async function fetchRandomVerbatim(): Promise<Verbatim | null> {
+  
+  try {
+    const response = await fetch(`${API_BASE_URL}/verbatim`, {
+      cache: "no-store",
+      headers: {
+        Accept: "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch verbatim: ${response.status}`);
+    }
+
+    const verbatims: Verbatim[] = await response.json();
+
+    if (verbatims.length === 0) {
+      return null;
+    }
+
+    // Sélectionner un verbatim aléatoire
+    const randomIndex = Math.floor(Math.random() * verbatims.length);
+    return verbatims[randomIndex];
+  } catch (error) {
+    console.error("Error fetching random verbatim:", error);
+    return null;
   }
 }

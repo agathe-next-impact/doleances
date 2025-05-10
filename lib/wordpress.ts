@@ -10,6 +10,7 @@ interface Article {
   author: string;
   categories: string[];
   categoriesId: number[];
+  categoriesSlug: string[];
   tags: string[];
   featuredImage?: string;
   readingTime: number;
@@ -111,7 +112,7 @@ export async function fetchFeaturedArticles(): Promise<Article[]> {
 
   try {
     const apiUrl = ensureCorrectApiUrl(WORDPRESS_API_URL);
-    const response = await fetch(`${apiUrl}/posts?_embed&per_page=3`);
+    const response = await fetch(`${apiUrl}/posts?_embed&per_page=4`);
 
     if (!response.ok) {
       throw new Error(`Failed to fetch posts: ${response.status}`);
@@ -124,11 +125,18 @@ export async function fetchFeaturedArticles(): Promise<Article[]> {
       slug: post.slug,
       title: post.title.rendered,
       excerpt: post.excerpt.rendered,
+      descriptif: post.acf?.descriptif || "",
+      resume: post.acf?.resume || "",
+      chapeau: post.acf?.chapeau || "",
       content: post.content.rendered,
       date: post.date,
+      date_de_levenement: post.acf?.date_de_levenement || "",
+      heure_de_levenement: post.acf?.heure_de_levenement || "",
+      lieu_de_levenement: post.acf?.lieu_de_levenement || "",
       author: post._embedded?.author?.[0]?.name || "Unknown Author",
       categories: post._embedded?.["wp:term"]?.[0]?.map((term: any) => term.name) || [],
       categoriesId: post._embedded?.["wp:term"]?.[0]?.map((term: any) => term.id) || [],
+      categoriesSlug: post._embedded?.["wp:term"]?.[0]?.map((term: any) => term.slug) || [],
       tags: post._embedded?.["wp:term"]?.[1]?.map((term: any) => term.name) || [],
       featuredImage: post._embedded?.["wp:featuredmedia"]?.[0]?.source_url || null,
       readingTime: calculateReadingTime(post.content.rendered),

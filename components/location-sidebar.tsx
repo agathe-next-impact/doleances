@@ -9,6 +9,7 @@ import { Fragment } from "react";
 
 interface Location {
   id: string
+  slug?: string
   title: string
   position: { lat: number; lng: number }
   address: string
@@ -72,6 +73,7 @@ export default function LocationSidebar({ location, locations, onClose, onLocati
     }, {});
   };
 
+
   const groupedLocations = groupLocationsByRegion(locations);
 
   // Fonction pour nettoyer le HTML
@@ -95,7 +97,7 @@ export default function LocationSidebar({ location, locations, onClose, onLocati
             <div className="mb-4 relative h-48 rounded-lg overflow-hidden">
               {/* Utiliser une image standard au lieu de Next.js Image pour éviter les problèmes CORS */}
               <img
-                src={location.thumbnail || "/placeholder.svg"}
+                src={location.thumbnail || ""}
                 alt={location.title}
                 className="w-full h-full object-cover"
                 onError={() => handleImageError(location.id)}
@@ -145,19 +147,20 @@ export default function LocationSidebar({ location, locations, onClose, onLocati
               </div>
             )}
 
-            {location.website && (
+            {location.slug && (
               <div className="flex items-center gap-2">
                 <Globe className="h-5 w-5 text-gray-500" />
                 <a
-                  href={location.website}
-                  target="_blank"
+                  href={location.slug ? `/groupe-local/${location.slug}` : "#"}
+                  
                   rel="noopener noreferrer"
                   className="text-primary hover:underline"
                 >
-                  Visiter le site web
+                  Voir l'activité du groupe local
                 </a>
               </div>
             )}
+
           </div>
         </div>
       ) : (
