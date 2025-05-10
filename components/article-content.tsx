@@ -7,7 +7,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { MapPin, Calendar, Users } from "lucide-react"
 import StaticMap from "@/components/static-map"
-import DateFormat from "@/components/date-format"
+import DateFormat, { TimeFormat } from "@/components/date-format"
 
 interface ArticleContentProps {
   post: Post
@@ -143,6 +143,8 @@ export default function ArticleContent({ post }: ArticleContentProps) {
     }
   })()
 
+console.log(post.acf?.heure_evenement)
+
   // Récupérer la ville du lieu de l'événement
   const eventCity = (() => {
     try {
@@ -210,7 +212,7 @@ export default function ArticleContent({ post }: ArticleContentProps) {
                       {post.acf?.heure_evenement && (
                         <div className="flex items-center gap-2">
                           <span className="font-medium">Heure:</span>
-                          <span>{post.acf.heure_evenement}</span>
+                          <span><TimeFormat timeStr={post.acf.heure_evenement} /></span>
                         </div>
                       )}
                     </>
@@ -254,7 +256,7 @@ export default function ArticleContent({ post }: ArticleContentProps) {
 
                   <div className="p-4 bg-muted/50 rounded-md">
                     <Link
-                      href={`/groupe-local/${groupeLocalPost.id}`}
+                      href={`/groupe-local/${groupeLocalPost.slug}`}
                       className="text-primary hover:underline font-medium"
                     >
                       {groupeLocalPost.title.rendered}
@@ -286,12 +288,13 @@ export default function ArticleContent({ post }: ArticleContentProps) {
             />
             <div className="flex flex-wrap gap-3 text-sm text-muted-foreground mb-6">
               <div><DateFormat dateStr={post.date} /></div>
+              <div><TimeFormat dateStr={post.time} /></div>
 
               {/* Groupe local avec lien */}
               {groupeLocalPost && (
                 <div className="flex items-center gap-2">
                   <Users className="h-4 w-4 text-muted-foreground" />
-                  <Link href={`/groupe-local/${groupeLocalPost.id}`} className="text-primary hover:underline">
+                  <Link href={`/groupe-local/${groupeLocalPost.slug}`} className="text-primary hover:underline">
                     {groupeLocalPost.title.rendered}
                   </Link>
                 </div>
@@ -302,10 +305,10 @@ export default function ArticleContent({ post }: ArticleContentProps) {
       )}
 
       <article className="prose prose-lg max-w-none mb-8">
-        <div dangerouslySetInnerHTML={{ __html: post.content.rendered }} />
+        <div dangerouslySetInnerHTML={{ __html: post.acf?.descriptif || "" }} />
       </article>
 
-      {acfFields.length > 0 && (
+      {acfFields.length > 0 && !isEvent && (
         <div className="mb-8 p-4 bg-muted/30 rounded-lg">
           <h2 className="text-xl font-semibold mb-4">Informations complémentaires</h2>
           <dl className="grid grid-cols-1 md:grid-cols-2 gap-4">

@@ -10,11 +10,7 @@ import { fetchFeaturedArticles, fetchPages } from "@/lib/wordpress"
 import { SearchAutocomplete } from "@/components/search-autocomplete"
 import YouTubeEmbed from "@/components/ui/video"
 import { Badge } from "@/components/ui/badge"
-<<<<<<< HEAD
-import Verbatim from "@/components/ui/verbatim"
-=======
 import Verbatim from "@/components/verbatim"
->>>>>>> 9a298626f0a173815640e8192cd1ac0634ed8cfd
 
 export default async function Home() {
   const articles = await fetchFeaturedArticles()
@@ -168,39 +164,6 @@ export default async function Home() {
                 </Button>
           </div>
         </div>
-<<<<<<< HEAD
-      </section> 
-
-      <section className="mb-8 grid gap-8 grid-cols-3">
-      <div className="col-span-1 flex flex-col rounded-lg border bg-card shadow-lg overflow-hidden">
-        <div className="flex flex-col flex-grow justify-between p-6">
-          <div>
-            <h2 className="w-full mb-4 pb-3 text-2xl font-serif font-light uppercase border-b-[1px]">Cartographie des groupes locaux</h2>
-              <p className="mb-6 line-clamp-3 text-muted-foreground">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut pellentesque tristique dolor, dictum mollis neque. Morbi nisl nisi, tempor vitae turpis id, posuere venenatis augue. Nam consectetur purus eu mi malesuada, venenatis congue felis interdum. Nullam vehicula est vitae est dictum, vel lobortis nisl fermentum. Donec dapibus sed lorem a convallis. Sed in risus augue. Aliquam a tortor sit amet nisl tincidunt porta rhoncus quis mauris. Quisque in suscipit nibh.</p>
-            </div>
-            <Button variant="outline" asChild>
-              <Link href='/cartographie'>Localiser les groupes</Link>
-            </Button>
-          </div>
-          </div>
-        <div className="col-span-1 flex flex-col rounded-lg border bg-card shadow-lg overflow-hidden">
-        <div className="flex flex-col flex-grow justify-between p-6">
-          <div>
-            <h2 className="w-full mb-4 pb-3 text-2xl font-serif font-light uppercase border-b-[1px]">La recherche scientifique</h2>
-            <p className="mb-6 line-clamp-3 text-muted-foreground">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut pellentesque tristique dolor, dictum mollis neque. Morbi nisl nisi, tempor vitae turpis id, posuere venenatis augue. Nam consectetur purus eu mi malesuada, venenatis congue felis interdum. Nullam vehicula est vitae est dictum, vel lobortis nisl fermentum. Donec dapibus sed lorem a convallis. Sed in risus augue. Aliquam a tortor sit amet nisl tincidunt porta rhoncus quis mauris. Quisque in suscipit nibh.</p>
-          </div>
-          <Button variant="outline" asChild>
-            <Link href='/articles'>Consulter les publications scientifiques</Link>
-          </Button>  
-          </div>
-          </div>
-          <div className="col-span-1 flex flex-col overflow-hidden">
-          <div className="flex flex-col flex-grow justify-between p-6">
-          <Verbatim />
-        </div>
-        </div>
-=======
->>>>>>> 9a298626f0a173815640e8192cd1ac0634ed8cfd
       </section>
 
 

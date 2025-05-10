@@ -17,6 +17,7 @@ interface ArticleCardProps {
 
 export default function ArticleCard({ post }: ArticleCardProps) {
   const [groupeLocalName, setGroupeLocalName] = useState<string | null>(null)
+  const [groupeLocalSlug, setGroupeLocalSlug] = useState<string | null>(null)
   const [isLoadingGroupe, setIsLoadingGroupe] = useState(false)
 
   // Get featured image if available
@@ -34,6 +35,7 @@ export default function ArticleCard({ post }: ArticleCardProps) {
   // Récupérer l'ID du groupe local depuis les champs ACF (utiliser tax_groupe_local ou groupe_local_tax)
   const groupeLocalId = post.acf?.tax_groupe_local || post.acf?.groupe_local_tax || null
 
+
   // Charger le nom du groupe local si on a un ID
   useEffect(() => {
     const loadGroupeLocalName = async () => {
@@ -43,6 +45,7 @@ export default function ArticleCard({ post }: ArticleCardProps) {
           const groupe = await fetchGroupeLocalById(groupeLocalId)
           if (groupe) {
             setGroupeLocalName(groupe.title.rendered)
+            setGroupeLocalSlug(groupe.slug)
           }
         } catch (error) {
           console.error(`Erreur lors du chargement du groupe local ${groupeLocalId}:`, error)
@@ -184,7 +187,7 @@ export default function ArticleCard({ post }: ArticleCardProps) {
               {isLoadingGroupe ? (
                 <span className="text-muted-foreground">Chargement du groupe local...</span>
               ) : (
-                <Link href={`/groupe-local/${groupeLocalId}`} className="text-primary hover:underline font-medium">
+                <Link href={`/groupe-local/${groupeLocalSlug}`} className="text-primary hover:underline font-medium">
                   {groupeLocalName || "Voir le groupe local"}
                 </Link>
               )}

@@ -35,6 +35,7 @@ export interface Post {
     heure_evenement?: string
     lieu_evenement?: string
     adresse_evenement?: string
+    descriptif?: string
     adress?: string
     adresse?: string
     latitude?: string | number

@@ -123,8 +123,19 @@ export default function ArticleList({ initialPosts, categoryId, isEventCategory 
                 }
 
                 try {
-                  // Format attendu pour date_de_levenement: DD/MM/YYYY
+                  // Format attendu pour date_de_levenement: YYYYMMDD
+                  // ou DD/MM/YYYY
+                  
                   const dateParts = post.acf.date_de_levenement.split("/")
+                  // Vérifier si le format est YYYYMMDD
+                  if (post.acf.date_de_levenement.length === 8) {
+                    const year = post.acf.date_de_levenement.slice(0, 4)
+                    const month = post.acf.date_de_levenement.slice(4, 6)
+                    const monthYearFormat = `${month}/${year}`
+
+                    // Comparer avec le filtre de date (MM/YYYY)
+                    return monthYearFormat === dateFilter
+                  }
                   if (dateParts && dateParts.length === 3) {
                     const month = dateParts[1]
                     const year = dateParts[2]

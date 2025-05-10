@@ -6,22 +6,11 @@ import SearchFilter from "@/components/search-filter"
 import { Suspense } from "react"
 import Link from "next/link"
 
-<<<<<<< HEAD:app/category/[id]/page.tsx
-export default async function CategoryPage(context: { params: { id: string } }) {
-  try {
-    // Récupérer l'ID de la catégorie à partir des paramètres de l'URL
-    
-    const categoryId = Number.parseInt(context.params.id)
-    if (isNaN(categoryId)) {
-      throw new Error(`Invalid category ID: ${context.params.id}`)
-    }
-=======
 export default async function CategoryPage({ params }: { params: { slug: string } }) {
   try {
 
     const categorySlug = params.slug
     console.log(`Récupération de la catégorie avec le slug ${categorySlug}`)
->>>>>>> 9a298626f0a173815640e8192cd1ac0634ed8cfd:app/category/[slug]/page.tsx
 
     // Fetch category data with better error handling
     let category
@@ -31,16 +20,9 @@ export default async function CategoryPage({ params }: { params: { slug: string 
       console.error(`Error fetching category ${categorySlug}:`, error)
       // Provide a fallback category
       category = {
-<<<<<<< HEAD:app/category/[id]/page.tsx
-        id: categoryId,
-        slug: `categorie-${categoryId}`, // Add a default slug
-        name: `Catégorie ${categoryId}`,
-        description: "",
-=======
         id: category?.id,
         name: `Catégorie ${category?.name}`,
         description: category?.description || "",
->>>>>>> 9a298626f0a173815640e8192cd1ac0634ed8cfd:app/category/[slug]/page.tsx
         count: 0,
         link: "", 
       }
@@ -48,11 +30,7 @@ export default async function CategoryPage({ params }: { params: { slug: string 
 
 
     // Fetch posts for this category with better error handling
-<<<<<<< HEAD:app/category/[id]/page.tsx
-    let posts: Array<{ id: number; title?: string; acf?: { date_de_levenement?: string }; date: string }> = []
-=======
     let posts: any[] = []
->>>>>>> 9a298626f0a173815640e8192cd1ac0634ed8cfd:app/category/[slug]/page.tsx
     try {
       posts = await fetchPostsByCategory(category?.id)
     } catch (error) {
@@ -78,11 +56,11 @@ export default async function CategoryPage({ params }: { params: { slug: string 
       for (const post of posts) {
         if (post.acf?.date_de_levenement) {
           try {
-            // Format attendu pour date_de_levenement: DD/MM/YYYY
-            const dateParts = post.acf.date_de_levenement.split("/")
-            if (dateParts && dateParts.length === 3) {
-              const month = dateParts[1]
-              const year = dateParts[2]
+            // Format attendu pour date_de_levenement: YYYYMMDD
+            const dateParts = post.acf.date_de_levenement
+            if (dateParts.length === 8) {
+              const month = dateParts.slice(4, 6)
+              const year = dateParts.slice(0, 4)
 
               // Ajouter la date au format MM/YYYY pour le filtrage (comme pour les publications)
               const monthYearFormat = `${month}/${year}`
@@ -146,14 +124,7 @@ export default async function CategoryPage({ params }: { params: { slug: string 
 
     return (
       <div className="container mx-auto px-4 py-8">
-<<<<<<< HEAD:app/category/[id]/page.tsx
-        <Link href="/category" className="text-sm text-muted-foreground flex items-center mb-4">
-            <span>Toutes les actualités</span>
-        </Link>
-        <CategoryHero category={category} />
-=======
         <CategoryHero category={category?.name} description={category?.description } />
->>>>>>> 9a298626f0a173815640e8192cd1ac0634ed8cfd:app/category/[slug]/page.tsx
         <div className="my-8">
           <Suspense fallback={<div>Chargement des filtres...</div>}>
             <SearchFilter
@@ -164,22 +135,7 @@ export default async function CategoryPage({ params }: { params: { slug: string 
             />
           </Suspense>
         </div>
-<<<<<<< HEAD:app/category/[id]/page.tsx
-        <ArticleList
-          initialPosts={posts.map((post) => ({
-            ...post,
-            title: post.title || "Titre par défaut",
-            content: post.content || "Contenu par défaut",
-            excerpt: post.excerpt || "Extrait par défaut",
-            slug: post.slug || `post-${post.id}`,
-            link: post.link || "#",
-          }))}
-          categoryId={categoryId}
-          isEventCategory={isEventCategory}
-        />
-=======
         <ArticleList initialPosts={posts} categoryId={category?.id} isEventCategory={isEventCategory} />
->>>>>>> 9a298626f0a173815640e8192cd1ac0634ed8cfd:app/category/[slug]/page.tsx
       </div>
     )
   } catch (error) {
