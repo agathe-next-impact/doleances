@@ -5,6 +5,7 @@ import type { Post, GroupeLocalPost } from "@/lib/api"
 import { fetchGroupeLocalById } from "@/lib/api"
 import Image from "next/image"
 import Link from "next/link"
+import { Badge } from "@/components/ui/badge"
 import { MapPin, Calendar, Users } from "lucide-react"
 import StaticMap from "@/components/static-map"
 import DateFormat, { TimeFormat } from "@/components/date-format"
@@ -16,6 +17,10 @@ interface ArticleContentProps {
 export default function ArticleContent({ post }: ArticleContentProps) {
   const [groupeLocalPost, setGroupeLocalPost] = useState<GroupeLocalPost | null>(null)
   const [isLoadingGroupe, setIsLoadingGroupe] = useState(false)
+
+  // retrouve le nom et le slug de la catégorie de l'article
+  const categoryName = post._embedded?.["wp:term"]?.[0]?.[0]?.name
+  const categorySlug = post._embedded?.["wp:term"]?.[0]?.[0]?.slug
 
   // Get featured image if available
   const featuredImage = (() => {
@@ -163,6 +168,11 @@ console.log(post.acf?.heure_evenement)
       {/* Nouvelle mise en page pour les événements avec image à gauche (50%) et détails à droite (50%) */}
       {isEvent ? (
         <div className="mb-8">
+          <Badge variant="secondary" className="mb-4">
+            <Link href={`/category/${categorySlug}`}>
+                {categoryName}
+            </Link>
+          </Badge>
           <h1
             className="text-3xl md:text-4xl font-bold mb-6"
             dangerouslySetInnerHTML={{ __html: post.title.rendered }}
@@ -282,6 +292,11 @@ console.log(post.acf?.heure_evenement)
             </div>
           )}
           <div className="w-2/3 px-12 py-8 mx-auto mb-8">
+          <Badge variant="secondary" className="mb-4">
+            <Link href={`/category/${categorySlug}`}>
+                {categoryName}
+            </Link>
+          </Badge>
             <h1
               className="text-3xl md:text-4xl font-bold mb-4"
               dangerouslySetInnerHTML={{ __html: post.title.rendered }}

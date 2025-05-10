@@ -37,6 +37,7 @@ export default function ArticleHero({ post }: ArticleHeroProps) {
 
   return (
     <div className="max-w-3xl mx-auto mb-8">
+
       <h1 className="text-3xl md:text-4xl font-bold mb-4" dangerouslySetInnerHTML={{ __html: post.title.rendered }} />
       <div className="flex flex-wrap gap-3 text-sm text-muted-foreground mb-6">
         <div>{formatDate(post.date)}</div>
