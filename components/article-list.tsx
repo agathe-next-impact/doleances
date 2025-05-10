@@ -6,6 +6,7 @@ import { useEffect, useState, useMemo } from "react"
 import ArticleCard from "./article-card"
 import { fetchPostsByCategoryAndGroupeLocalCPT } from "@/lib/api"
 
+
 interface ArticleListProps {
   initialPosts: Post[]
   categoryId: number
@@ -72,7 +73,7 @@ export default function ArticleList({ initialPosts, categoryId, isEventCategory 
                     }
                     return false
                   } catch (error) {
-                    console.error(`Erreur lors du filtrage par date pour l'article ${post.id}:`, error)
+                    console.error(`Erreur lors du filtrage par date pour l'article ${post.slug}:`, error)
                     return false
                   }
                 })
@@ -134,7 +135,7 @@ export default function ArticleList({ initialPosts, categoryId, isEventCategory 
                   }
                   return false
                 } catch (error) {
-                  console.error(`Erreur lors du filtrage par date pour l'article ${post.id}:`, error)
+                  console.error(`Erreur lors du filtrage par date pour l'article ${post.slug}:`, error)
                   return false
                 }
               })
@@ -208,7 +209,7 @@ export default function ArticleList({ initialPosts, categoryId, isEventCategory 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {filteredPosts.map((post) => (
-        <ArticleCard key={post.id} post={post} />
+        <ArticleCard key={post.slug} post={post} />
       ))}
     </div>
   )

@@ -1,12 +1,11 @@
-import { fetchPost } from "@/lib/api"
+import { fetchPostBySlug } from "@/lib/api"
 import { notFound } from "next/navigation"
 import ArticleContent from "@/components/article-content"
 
-export default async function ArticlePage({ params }: { params: { id: string } }) {
+export default async function ArticlePage({ params }: { params: { slug: string } }) {
   try {
-    const postId = Number.parseInt(params.id)
-    console.log(`Récupération de l'article avec l'ID ${postId}`)
-    const post = await fetchPost(postId)
+    console.log(`Récupération de l'article avec l'ID ${params.slug}`)
+    const post = await fetchPostBySlug(params.slug)
 
     console.log(`Article récupéré: "${post.title.rendered}"`)
 
@@ -16,6 +15,8 @@ export default async function ArticlePage({ params }: { params: { id: string } }
     } else {
       console.log("Cet article n'a pas de groupe local associé dans les champs ACF")
     }
+
+    console.log("Données de l'article:", post)
 
     return (
       <div className="container mx-auto px-4 py-8">

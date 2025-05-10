@@ -149,6 +149,31 @@ export async function fetchCategories(): Promise<Category[]> {
   }
 }
 
+// Fetch a specific category by slug
+export async function fetchCategoryBySlug(slug: string): Promise<Category | null> {
+  try {
+    const response = await fetch(`${API_BASE_URL}/categories?slug=${slug}`, {
+      cache: "no-store",
+      headers: {
+        Accept: "application/json",
+      },
+    })
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch category by slug: ${response.status}`)
+    }
+
+    const categories = await response.json()
+
+    // Check if a category was found
+    return categories.length > 0 ? categories[0] : null
+  } catch (error) {
+    console.error(`Error fetching category by slug ${slug}:`, error)
+    return null
+  }
+}
+
+
 // Fetch a specific category by ID
 export async function fetchCategory(id: number): Promise<Category> {
   try {
@@ -297,10 +322,10 @@ export async function fetchPostsByCategory(categoryId: number): Promise<Post[]> 
   }
 }
 
-// Fetch a specific post by ID
-export async function fetchPost(id: number): Promise<Post> {
+// Fetch a specific post by slug
+export async function fetchPostBySlug(slug: string): Promise<Post | null> {
   try {
-    const response = await fetch(`${API_BASE_URL}/posts/${id}?_embed`, {
+    const response = await fetch(`${API_BASE_URL}/posts?slug=${slug}&_embed`, {
       cache: "no-store",
       headers: {
         Accept: "application/json",
@@ -308,21 +333,16 @@ export async function fetchPost(id: number): Promise<Post> {
     })
 
     if (!response.ok) {
-      throw new Error(`Failed to fetch post: ${response.status}`)
+      throw new Error(`Failed to fetch post by slug: ${response.status}`)
     }
 
-    const post = await response.json()
+    const posts = await response.json()
 
-    // Ajouter un log pour déboguer la structure des données
-    console.log("Structure ACF du post:", post.acf)
-    if (post.acf?.lieu_de_levenement) {
-      console.log("Structure lieu_de_levenement:", post.acf.lieu_de_levenement)
-    }
-
-    return post
+    // Vérifier si un post correspondant a été trouvé
+    return posts.length > 0 ? posts[0] : null
   } catch (error) {
-    console.error(`Error fetching post ${id}:`, error)
-    throw error
+    console.error(`Error fetching post by slug ${slug}:`, error)
+    return null
   }
 }
 

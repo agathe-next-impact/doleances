@@ -56,7 +56,7 @@ export default async function Home() {
                     <div className="flex flex-wrap gap-2 pt-2">
                     {stickyArticle.categories.map((category, index) => (
                       <Badge key={`cat-${index}`} variant="secondary">            
-                        <Link href={`/article/${stickyArticle.categoriesId[index]}`}>
+                        <Link href={`/article/${stickyArticle.categoriesSlug[index]}`}>
                         {category}
                         </Link>
                       </Badge>

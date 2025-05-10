@@ -24,12 +24,13 @@ export default function CategoryCard({ category }: CategoryCardProps) {
         setLoading(true)
         setError(null)
         const posts = await fetchRecentPostsByCategory(category.id)
+        
         if (isMounted) {
           setRecentPosts(posts)
           setLoading(false)
         }
       } catch (err) {
-        console.error(`Error fetching recent posts for category ${category.id}:`, err)
+        console.error(`Error fetching recent posts for category ${category.slug}:`, err)
         if (isMounted) {
           setError("Impossible de charger les articles récents.")
           setLoading(false)
@@ -42,7 +43,7 @@ export default function CategoryCard({ category }: CategoryCardProps) {
     return () => {
       isMounted = false
     }
-  }, [category.id])
+  }, [category.slug])
 
 console.log(recentPosts)
 
@@ -50,7 +51,7 @@ console.log(recentPosts)
     <Card className="h-full flex flex-col overflow-hidden border shadow-lg">
       <CardHeader className="pb-2">
         <CardTitle className="text-xl">
-          <Link href={`/category/${category.id}`}>
+          <Link href={`/category/${category.slug}`}>
             {category.name}
           </Link>
         </CardTitle>
@@ -76,7 +77,7 @@ console.log(recentPosts)
           <ul className="space-y-6">
             {recentPosts.map((post) => (
               <li key={post.id} className="text-sm">
-                <Link href={`/article/${post.id}`} className="flex gap-6">
+                <Link href={`/article/${post.slug}`} className="flex gap-6">
                   <div className="relative h-16 w-1/3 mb-2">
                     <Image
                       src={post._embedded?.["wp:featuredmedia"][0].source_url || "/placeholder.svg"}
@@ -121,7 +122,7 @@ console.log(recentPosts)
         )}
       </CardContent>
       <CardFooter>
-        <Link href={`/category/${category.id}`} className="text-sm text-muted-foreground hover:underline">
+        <Link href={`/category/${category.slug}`} className="text-sm text-muted-foreground hover:underline">
           {category.name} : Voir tout
         </Link>
       </CardFooter>

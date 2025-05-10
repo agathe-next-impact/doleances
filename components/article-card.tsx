@@ -141,7 +141,7 @@ export default function ArticleCard({ post }: ArticleCardProps) {
       </div>
       <CardHeader className="pb-2">
         <CardTitle className="text-lg">
-          <Link href={`/article/${post.id}`} className="hover:underline">
+          <Link href={`/article/${post.slug}`} className="hover:underline">
             <span dangerouslySetInnerHTML={{ __html: post.title.rendered }} />
           </Link>
         </CardTitle>

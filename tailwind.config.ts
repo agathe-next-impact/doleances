@@ -13,6 +13,7 @@ const config: Config = {
 		fontFamily: {
 			serif: ['Crimson Pro', 'serif'],
 			sansserif: ['Open Sans', 'sans-serif'],
+			handwritten: ['Caveat', 'cursive'],
 		},
   		colors: {
   			background: 'hsl(var(--background))',

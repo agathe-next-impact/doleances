@@ -1,11 +1,12 @@
 // Améliorer la gestion des erreurs et ajouter des fallbacks pour les données manquantes
-import { fetchCategory, fetchPostsByCategory, extractGroupesLocauxCPTFromCategory } from "@/lib/api"
+import { fetchCategory, fetchPostsByCategory, extractGroupesLocauxCPTFromCategory, fetchCategoryBySlug } from "@/lib/api"
 import ArticleList from "@/components/article-list"
 import CategoryHero from "@/components/category-hero"
 import SearchFilter from "@/components/search-filter"
 import { Suspense } from "react"
 import Link from "next/link"
 
+<<<<<<< HEAD:app/category/[id]/page.tsx
 export default async function CategoryPage(context: { params: { id: string } }) {
   try {
     // Récupérer l'ID de la catégorie à partir des paramètres de l'URL
@@ -14,31 +15,50 @@ export default async function CategoryPage(context: { params: { id: string } }) 
     if (isNaN(categoryId)) {
       throw new Error(`Invalid category ID: ${context.params.id}`)
     }
+=======
+export default async function CategoryPage({ params }: { params: { slug: string } }) {
+  try {
+
+    const categorySlug = params.slug
+    console.log(`Récupération de la catégorie avec le slug ${categorySlug}`)
+>>>>>>> 9a298626f0a173815640e8192cd1ac0634ed8cfd:app/category/[slug]/page.tsx
 
     // Fetch category data with better error handling
     let category
     try {
-      category = await fetchCategory(categoryId)
+      category = await fetchCategoryBySlug(categorySlug)
     } catch (error) {
-      console.error(`Error fetching category ${categoryId}:`, error)
+      console.error(`Error fetching category ${categorySlug}:`, error)
       // Provide a fallback category
       category = {
+<<<<<<< HEAD:app/category/[id]/page.tsx
         id: categoryId,
         slug: `categorie-${categoryId}`, // Add a default slug
         name: `Catégorie ${categoryId}`,
         description: "",
+=======
+        id: category?.id,
+        name: `Catégorie ${category?.name}`,
+        description: category?.description || "",
+>>>>>>> 9a298626f0a173815640e8192cd1ac0634ed8cfd:app/category/[slug]/page.tsx
         count: 0,
         link: "", 
       }
     }
 
+
     // Fetch posts for this category with better error handling
+<<<<<<< HEAD:app/category/[id]/page.tsx
     let posts: Array<{ id: number; title?: string; acf?: { date_de_levenement?: string }; date: string }> = []
+=======
+    let posts: any[] = []
+>>>>>>> 9a298626f0a173815640e8192cd1ac0634ed8cfd:app/category/[slug]/page.tsx
     try {
-      posts = await fetchPostsByCategory(categoryId)
+      posts = await fetchPostsByCategory(category?.id)
     } catch (error) {
-      console.error(`Error fetching posts for category ${categoryId}:`, error)
+      console.error(`Error fetching posts for category ${category?.id}:`, error)
     }
+
 
     // Déterminer si c'est une catégorie d'événements
     // Pour simplifier, nous considérons que toute catégorie avec au moins un article
@@ -122,24 +142,29 @@ export default async function CategoryPage(context: { params: { id: string } }) 
     }
 
     // Récupérer les CPT groupe_local associés aux articles de cette catégorie
-    const groupesLocauxCPT = await extractGroupesLocauxCPTFromCategory(categoryId)
+    const groupesLocauxCPT = await extractGroupesLocauxCPTFromCategory(category?.id)
 
     return (
       <div className="container mx-auto px-4 py-8">
+<<<<<<< HEAD:app/category/[id]/page.tsx
         <Link href="/category" className="text-sm text-muted-foreground flex items-center mb-4">
             <span>Toutes les actualités</span>
         </Link>
         <CategoryHero category={category} />
+=======
+        <CategoryHero category={category?.name} description={category?.description } />
+>>>>>>> 9a298626f0a173815640e8192cd1ac0634ed8cfd:app/category/[slug]/page.tsx
         <div className="my-8">
           <Suspense fallback={<div>Chargement des filtres...</div>}>
             <SearchFilter
               dates={dates.filter((date): date is string => date !== null)}
               groupesLocauxCPT={groupesLocauxCPT}
-              categoryId={categoryId}
+              categoryId={category?.id}
               isEventCategory={isEventCategory}
             />
           </Suspense>
         </div>
+<<<<<<< HEAD:app/category/[id]/page.tsx
         <ArticleList
           initialPosts={posts.map((post) => ({
             ...post,
@@ -152,6 +177,9 @@ export default async function CategoryPage(context: { params: { id: string } }) 
           categoryId={categoryId}
           isEventCategory={isEventCategory}
         />
+=======
+        <ArticleList initialPosts={posts} categoryId={category?.id} isEventCategory={isEventCategory} />
+>>>>>>> 9a298626f0a173815640e8192cd1ac0634ed8cfd:app/category/[slug]/page.tsx
       </div>
     )
   } catch (error) {

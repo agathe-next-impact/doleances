@@ -1,20 +1,28 @@
 import Link from "next/link"
 import Image from "next/image"
-import { CalendarIcon, User2 } from "lucide-react"
+import { CalendarIcon, MapIcon, User2 } from "lucide-react"
 
 import { formatDate } from "@/lib/utils"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import DateFormat, { TimeFormat } from "./date-format"
 
 interface Article {
   id: number
   slug: string
   title: string
   excerpt: string
+  descriptif?: string
+  resume?: string
+  chapeau?: string
+  date_de_levenement?: string
+  heure_de_levenement?: string
+  lieu_de_levenement?: string
   date: string
   author: string
   categories: string[]
   categoriesId: number[]
+  categoriesSlug: string[]
   tags: string[]
   featuredImage?: string
 }
@@ -24,12 +32,30 @@ interface ArticleCardProps {
 }
 
 export function ArticleCardHome({ article }: ArticleCardProps) {
+
+  console.log("article", article)
   // Clean excerpt text for better display
-  const cleanExcerpt = article.excerpt
-    .replace(/<[^>]*>/g, "") // Remove HTML tags
-    .replace(/&nbsp;/g, " ") // Replace &nbsp; with spaces
-    .replace(/\s+/g, " ") // Replace multiple spaces with a single space
-    .trim()
+  let cleanExcerpt 
+  switch (article.categoriesSlug[0] ?? "") {
+    case "evenements":
+      cleanExcerpt = (article.descriptif ?? "").replace(/<[^>]+>/g, "").replace(/&nbsp;/g, " ").trim()
+      break
+    case "publications-scientifiques":
+      cleanExcerpt = (article.resume ?? "").replace(/<[^>]+>/g, "").replace(/&nbsp;/g, " ").trim()
+      break
+    case "revue-de-presse":
+      cleanExcerpt = (article.chapeau ?? "").replace(/<[^>]+>/g, "").replace(/&nbsp;/g, " ").trim()
+      break
+    case "etats-generaux-communaux":
+      cleanExcerpt = article.excerpt.replace(/<[^>]+>/g, "").replace(/&nbsp;/g, " ").trim()
+      break
+    default:
+      cleanExcerpt = article.excerpt.replace(/<[^>]+>/g, "").replace(/&nbsp;/g, " ").trim()    
+  }
+
+
+
+
 
   console.log(article.categories + "et" + article.categoriesId)
 
@@ -47,7 +73,7 @@ export function ArticleCardHome({ article }: ArticleCardProps) {
       )}
       <CardHeader className="pl-0">
         <CardTitle className="line-clamp-2">
-          <Link href={`/article/${article.id}`} className="hover:underline">
+          <Link href={`/article/${article.slug}`} className="hover:underline">
             {article.title}
           </Link>
         </CardTitle>
@@ -59,7 +85,7 @@ export function ArticleCardHome({ article }: ArticleCardProps) {
         <div className="flex flex-wrap gap-2">
           {article.categories.map((category, index) => (
             <Badge key={`cat-${index}`} variant="secondary">              
-              <Link href={`/category/${article.categoriesId[index]}`}>
+              <Link href={`/category/${article.categoriesSlug[index]}`}>
               {category}
               </Link>
             </Badge>
@@ -70,6 +96,7 @@ export function ArticleCardHome({ article }: ArticleCardProps) {
             </Badge>
           ))}
         </div>
+        {(article.categoriesSlug[0] != "evenements") && (
         <div className="flex w-full items-center justify-between text-xs text-muted-foreground">
           <div className="flex items-center gap-1">
             <User2 className="h-3 w-3" />
@@ -80,6 +107,19 @@ export function ArticleCardHome({ article }: ArticleCardProps) {
             <span>{formatDate(article.date)}</span>
           </div>
         </div>
+        )} 
+        {(article.categoriesSlug[0] == "evenements") && (
+        <div className="flex flex-col w-full justify-between gap-2 text-xs text-muted-foreground">
+          <div className="flex items-center gap-1">
+            <MapIcon className="h-3 w-3" />
+            <span>{article?.lieu_de_levenement.address}</span>
+          </div>
+          <div className="flex items-center gap-1">
+            <CalendarIcon className="h-3 w-3" />
+            <span><DateFormat dateStr={article?.date_de_levenement} /> à <TimeFormat timeStr={article?.heure_de_levenement} /></span>
+          </div>
+        </div>
+        )}
       </CardFooter>
     </Card>
   )
