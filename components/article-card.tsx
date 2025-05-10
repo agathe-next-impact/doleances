@@ -245,9 +245,12 @@ export default function ArticleCard({ post }: ArticleCardProps) {
             </div>
           )}
       </CardContent>
+      {/* Affichage du footer si la carte n'est pas un événement */}
+      {!isEvent && (
       <CardFooter className="flex flex-wrap gap-2 items-center text-xs text-muted-foreground">
         <div>{formatDate(post.date)}</div>
       </CardFooter>
+      )}
     </Card>
   )
 }

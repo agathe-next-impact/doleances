@@ -32,6 +32,7 @@ export default function SearchFilter({
   const [dateFilter, setDateFilter] = useState(searchParams.get("date") || "");
   const [groupeLocalFilter, setGroupeLocalFilter] = useState(searchParams.get("groupe_local_cpt") || "");
 
+
   // Fonction pour créer une nouvelle URL avec les paramètres de recherche
   const createQueryString = useCallback(
     (params: Record<string, string | null>) => {
@@ -69,7 +70,9 @@ export default function SearchFilter({
 
   // Gestionnaire pour le changement de date
   const handleDateChange = (value: string) => {
+    // Vérifier si la valeur est une date valide
     setDateFilter(value);
+    // formatte la date en nombre
     updateUrl({ date: value });
   };
 
@@ -131,7 +134,7 @@ export default function SearchFilter({
           </Select>
         )}
 
-        {groupesLocauxCPT.length > 0 && (
+        {!isEventCategory && groupesLocauxCPT.length > 0 && (
           <Select value={groupeLocalFilter} onValueChange={handleGroupeLocalChange}>
             <SelectTrigger>
               <SelectValue placeholder="Filtrer par groupe local" />
