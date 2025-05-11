@@ -36,6 +36,7 @@ export interface Post {
     lieu_evenement?: string
     adresse_evenement?: string
     descriptif?: string
+    fichier_de_la_publication?: string
     adress?: string
     adresse?: string
     latitude?: string | number
@@ -100,6 +101,22 @@ export interface GroupeLocalPost {
 export interface GroupeLocal {
   id: number
   name: string
+}
+
+export interface Media {
+  id: number
+  title: {
+    rendered: string
+  }
+  date: string
+  link: string
+  media_type: string
+  mime_type: string
+  source_url: string
+  alt_text?: string
+  caption?: {
+    rendered: string
+  }
 }
 
 const API_BASE_URL = "https://palegreen-capybara-652133.hostingersite.com/wp-json/wp/v2"
@@ -413,6 +430,28 @@ export async function searchPosts(query: string, categoryId: number): Promise<Po
   } catch (error) {
     console.error(`Error searching posts for category ${categoryId}:`, error)
     return []
+  }
+}
+
+// récupérer les fichiers joints par des champs ACF 
+export async function fetchAttachmentById(id: number): Promise<Media[] | null> {
+  try {
+    const response = await fetch(`${API_BASE_URL}/media/${id}`, {
+      cache: "no-store",
+      headers: {
+        Accept: "application/json",
+      },
+    })
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch attachment: ${response.status}`)
+    }
+
+    const data = await response.json()
+    return data
+  } catch (error) {
+    console.error(`Error fetching attachment by ID ${id}:`, error)
+    return null
   }
 }
 
@@ -799,7 +838,7 @@ export async function extractGroupesLocauxCPTFromCategory(categoryId: number): P
 export interface Verbatim {
   id: number;
   acf: {
-    texte_du_verbatim?: Node[];
+    texte_du_verbatim?: string;
     date?: string;
     departement?: string;
     groupe_local?: string;

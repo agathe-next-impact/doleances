@@ -20,7 +20,7 @@ export default async function Home() {
   return (
     <main className="container mx-auto px-4 py-8">
         <div className="mb-12 text-center">
-          <h1 className="mb-4 text-3xl font-light tracking-tight md:text-4xl">L'actualité des doléances</h1> 
+          <h1 className="">L'actualité des doléances</h1> 
           <p className="mx-auto mb-6 max-w-2xl text-lg text-muted-foreground">
           Wiki du corpus des doléances de 2018/2019</p>
           </div>

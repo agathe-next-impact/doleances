@@ -9,7 +9,7 @@ import { Badge } from "@/components/ui/badge"
 import { Calendar, Clock, MapPin, Users } from "lucide-react"
 import { useState, useEffect } from "react"
 import { fetchGroupeLocalById } from "@/lib/api"
-import DateFormat from "@/components/date-format"
+import DateFormat, { TimeFormat } from "@/components/date-format"
 
 interface ArticleCardProps {
   post: Post
@@ -80,7 +80,7 @@ export default function ArticleCard({ post }: ArticleCardProps) {
   }
 
   // Check if this post is an event
-  const isEvent = post.acf?.date_de_levenement || post.acf?.heure_evenement || post.acf?.lieu_de_levenement
+  const isEvent = post.acf?.date_de_levenement || post.acf?.heure_de_levenement || post.acf?.lieu_de_levenement
 
   // Récupérer l'adresse du lieu de l'événement (structure imbriquée)
   const eventAddress = (() => {
@@ -158,10 +158,10 @@ export default function ArticleCard({ post }: ArticleCardProps) {
                 <DateFormat dateStr={post.acf.date_de_levenement}/>
               </div>
             )}
-            {post.acf?.heure_evenement && (
+            {post.acf?.heure_de_levenement && (
               <div className="flex items-center gap-1.5">
                 <Clock className="h-4 w-4 text-muted-foreground" />
-                <span>{post.acf.heure_evenement}</span>
+                <span><TimeFormat timeStr={post.acf.heure_de_levenement} /></span>
               </div>
             )}
             <div className="flex items-start gap-1.5">
@@ -203,7 +203,7 @@ export default function ArticleCard({ post }: ArticleCardProps) {
                   ([key]) =>
                     ![
                       "date_de_levenement",
-                      "heure_evenement",
+                      "heure_de_levenement",
                       "lieu_evenement",
                       "adresse_evenement",
                       "adress",

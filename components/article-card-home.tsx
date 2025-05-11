@@ -13,8 +13,6 @@ interface Article {
   title: string
   excerpt: string
   descriptif?: string
-  resume?: string
-  chapeau?: string
   date_de_levenement?: string
   heure_de_levenement?: string
   lieu_de_levenement?: string
@@ -32,32 +30,6 @@ interface ArticleCardProps {
 }
 
 export function ArticleCardHome({ article }: ArticleCardProps) {
-
-  console.log("article", article)
-  // Clean excerpt text for better display
-  let cleanExcerpt 
-  switch (article.categoriesSlug[0] ?? "") {
-    case "evenements":
-      cleanExcerpt = (article.descriptif ?? "").replace(/<[^>]+>/g, "").replace(/&nbsp;/g, " ").trim()
-      break
-    case "publications-scientifiques":
-      cleanExcerpt = (article.resume ?? "").replace(/<[^>]+>/g, "").replace(/&nbsp;/g, " ").trim()
-      break
-    case "revue-de-presse":
-      cleanExcerpt = (article.chapeau ?? "").replace(/<[^>]+>/g, "").replace(/&nbsp;/g, " ").trim()
-      break
-    case "etats-generaux-communaux":
-      cleanExcerpt = article.excerpt.replace(/<[^>]+>/g, "").replace(/&nbsp;/g, " ").trim()
-      break
-    default:
-      cleanExcerpt = article.excerpt.replace(/<[^>]+>/g, "").replace(/&nbsp;/g, " ").trim()    
-  }
-
-
-
-
-
-  console.log(article.categories + "et" + article.categoriesId)
 
   return (
     <Card className="flex flex-col overflow-hidden border-none shadow-none">
@@ -79,7 +51,7 @@ export function ArticleCardHome({ article }: ArticleCardProps) {
         </CardTitle>
       </CardHeader>
       <CardContent className="flex-grow pl-0">
-        <p className="line-clamp-3 text-muted-foreground">{cleanExcerpt}</p>
+        <p className="line-clamp-3 text-muted-foreground">{article?.descriptif}</p>
       </CardContent>
       <CardFooter className="flex flex-col items-start gap-2 pl-0">
         <div className="flex flex-wrap gap-2">

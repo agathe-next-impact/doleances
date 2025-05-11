@@ -13,7 +13,6 @@ export default function Verbatim() {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  console.log("verbatim", verbatim);
 
   useEffect(() => {
     const loadVerbatim = async () => {
@@ -21,7 +20,8 @@ export default function Verbatim() {
       setError(null);
 
       try {
-        const randomVerbatim = await fetchRandomVerbatim();
+        const randomVerbatim = await fetchRandomVerbatim(); 
+       
         setVerbatim(randomVerbatim);
       } catch (err) {
         setError("Impossible de charger un verbatim.");
@@ -47,11 +47,12 @@ export default function Verbatim() {
 
   return (
     <div className="p-4">
-      <div className="text-gray-700 prose prose-sm max-w-none">
-        <div className="italic text-2xl font-handwritten pb-8"> {verbatim.acf.texte_du_verbatim || ""} </div>
-        <p className="font-sansserif font-medium text-xl text-right">{verbatim.acf.departement}</p>
+      <div className="text-gray-700 mb-8 text-2xl font-handwritten prose prose-sm max-w-none">
+        <span style={{ wordBreak: "break-word" }}>
+          {verbatim.acf.texte_du_verbatim || ""}
+        </span></div>
+        <p className="font-serif font-medium text-xl text-right">{verbatim.acf.departement}</p>
         <p className="font-serif text-xl text-right"><DateFormat dateStr={verbatim.acf.date || ""} short={true} /></p>
-    </div>
     </div>
   );
 }

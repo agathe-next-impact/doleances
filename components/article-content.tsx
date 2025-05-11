@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import type { Post, GroupeLocalPost } from "@/lib/api"
-import { fetchGroupeLocalById } from "@/lib/api"
+import { fetchGroupeLocalById, fetchAttachmentById } from "@/lib/api"
 import Image from "next/image"
 import Link from "next/link"
 import { Badge } from "@/components/ui/badge"
@@ -32,6 +32,19 @@ export default function ArticleContent({ post }: ArticleContentProps) {
     }
   })()
 
+  // Get attached media if available
+  const attachedFile = (async () => {
+    try {
+      const fileId = Number(post.acf?.fichier_de_la_publication)
+      const attachedMedia = await fetchAttachmentById(fileId)
+      return attachedMedia && 'source_url' in attachedMedia ? attachedMedia.source_url : null
+    } catch (error) {
+      console.error("Error getting attached file:", error)
+      return null
+    }
+  })()
+
+  
   // Get all ACF fields and extract date/time related fields
   const acfFields = []
   const dateTimeFields = []
@@ -102,7 +115,7 @@ export default function ArticleContent({ post }: ArticleContentProps) {
   // Vérifier si cet article est un événement
   const isEvent =
     post.acf?.date_de_levenement ||
-    post.acf?.heure_evenement ||
+    post.acf?.heure_de_levenement ||
     post.acf?.lieu_de_levenement ||
     dateTimeFields.length > 0
 
@@ -148,7 +161,7 @@ export default function ArticleContent({ post }: ArticleContentProps) {
     }
   })()
 
-console.log(post.acf?.heure_evenement)
+console.log(post.acf?.heure_de_levenement)
 
   // Récupérer la ville du lieu de l'événement
   const eventCity = (() => {
@@ -173,11 +186,12 @@ console.log(post.acf?.heure_evenement)
                 {categoryName}
             </Link>
           </Badge>
-          <h1
-            className="text-3xl md:text-4xl font-bold mb-6"
-            dangerouslySetInnerHTML={{ __html: post.title.rendered }}
-          />
-
+          <div className="mb-12 text-center">
+            <h1
+              className="w-full mb-4 text-center text-3xl font-light tracking-tight md:text-4xl"
+              dangerouslySetInnerHTML={{ __html: post.title.rendered }}
+            />
+          </div>
           <div className="grid md:grid-cols-2 gap-6">
             {/* Colonne de gauche: Image (50%) */}
             <div className="relative h-full min-h-[300px] rounded-lg overflow-hidden">
@@ -188,7 +202,7 @@ console.log(post.acf?.heure_evenement)
                 }
                 alt=""
                 fill
-                className="object-cover"
+                className="object-cover border-2 border-muted rounded-lg"
                 sizes="(max-width: 768px) 40vw, 50vw"
               />
             </div>
@@ -198,11 +212,11 @@ console.log(post.acf?.heure_evenement)
               {/* Section Date et Heure */}
               <div className="space-y-4">
                 <div className="flex items-center gap-2 mb-2">
-                  <Calendar className="h-5 w-5 text-primary" />
-                  <h3 className="text-lg font-semibold">Date et heure</h3>
+                  <Calendar className="h-5 w-5 text-muted-foreground" />
+                  <h3 className="uppercase text-muted-foreground">Date et heure</h3>
                 </div>
 
-                <div className="p-4 bg-muted/50 rounded-md">
+                <div className="p-4 pt-0">
                     <>
                       {post.acf?.date_de_levenement ? (
                         <div className="flex items-center gap-2 mb-2">
@@ -219,10 +233,10 @@ console.log(post.acf?.heure_evenement)
                           <span>Non précisée</span>
                         </div>
                       )}
-                      {post.acf?.heure_evenement && (
+                      {post.acf?.heure_de_levenement && (
                         <div className="flex items-center gap-2">
                           <span className="font-medium">Heure:</span>
-                          <span><TimeFormat timeStr={post.acf.heure_evenement} /></span>
+                          <span><TimeFormat timeStr={post.acf.heure_de_levenement} /></span>
                         </div>
                       )}
                     </>
@@ -232,25 +246,21 @@ console.log(post.acf?.heure_evenement)
               {/* Section Lieu */}
               <div className="space-y-4">
                 <div className="flex items-center gap-2 mb-2">
-                  <MapPin className="h-5 w-5 text-primary" />
-                  <h3 className="text-lg font-semibold">Lieu</h3>
+                  <MapPin className="h-5 w-5 text-muted-foreground" />
+                  <h3 className="uppercase text-muted-foreground">Lieu</h3>
                 </div>
 
                 {/* Nom du lieu mis en évidence */}
                 {eventLocationName ? (
-                  <div className="p-3 bg-primary/10 border-l-4 border-primary rounded-r-md">
-                    <div className="text-xl font-medium text-primary">
-                      {eventLocationName}
-                      {eventCity && <span className="ml-2 text-sm text-muted-foreground">({eventCity})</span>}
-                    </div>
+                  <div className="bg-primary/10 border-&-2 border-primary rounded-r-md">
 
                     {/* Adresse */}
                     {eventAddress && (
-                      <div className="mt-2 text-muted-foreground whitespace-pre-line">{eventAddress}</div>
+                      <div className="p-4 pt-0 whitespace-pre-line">{eventAddress}</div>
                     )}
                   </div>
                 ) : (
-                  <div className="p-4 bg-muted/50 rounded-md text-muted-foreground">
+                  <div className="p-4 rounded-md text-muted-foreground">
                     {eventAddress ? eventAddress : "Lieu non précisé"}
                   </div>
                 )}
@@ -260,11 +270,11 @@ console.log(post.acf?.heure_evenement)
               {groupeLocalPost && (
                 <div className="space-y-4">
                   <div className="flex items-center gap-2 mb-2">
-                    <Users className="h-5 w-5 text-primary" />
-                    <h3 className="text-lg font-semibold">Groupe local</h3>
+                    <Users className="h-5 w-5 text-muted-foreground" />
+                    <h3 className="uppercase text-muted-foreground">Groupe local</h3>
                   </div>
 
-                  <div className="p-4 bg-muted/50 rounded-md">
+                  <div className="p-4 pt-0">
                     <Link
                       href={`/groupe-local/${groupeLocalPost.slug}`}
                       className="text-primary hover:underline font-medium"
@@ -292,7 +302,7 @@ console.log(post.acf?.heure_evenement)
             </div>
           )}
           <div className="w-2/3 px-12 py-8 mx-auto mb-8">
-          <Badge variant="secondary" className="mb-4">
+            <Badge variant="secondary" className="mb-4">
             <Link href={`/category/${categorySlug}`}>
                 {categoryName}
             </Link>
@@ -303,7 +313,6 @@ console.log(post.acf?.heure_evenement)
             />
             <div className="flex flex-wrap gap-3 text-sm text-muted-foreground mb-6">
               <div><DateFormat dateStr={post.date} /></div>
-              <div><TimeFormat dateStr={post.time} /></div>
 
               {/* Groupe local avec lien */}
               {groupeLocalPost && (
@@ -315,13 +324,13 @@ console.log(post.acf?.heure_evenement)
                 </div>
               )}
             </div>
+            <div
+              className="text-sm text-muted-foreground line-clamp-3 mb-4"
+              dangerouslySetInnerHTML={{ __html: post.acf?.descriptif || "" }}
+            />
           </div>
         </div>
       )}
-
-      <article className="prose prose-lg max-w-none mb-8">
-        <div dangerouslySetInnerHTML={{ __html: post.acf?.descriptif || "" }} />
-      </article>
 
       {acfFields.length > 0 && !isEvent && (
         <div className="mb-8 p-4 bg-muted/30 rounded-lg">
@@ -332,8 +341,10 @@ console.log(post.acf?.heure_evenement)
                 .filter(
                   ([key]) =>
                     ![
+                      "descriptif",
+                      "contenu_de_la_publication",
                       "date_de_levenement",
-                      "heure_evenement",
+                      "heure_de_levenement",
                       "lieu_evenement",
                       "adresse_evenement",
                       "adress",
@@ -356,7 +367,7 @@ console.log(post.acf?.heure_evenement)
                     <div key={key} className="space-y-1">
                       <dt className="text-sm font-medium text-muted-foreground capitalize">{key.replace(/_/g, " ")}</dt>
                       <dd className="text-sm">
-                        {typeof value === "string" && value.startsWith("http") ? (
+                        {typeof value === "string" ? (
                           <a
                             href={value}
                             target="_blank"
@@ -368,6 +379,17 @@ console.log(post.acf?.heure_evenement)
                         ) : (
                           String(value)
                         )}
+                        {key === "fichier_de_la_publication" && (
+                          <a
+                            href={`/media/${attachedFile}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-primary hover:underline ml-2"
+                          >
+                            Télécharger le fichier
+                          </a>
+                        )}
+
                       </dd>
                     </div>
                   )
@@ -377,6 +399,10 @@ console.log(post.acf?.heure_evenement)
           </dl>
         </div>
       )}
+
+      <article className="prose prose-lg max-w-none mb-8">
+        <div dangerouslySetInnerHTML={{ __html: post.acf?.contenu_de_la_publication || "" }} />
+      </article>
 
       {isEvent && (post.acf?.lieu_de_levenement || eventAddress) && (
         <div className="mb-8">
