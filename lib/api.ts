@@ -434,24 +434,24 @@ export async function searchPosts(query: string, categoryId: number): Promise<Po
 }
 
 // récupérer les fichiers joints par des champs ACF 
-export async function fetchAttachmentById(id: number): Promise<Media[] | null> {
+export async function fetchAttachmentById(id: number) {
   try {
     const response = await fetch(`${API_BASE_URL}/media/${id}`, {
       cache: "no-store",
       headers: {
         Accept: "application/json",
       },
-    })
+    });
 
     if (!response.ok) {
-      throw new Error(`Failed to fetch attachment: ${response.status}`)
+      throw new Error(`Failed to fetch attachment: ${response.status}`);
     }
 
-    const data = await response.json()
-    return data
+    const data = response.json();
+    return data;
   } catch (error) {
-    console.error(`Error fetching attachment by ID ${id}:`, error)
-    return null
+    console.error(`Error fetching attachment by ID ${id}:`, error);
+    return null;
   }
 }
 

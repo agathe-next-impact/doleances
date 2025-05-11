@@ -19,7 +19,7 @@ export default async function Home() {
 
   return (
     <main className="container mx-auto px-4 py-8">
-        <div className="mb-12 text-center">
+        <div className="py-8 text-center">
           <h1 className="">L'actualité des doléances</h1> 
           <p className="mx-auto mb-6 max-w-2xl text-lg text-muted-foreground">
           Wiki du corpus des doléances de 2018/2019</p>
@@ -32,7 +32,7 @@ export default async function Home() {
         <div className="grid grid-cols-3 gap-6 mb-8">
             <div className="col-span-2 flex row-span-2 rounded-lg border bg-card shadow-lg overflow-hidden">
               {stickyArticle && stickyArticle.featuredImage && (
-                <div className="relative h-full w-full">
+                <div className="relative h-full w-1/3">
                   <Image
                     src={stickyArticle.featuredImage || "/placeholder.svg"}
                     alt={stickyArticle.title}

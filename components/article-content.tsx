@@ -17,10 +17,28 @@ interface ArticleContentProps {
 export default function ArticleContent({ post }: ArticleContentProps) {
   const [groupeLocalPost, setGroupeLocalPost] = useState<GroupeLocalPost | null>(null)
   const [isLoadingGroupe, setIsLoadingGroupe] = useState(false)
+  const [attachedFile, setAttachedFile] = useState<string | null>(null);
+
 
   // retrouve le nom et le slug de la catégorie de l'article
   const categoryName = post._embedded?.["wp:term"]?.[0]?.[0]?.name
   const categorySlug = post._embedded?.["wp:term"]?.[0]?.[0]?.slug
+
+  useEffect(() => {
+  const loadAttachedFile = async () => {
+    try {
+      const fileId = Number(post.acf?.fichier_de_la_publication);
+      if (!fileId) return;
+      const attachedMedia = await fetchAttachmentById(fileId);
+      setAttachedFile(attachedMedia?.source_url || null);
+    } catch (error) {
+      console.error("Error getting attached file:", error);
+    }
+  };
+
+  loadAttachedFile();
+}, [post.acf?.fichier_de_la_publication]);
+
 
   // Get featured image if available
   const featuredImage = (() => {
@@ -32,19 +50,6 @@ export default function ArticleContent({ post }: ArticleContentProps) {
     }
   })()
 
-  // Get attached media if available
-  const attachedFile = (async () => {
-    try {
-      const fileId = Number(post.acf?.fichier_de_la_publication)
-      const attachedMedia = await fetchAttachmentById(fileId)
-      return attachedMedia && 'source_url' in attachedMedia ? attachedMedia.source_url : null
-    } catch (error) {
-      console.error("Error getting attached file:", error)
-      return null
-    }
-  })()
-
-  
   // Get all ACF fields and extract date/time related fields
   const acfFields = []
   const dateTimeFields = []
@@ -83,6 +88,8 @@ export default function ArticleContent({ post }: ArticleContentProps) {
     console.error("Error extracting ACF fields:", error)
   }
 
+console.log("ACF Fields:", acfFields)
+
   // Récupérer l'ID du groupe local depuis les champs ACF (utiliser tax_groupe_local ou groupe_local_tax)
   const groupeLocalId = post.acf?.tax_groupe_local || post.acf?.groupe_local_tax || null
 
@@ -112,12 +119,11 @@ export default function ArticleContent({ post }: ArticleContentProps) {
     loadGroupeLocalPost()
   }, [groupeLocalId])
 
-  // Vérifier si cet article est un événement
-  const isEvent =
+  const isEvent = Boolean(
     post.acf?.date_de_levenement ||
     post.acf?.heure_de_levenement ||
-    post.acf?.lieu_de_levenement ||
-    dateTimeFields.length > 0
+    post.acf?.lieu_de_levenement
+  );
 
   // Récupérer l'adresse du lieu de l'événement (structure imbriquée)
   const eventAddress = (() => {
@@ -161,7 +167,6 @@ export default function ArticleContent({ post }: ArticleContentProps) {
     }
   })()
 
-console.log(post.acf?.heure_de_levenement)
 
   // Récupérer la ville du lieu de l'événement
   const eventCity = (() => {
@@ -290,117 +295,150 @@ console.log(post.acf?.heure_de_levenement)
       ) : (
         // Affichage standard pour les articles non-événements
         <div className="flex">
-          {featuredImage && (
-            <div className="relative h-64 md:h-96 w-1/3 mb-8">
-              <Image
-                src={featuredImage || "/placeholder.svg"}
-                alt=""
-                fill
-                className="object-cover rounded-lg"
-                sizes="(max-width: 768px) 40vw, (max-width: 1200px) 768px, 1024px"
-              />
-            </div>
-          )}
-          <div className="w-2/3 px-12 py-8 mx-auto mb-8">
-            <Badge variant="secondary" className="mb-4">
-            <Link href={`/category/${categorySlug}`}>
-                {categoryName}
-            </Link>
-          </Badge>
-            <h1
-              className="text-3xl md:text-4xl font-bold mb-4"
-              dangerouslySetInnerHTML={{ __html: post.title.rendered }}
-            />
-            <div className="flex flex-wrap gap-3 text-sm text-muted-foreground mb-6">
-              <div><DateFormat dateStr={post.date} /></div>
-
-              {/* Groupe local avec lien */}
-              {groupeLocalPost && (
-                <div className="flex items-center gap-2">
-                  <Users className="h-4 w-4 text-muted-foreground" />
-                  <Link href={`/groupe-local/${groupeLocalPost.slug}`} className="text-primary hover:underline">
-                    {groupeLocalPost.title.rendered}
-                  </Link>
+          {/* Colonne de gauche: Image (33%) */}
+          <div className="hidden md:block w-1/3 py-4 mx-auto">
+              {featuredImage && (
+                <div className="relative h-64 md:h-96 mb-8">
+                  <Image
+                    src={featuredImage || "/placeholder.svg"}
+                    alt=""
+                    fill
+                    className="object-cover rounded-lg"
+                    sizes="(max-width: 768px) 40vw, (max-width: 1200px) 768px, 1024px"
+                  />
                 </div>
               )}
-            </div>
-            <div
-              className="text-sm text-muted-foreground line-clamp-3 mb-4"
-              dangerouslySetInnerHTML={{ __html: post.acf?.descriptif || "" }}
-            />
+          </div>
+          {/* Colonne de droite: Détails de l'article (67%) */}
+          <div className="w-2/3 md:w-2/3 px-4 py-8 mx-auto">
+                <div className="px-8 pt-8 mx-auto mb-8">
+                  <Badge variant="secondary" className="mb-4">
+                  <Link href={`/category/${categorySlug}`}>
+                      {categoryName}
+                  </Link>
+                </Badge>
+                  <h1
+                    className="text-3xl md:text-4xl font-bold mb-4"
+                    dangerouslySetInnerHTML={{ __html: post.title.rendered }}
+                  />
+                  <div className="flex flex-wrap gap-3 text-sm text-muted-foreground mb-6">
+                    <div><DateFormat dateStr={post.date} /></div>
+
+                    {/* Groupe local avec lien */}
+                    {groupeLocalPost && (
+                      <div className="flex items-center gap-2">
+                        <Users className="h-4 w-4 text-muted-foreground" />
+                        <Link href={`/groupe-local/${groupeLocalPost.slug}`} className="text-primary hover:underline">
+                          {groupeLocalPost.title.rendered}
+                        </Link>
+                      </div>
+                    )}
+                  </div>
+                </div>
+                {acfFields.length > 0 && !isEvent && (
+                <div className="ml-8 px-8 py-4 bg-muted/30 rounded-lg">
+                  <dl className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <>
+                      <div className="space-y-1">
+
+                          {attachedFile && (
+                            <>
+                              <dt className="text-sm font-medium text-muted-foreground capitalize">Fichier de la publication</dt>
+                                <dd className="text-sm">
+                              <a
+                                href={attachedFile}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-primary hover:underline ml-2"
+                              >
+                                Télécharger
+                              </a>
+                              </dd>
+                            </>
+                          )}
+                        
+                          {post.acf?.auteur && (
+                            <>
+                              <dt className="text-sm font-medium text-muted-foreground capitalize">Auteur</dt>
+                              <dd className="text-sm">
+                                <div className="text-primary hover:underline ml-2">
+                                  {post.acf.auteur}
+                                </div>
+                              </dd>
+                            </>
+                          )}
+                        {post.acf?.lien_de_la_publication && (
+                          <>
+                            <dt className="text-sm font-medium text-muted-foreground capitalize">Lien vers la publication</dt>
+                            <dd className="text-sm">
+                              <a
+                                href={post.acf.lien_de_la_publication}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-primary hover:underline ml-2"
+                              >
+                                {post.acf.lien_de_la_publication}
+                              </a>
+                            </dd>
+                          </>
+                        )}
+                        {post.acf?.date_de_la_publication && (
+                          <>
+                            <dt className="text-sm font-medium text-muted-foreground capitalize">Date de la publication</dt>
+                            <dd className="text-sm">
+                              <div className="text-primary hover:underline ml-2">
+                                <DateFormat dateStr={post.acf.date_de_la_publication} />
+                              </div>
+                            </dd>
+                          </>
+                        )}
+                        {post.acf?.auteur_et_media && (
+                          <>
+                            <dt className="text-sm font-medium text-muted-foreground capitalize">Média</dt>
+                            <dd className="text-sm">
+                              <div className="text-primary hover:underline ml-2">
+                                {post.acf.auteur_et_media}
+                              </div>
+                            </dd>
+                          </>
+                        )}
+                        {post.acf?.lien_vers_larticle && (
+                          <>
+                            <dt className="text-sm font-medium text-muted-foreground capitalize">Lien vers le reportage</dt>
+                            <dd className="text-sm">
+                              <a
+                                href={post.acf.lien_vers_larticle}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-primary hover:underline ml-2"
+                              >
+                                {post.acf.lien_vers_larticle}
+                              </a>
+                            </dd>
+                          </>
+                        )}
+                      </div>
+                    </>
+                  </dl>
+
+                </div>
+          
+      )}
           </div>
         </div>
       )}
 
-      {acfFields.length > 0 && !isEvent && (
-        <div className="mb-8 p-4 bg-muted/30 rounded-lg">
-          <h2 className="text-xl font-semibold mb-4">Informations complémentaires</h2>
-          <dl className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {
-              acfFields
-                .filter(
-                  ([key]) =>
-                    ![
-                      "descriptif",
-                      "contenu_de_la_publication",
-                      "date_de_levenement",
-                      "heure_de_levenement",
-                      "lieu_evenement",
-                      "adresse_evenement",
-                      "adress",
-                      "adresse",
-                      "latitude",
-                      "longitude",
-                      "lieu_de_levenement", // Exclure le champ imbriqué
-                      "groupe_local",
-                      "groupe_local_tax", // Exclure les champs de groupe local
-                      "tax_groupe_local", // Exclure le nouveau champ de groupe local
-                    ].includes(key),
-                )
-                .map(([key, value]) => {
-                  // Vérifier si la valeur est un objet (comme lieu_de_levenement)
-                  if (typeof value === "object" && value !== null) {
-                    return null // Ne pas afficher les objets complexes
-                  }
+      {/* Affichage du contenu principal de l'article */}
 
-                  return (
-                    <div key={key} className="space-y-1">
-                      <dt className="text-sm font-medium text-muted-foreground capitalize">{key.replace(/_/g, " ")}</dt>
-                      <dd className="text-sm">
-                        {typeof value === "string" ? (
-                          <a
-                            href={value}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-primary hover:underline"
-                          >
-                            {value}
-                          </a>
-                        ) : (
-                          String(value)
-                        )}
-                        {key === "fichier_de_la_publication" && (
-                          <a
-                            href={`/media/${attachedFile}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-primary hover:underline ml-2"
-                          >
-                            Télécharger le fichier
-                          </a>
-                        )}
+          {post.acf?.descriptif && (
+            <div className="flex items-center gap-2 px-8 py-4 bg-muted/30 rounded-lg">
+              <div className="text-sm text-muted-foreground">
+                {post.acf.descriptif}
+              </div>
+            </div>
+        )}
 
-                      </dd>
-                    </div>
-                  )
-                })
-                .filter(Boolean) // Filtrer les valeurs null
-            }
-          </dl>
-        </div>
-      )}
-
-      <article className="prose prose-lg max-w-none mb-8">
+      <article className="prose prose-lg max-w-none mb-8 py-8">
         <div dangerouslySetInnerHTML={{ __html: post.acf?.contenu_de_la_publication || "" }} />
       </article>
 
