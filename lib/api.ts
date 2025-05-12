@@ -121,7 +121,7 @@ export async function fetchCategories(): Promise<Category[]> {
     // Check if we have a valid cache
     const now = Date.now()
     if (categoriesCache && categoriesCacheTime + CACHE_DURATION > now) {
-      return categoriesCache
+      return categoriesCache.sort((a, b) => b.count - a.count)
     }
 
     const response = await fetch(`${API_BASE_URL}/categories?per_page=100`, {
@@ -141,7 +141,8 @@ export async function fetchCategories(): Promise<Category[]> {
     categoriesCache = data
     categoriesCacheTime = now
 
-    return data
+    // Sort categories by count in descending order
+    return data.sort((a, b) => b.count - a.count)
   } catch (error) {
     console.error("Error fetching categories:", error)
     return []

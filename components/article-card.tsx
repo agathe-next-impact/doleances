@@ -172,7 +172,7 @@ export default function ArticleCard({ post }: ArticleCardProps) {
 
         <div
           className="text-sm text-muted-foreground line-clamp-3 mb-4"
-          dangerouslySetInnerHTML={{ __html: post.excerpt.rendered }}
+          dangerouslySetInnerHTML={{ __html: post.acf?.descriptif || post.excerpt.rendered }}
         />
 
         {/* Affichage du groupe local avec lien */}
@@ -199,8 +199,8 @@ export default function ArticleCard({ post }: ArticleCardProps) {
                   ([key]) =>
                     ![
                       "date_de_levenement",
+                      'descriptif',
                       "heure_evenement",
-                      "lieu_evenement",
                       "adresse_evenement",
                       "adress",
                       "adresse",
@@ -218,19 +218,21 @@ export default function ArticleCard({ post }: ArticleCardProps) {
 
                   return (
                     <div key={key} className="text-xs">
-                      <span className="font-medium capitalize">{key.replace(/_/g, " ")}: </span>
-                      <span className="text-muted-foreground">
+                      <span className="font-regular uppercase text-muted-foreground">{key.replace(/_/g, " ")}: </span>
+                      <span >
                         {typeof value === "string" && value.startsWith("http") ? (
                           <a
-                            href={value}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-primary hover:underline"
+                          href={value}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-primary hover:underline"
                           >
-                            Lien
+                          Voir en ligne
                           </a>
                         ) : (
-                          String(value).substring(0, 50) + (String(value).length > 50 ? "..." : "")
+                          String(value)
+                          .replace(/<\/?[^>]+(>|$)/g, "") // Remove HTML tags
+                          .substring(0, 50) + (String(value).length > 50 ? "..." : "")
                         )}
                       </span>
                     </div>
