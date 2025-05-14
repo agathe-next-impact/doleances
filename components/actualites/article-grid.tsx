@@ -1,4 +1,4 @@
-import { ArticleCardHome } from "@/components/article-card-home"
+import { ArticleCardHome } from "@/components/actualites/article-card-home"
 
 interface Article {
   id: number
