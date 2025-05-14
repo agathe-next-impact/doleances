@@ -1,3 +1,5 @@
+import { env } from "process"
+
 // Types for WordPress API responses
 export interface Category {
   id: number
@@ -121,7 +123,7 @@ export interface Media {
   }
 }
 
-const API_BASE_URL = "https://wp-starter.io/wp-json/wp/v2"
+const API_BASE_URL = env.NEXT_PUBLIC_API_BASE_URL || "https://wp-starter.io/wp-json/wp/v2"
 
 // Cache for categories to avoid multiple requests
 let categoriesCache: Category[] | null = null

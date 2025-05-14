@@ -55,7 +55,13 @@ export default async function Home() {
             <YouTubeEmbed videoLink="https://www.youtube.com/embed/8bof5Anluk4?si=H5M7BGGsvWFUODBM" />
             </div>
         </div>
+        
         <div className="h-max flex flex-col col-span-2 ">
+
+          
+          <div className="flex flex-col flex-grow justify-center p-6">
+            <Verbatim />
+          </div>
           <div className="h-max flex flex-col rounded-lg border bg-card shadow-lg overflow-hidden">
             {stickyArticle && stickyArticle.featuredImage && (
               <div className="relative h-48 w-full">
@@ -67,6 +73,7 @@ export default async function Home() {
                 />
               </div>
             )}
+            
             <div className="flex flex-col flex-grow p-6">
               <h2 className="w-full mb-4 pb-3 text-2xl font-serif font-light uppercase border-b-[1px]">à la une</h2>
               {stickyArticle && (
@@ -109,9 +116,6 @@ export default async function Home() {
                 </>
               )}
             </div>
-          </div>
-          <div className="flex flex-col flex-grow justify-center p-6">
-            <Verbatim />
           </div>
         </div>
       </section> 

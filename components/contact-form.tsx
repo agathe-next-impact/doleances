@@ -134,7 +134,7 @@ export default function ContactForm({ subjects }: ContactFormProps) {
             )}
           />
 
-          <Button type="submit" className="w-full" disabled={isSubmitting}>
+          <Button type="submit" variant="outline" disabled={isSubmitting}>
             {isSubmitting ? "Envoi en cours..." : "Envoyer le message"}
           </Button>
         </form>

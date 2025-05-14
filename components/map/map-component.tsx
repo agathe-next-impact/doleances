@@ -1,152 +1,121 @@
-"use client"
+"use client";
 
-import { useState, useEffect, useCallback, useRef } from "react"
-import { GoogleMap, useJsApiLoader, Marker, MarkerClusterer } from "@react-google-maps/api"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import LocationSidebar from "./location-sidebar"
-import { AlertCircle } from "lucide-react"
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { useState, useEffect, useCallback, useRef } from "react";
+import { GoogleMap, useJsApiLoader, Marker, MarkerClusterer } from "@react-google-maps/api";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import LocationSidebar from "./location-sidebar";
+import { AlertCircle } from "lucide-react";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 // Types
 interface Location {
-  id: string
-  slug: string
-  title: { rendered: string }
+  id: string;
+  slug: string;
+  title: { rendered: string };
   acf: {
     localisation: {
-      lat: string | number
-      lng: string | number
-      address?: string
-    }
-    region: string
-    adresse: string
-    telephone: string
-    email: string
-    site_web: string
-  }
-  content?: { rendered: string }
-  featured_media?: number
+      lat: string | number;
+      lng: string | number;
+      address?: string;
+    };
+    region: string;
+    adresse: string;
+    telephone: string;
+    email: string;
+    site_web: string;
+  };
+  content?: { rendered: string };
+  featured_media?: number;
   _embedded?: {
     "wp:featuredmedia"?: Array<{
-      source_url: string
-    }>
-  }
+      source_url: string;
+    }>;
+  };
 }
 
 interface ProcessedLocation {
-  id: string
-  slug?: string
-  title: string
-  position: { lat: number; lng: number }
-  address: string
-  content?: string
-  phone?: string
-  email?: string
-  website?: string
-  region: string
-  thumbnail?: string
+  id: string;
+  slug?: string;
+  title: string;
+  position: { lat: number; lng: number };
+  address: string;
+  content?: string;
+  phone?: string;
+  email?: string;
+  website?: string;
+  region: string;
+  thumbnail?: string;
 }
 
 interface GroupRegion {
-  id: string
-  name: string
-  center: { lat: number; lng: number }
-  zoom: number
-  locations: ProcessedLocation[]
+  id: string;
+  name: string;
+  center: { lat: number; lng: number };
+  zoom: number;
+  locations: ProcessedLocation[];
 }
 
 // Styles
 const containerStyle = {
   width: "100%",
   height: "calc(100vh - 80px)",
-}
-
-// Mapping des types en français
-const regionLabels: Record<string, string> = {
-  ileDeFrancefrance: "Ile de France",
-  oise: "Oise",
-  auvergne: "Auvergne",
-}
-
-
+};
 
 // Coordonnées par défaut pour la France
-const defaultCenter = { lat: 46.603354, lng: 2.3522 }
-const defaultZoom = 5
+const defaultCenter = { lat: 46.603354, lng: 2.3522 };
+const defaultZoom = 5;
 
 // Clé API Google Maps
-const googleMapsApiKey = "AIzaSyA1lJXqXBc0-w5WUVO1KhvggK05FCbi7Yg" // Remplacez par votre clé API
+const googleMapsApiKey = "AIzaSyA1lJXqXBc0-w5WUVO1KhvggK05FCbi7Yg"; // Remplacez par votre clé API
+const WORDPRESS_API_URL = "https://wp-starter.io/wp-json/wp/v2";
 
 export default function MapComponent() {
-  const [selectedRegion, setSelectedRegion] = useState<string | null>(null)
-  const [selectedLocation, setSelectedLocation] = useState<ProcessedLocation | null>(null)
-  const [groupRegions, setGroupRegions] = useState<GroupRegion[]>([])
-  const [loading, setLoading] = useState<boolean>(true)
-  const [error, setError] = useState<string | null>(null)
-  const mapRef = useRef<google.maps.Map | null>(null)  
-  const [viewingAllFrance, setViewingAllFrance] = useState<boolean>(true)
+  const [selectedRegion, setSelectedRegion] = useState<string | null>(null);
+  const [selectedLocation, setSelectedLocation] = useState<ProcessedLocation | null>(null);
+  const [groupRegions, setGroupRegions] = useState<GroupRegion[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+  const mapRef = useRef<google.maps.Map | null>(null);
+  const [viewingAllFrance, setViewingAllFrance] = useState<boolean>(true);
 
   // Utiliser useJsApiLoader au lieu de LoadScript pour une meilleure gestion des erreurs
   const { isLoaded, loadError } = useJsApiLoader({
     googleMapsApiKey,
-    // Ajouter ces options pour éviter les problèmes CORS
-    googleMapsClientId: undefined,
     preventGoogleFontsLoading: true,
-  })
+  });
 
   // Récupérer les données des groupes locaux depuis l'API WordPress
   useEffect(() => {
     const fetchGroupesLocaux = async () => {
       try {
-        setLoading(true)
-        // Utiliser l'endpoint spécifié et inclure les médias associés
-        const response = await fetch(
-          "https://palegreen-capybara-652133.hostingersite.com/wp-json/wp/v2/groupe_local?_embed",
-          {
-            // Ajouter ces options pour éviter les problèmes CORS
-            mode: "cors",
-            credentials: "omit",
-            headers: {
-              "Content-Type": "application/json",
-            },
+        setLoading(true);
+        const response = await fetch(`${WORDPRESS_API_URL}/groupe_local?_embed`, {
+          mode: "cors",
+          credentials: "omit",
+          headers: {
+            "Content-Type": "application/json",
           },
-        )
+        });
 
         if (!response.ok) {
-          throw new Error(`Erreur HTTP: ${response.status}`)
+          throw new Error(`Erreur HTTP: ${response.status}`);
         }
 
-        const data: Location[] = await response.json()
+        const data: Location[] = await response.json();
 
-        // Vérifier si les données sont valides
         if (!Array.isArray(data)) {
-          throw new Error("Format de données invalide")
+          throw new Error("Format de données invalide");
         }
 
-        // Traiter les données pour les adapter à notre structure
         const processedLocations: ProcessedLocation[] = data
-          .filter((item) => {
-            // Vérifier que tous les champs nécessaires existent
-            return item && item.acf && item.acf.localisation && item.acf.localisation.lat && item.acf.localisation.lng
-          })
+          .filter((item) => item.acf?.localisation?.lat && item.acf?.localisation?.lng)
           .map((item) => {
-            // Convertir les coordonnées en nombres
-            const lat =
-              typeof item.acf.localisation.lat === "string"
-                ? Number.parseFloat(item.acf.localisation.lat)
-                : item.acf.localisation.lat
+            const lat = parseFloat(item.acf.localisation.lat as string);
+            const lng = parseFloat(item.acf.localisation.lng as string);
 
-            const lng =
-              typeof item.acf.localisation.lng === "string"
-                ? Number.parseFloat(item.acf.localisation.lng)
-                : item.acf.localisation.lng
-
-
-            // Vérifier que les coordonnées sont valides
             if (isNaN(lat) || isNaN(lng)) {
-              console.warn(`Coordonnées invalides pour ${item.id}:`, item.acf.localisation)
-              // Utiliser des coordonnées par défaut
-              return null
+              console.warn(`Coordonnées invalides pour ${item.id}:`, item.acf.localisation);
+              return null;
             }
 
             return {
@@ -159,131 +128,109 @@ export default function MapComponent() {
               phone: item.acf.telephone || "",
               email: item.acf.email || "",
               website: item.acf.site_web || "",
-              region: item.acf.region_groupes_locaux || "autre",
+              region: item.acf.region_groupes_locaux || "Autres",
               thumbnail: item._embedded?.["wp:featuredmedia"]?.[0]?.source_url,
-            }
+            };
           })
-          .filter(Boolean) as ProcessedLocation[] // Filtrer les éléments null
-  
+          .filter(Boolean) as ProcessedLocation[];
 
-        // Si aucune localisation valide n'a été trouvée
         if (processedLocations.length === 0) {
-          setError("Aucune localisation valide trouvée dans les données.")
-          setLoading(false)
-          return
+          setError("Aucune localisation valide trouvée dans les données.");
+          setLoading(false);
+          return;
         }
 
         // Regrouper les localisations par région
-        const regionGroups: Record<string, ProcessedLocation[]> = {}
+        const regionGroups: Record<string, ProcessedLocation[]> = {};
 
         processedLocations.forEach((location) => {
           if (!regionGroups[location.region]) {
-            regionGroups[location.region] = []
+            regionGroups[location.region] = [];
           }
-          regionGroups[location.region].push(location)
-        })
+          regionGroups[location.region].push(location);
+        });
 
-        // Créer les groupes de régions
         const groups: GroupRegion[] = Object.entries(regionGroups).map(([region, locations]) => {
-          // Calculer le centre du groupe (moyenne des coordonnées)
           const center = locations.reduce(
-            (acc, loc) => {
-              return {
-                lat: acc.lat + loc.position.lat / locations.length,
-                lng: acc.lng + loc.position.lng / locations.length,
-              }
-            },
-            { lat: 0, lng: 0 },
-          )
+            (acc, loc) => ({
+              lat: acc.lat + loc.position.lat / locations.length,
+              lng: acc.lng + loc.position.lng / locations.length,
+            }),
+            { lat: 0, lng: 0 }
+          );
 
           return {
             id: region,
-            name: regionLabels[region] || region,
+            name: region,
             center,
             zoom: 7,
             locations,
-          }
-        })
+          };
+        });
 
-        setGroupRegions(groups)
-
-
-        // Sélectionner le premier région par défaut s'il existe
-        setLoading(false)
-
-        setLoading(false)
+        setGroupRegions(groups);
+        setLoading(false);
       } catch (err) {
-        console.error("Erreur lors de la récupération des groupes locaux:", err)
-        setError("Impossible de charger les données. Veuillez réessayer plus tard.")
-        setLoading(false)
+        console.error("Erreur lors de la récupération des groupes locaux:", err);
+        setError("Impossible de charger les données. Veuillez réessayer plus tard.");
+        setLoading(false);
       }
+    };
+
+    fetchGroupesLocaux();
+  }, []);
+
+  const resetToFranceView = useCallback(() => {
+    if (mapRef.current) {
+      mapRef.current.panTo(defaultCenter);
+      mapRef.current.setZoom(defaultZoom);
+      setSelectedLocation(null);
+      setSelectedRegion(null);
+      setViewingAllFrance(true);
     }
+  }, []);
 
-    fetchGroupesLocaux()
-  }, [])
-
-    // Fonction pour réinitialiser la vue à l'ensemble de la France
-    const resetToFranceView = useCallback(() => {
-      if (mapRef.current) {
-        mapRef.current.panTo(defaultCenter)
-        mapRef.current.setZoom(defaultZoom)
-        setSelectedLocation(null)
-        setSelectedRegion(null)
-        setViewingAllFrance(true)
-      }
-    }, [])
-
-  // Handle région change
   const handleRegionChange = useCallback(
     (regionId: string) => {
-      setSelectedRegion(regionId)
-      setSelectedLocation(null)
+      setSelectedRegion(regionId);
+      setSelectedLocation(null);
 
-      const group = groupRegions.find((g) => g.id === regionId)
+      const group = groupRegions.find((g) => g.id === regionId);
       if (group && mapRef.current) {
-        mapRef.current.panTo(group.center)
-        mapRef.current.setZoom(group.zoom)
+        mapRef.current.panTo(group.center);
+        mapRef.current.setZoom(group.zoom);
       }
     },
-    [groupRegions],
-  )
+    [groupRegions]
+  );
 
-  // Handle marker click
   const handleMarkerClick = useCallback((location: ProcessedLocation) => {
-    setSelectedLocation(location)
-    
-    // Centrer la carte sur la localisation sélectionnée
+    setSelectedLocation(location);
+
     if (mapRef.current) {
-      mapRef.current.panTo(location.position)
-      mapRef.current.setZoom(14) // Zoom approprié pour voir les détails
+      mapRef.current.panTo(location.position);
+      mapRef.current.setZoom(14);
     }
-  }, [])
+  }, []);
 
-  // Handle map load
   const onMapLoad = useCallback((map: google.maps.Map) => {
-    mapRef.current = map
+    mapRef.current = map;
+    map.panTo(defaultCenter);
+    map.setZoom(defaultZoom);
+  }, []);
 
-    // Initialiser la carte pour voir l'ensemble de la France
-    map.panTo(defaultCenter)
-    map.setZoom(defaultZoom)
-  }, [])
-
-  // Get current group
-  const currentGroup = groupRegions.find((g) => g.id === selectedRegion)
+  const currentGroup = groupRegions.find((g) => g.id === selectedRegion);
   const locations = currentGroup ? currentGroup.locations : groupRegions.flatMap((g) => g.locations);
 
-  // Fonction pour gérer la fermeture d'une localisation
   const handleCloseLocation = useCallback(() => {
-    setSelectedLocation(null); // Réinitialiser la localisation sélectionnée
-  
-    // Recentrer la carte sur la vue par défaut (toutes les régions)
+    setSelectedLocation(null);
+
     if (mapRef.current) {
       mapRef.current.panTo(defaultCenter);
       mapRef.current.setZoom(defaultZoom);
     }
-  }, [setSelectedLocation]);
+  }, []);
 
-  // Afficher une erreur si le chargement de l'API Google Maps a échoué
   if (loadError) {
     return (
       <div className="p-4">
@@ -295,7 +242,7 @@ export default function MapComponent() {
           </AlertDescription>
         </Alert>
       </div>
-    )
+    );
   }
 
   if (loading) {
@@ -306,7 +253,7 @@ export default function MapComponent() {
           <p className="mt-4">Chargement des données...</p>
         </div>
       </div>
-    )
+    );
   }
 
   if (error) {
@@ -319,10 +266,9 @@ export default function MapComponent() {
           </button>
         </div>
       </div>
-    )
+    );
   }
 
-  // Attendre que l'API Google Maps soit chargée
   if (!isLoaded) {
     return (
       <div className="flex items-center justify-center h-screen">
@@ -331,31 +277,34 @@ export default function MapComponent() {
           <p className="mt-4">Chargement de Google Maps...</p>
         </div>
       </div>
-    )
+    );
   }
 
   return (
     <div className="flex flex-col h-screen">
-      <div className="py-4 bg-white">      
-          <Select value={selectedRegion || ""} onValueChange={(value) => {
+      <div className="py-4 bg-white">
+        <Select
+          value={selectedRegion || ""}
+          onValueChange={(value) => {
             if (value === "all") {
-              resetToFranceView(); // Réinitialiser la vue à l'ensemble de la France
+              resetToFranceView();
             } else {
-              handleRegionChange(value); // Gérer le changement de région
+              handleRegionChange(value);
             }
-          }}>
-            <SelectTrigger className="w-full md:w-[300px]">
-              <SelectValue placeholder="Sélectionnez une région" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">Toutes les régions</SelectItem> {/* Option pour toutes les régions */}
-              {groupRegions.map((group) => (
-                <SelectItem key={group.id} value={group.id}>
-                  {group.name} ({group.locations.length})
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          }}
+        >
+          <SelectTrigger className="w-full md:w-[300px]">
+            <SelectValue placeholder="Sélectionnez une région" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Toutes les régions</SelectItem>
+            {groupRegions.map((group) => (
+              <SelectItem key={group.id} value={group.id}>
+                {group.name} ({group.locations.length})
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
 
       <div className="flex flex-col md:flex-row flex-1 h-full">
@@ -380,7 +329,6 @@ export default function MapComponent() {
                       position={location.position}
                       onClick={() => handleMarkerClick(location)}
                       clusterer={clusterer}
-                      // Suppression de l'animation pour éviter les erreurs
                     />
                   ))}
                 </>
@@ -397,5 +345,5 @@ export default function MapComponent() {
         />
       </div>
     </div>
-  )
+  );
 }

@@ -47,7 +47,7 @@ export default async function Home() {
                 {stickyArticle && (
                   <>
                     <h3 className="mb-2 font-medium">
-                      <Link href={`/article/${stickyArticle.id}`}>
+                      <Link href={`/article/${stickyArticle.slug}`}>
                         {stickyArticle.title}
                       </Link></h3>
                     <div
@@ -57,7 +57,7 @@ export default async function Home() {
                         <div className="flex flex-wrap gap-2 pt-2">
                         {stickyArticle.categories.map((category, index) => (
                           <Badge key={`cat-${index}`} variant="secondary">            
-                            <Link href={`/article/${stickyArticle.categoriesSlug[index]}`}>
+                            <Link href={`/category/${stickyArticle.categoriesSlug[index]}`}>
                             {category}
                             </Link>
                           </Badge>
