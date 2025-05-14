@@ -103,10 +103,12 @@ export async function sendContactForm(formData: FormData) {
   // Valider les données du formulaire
   const validatedData = formSchema.parse(formData)
 
+  console.log("Données du formulaire validées:", validatedData)
+
   try {
     // Récupérer les emails destinataires depuis l'API
     const contactData = await getContactData()
-    const recipientEmails = contactData.emails || []
+    const recipientEmails: string[] = contactData.emails || []
 
     if (recipientEmails.length === 0) {
       throw new Error("Aucun email destinataire trouvé")
@@ -114,19 +116,26 @@ export async function sendContactForm(formData: FormData) {
 
     // Configuration de Nodemailer (à remplacer par vos propres informations SMTP)
     const transporter = nodemailer.createTransport({
-      host: process.env.SMTP_HOST || "smtp.hostinger.com",
-      port: Number.parseInt(process.env.SMTP_PORT || "465"),
-      secure: process.env.SMTP_SECURE === "true",
+      host: process.env.SMTP_HOST || "smtp.gmail.com",
+      port: Number.parseInt(process.env.SMTP_PORT || "587"),
+      secure: process.env.SMTP_SECURE === "false",
       auth: {
-        user: process.env.SMTP_USER || "contact@wp-starter.io",
-        pass: process.env.SMTP_PASSWORD || "zfs3016A79!",
+        user: process.env.SMTP_USER || "am.agathe.martin@gmail.com",
+        pass: process.env.SMTP_PASSWORD || "dvzhmncnrcljqntr",
       },
     })
 
+    console.log("Transporteur Nodemailer créé avec succès")
+    let emailsList = "";
+    recipientEmails.forEach(email => {
+      emailsList += email.email_de_destination + ", ";
+      console.log("Emails de destination:", emailsList);
+    });
+
     // Envoyer l'email
     await transporter.sendMail({
-      from: `"Formulaire de contact" <${process.env.SMTP_USER}>`,
-      to: recipientEmails.join(", "),
+      from: "Formulaire de contact des doléances",
+      to: emailsList,
       subject: `Nouveau message: ${validatedData.subject}`,
       text: `
         Nom: ${validatedData.name}
