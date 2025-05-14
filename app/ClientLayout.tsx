@@ -154,6 +154,7 @@ export default function ClientLayout({
                               A propos
                             </Link>
                           </li>
+                          {/*
                           <li>
                             <Link
                               href="/doleances"
@@ -173,6 +174,7 @@ export default function ClientLayout({
                               Les doléances
                             </Link>
                           </li>
+                          */}
                         </ul>
                       </nav>
                     </SheetContent>
@@ -216,8 +218,8 @@ export default function ClientLayout({
                         </Link>
                       </li>
                       <li>
-                        <Link href="/articles" className="text-muted-foreground hover:underline">
-                          Doléances
+                        <Link href="/cateogory/etats-generaux-communaux" className="text-muted-foreground hover:underline">
+                          Etats Généraux communaux
                         </Link>
                       </li>
                       <li>

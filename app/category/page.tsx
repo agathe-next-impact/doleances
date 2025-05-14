@@ -1,5 +1,5 @@
 import { fetchCategories } from "@/lib/api"
-import CategoryCard from "@/components/category-card"
+import CategoryCard from "@/components/actualites/category-card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { CalendarIcon, User2 } from "lucide-react"
@@ -79,7 +79,7 @@ export default async function Home() {
                         </div>
                       </div>
                     <Button variant="outline" asChild>
-                      <Link href={`/article/${stickyArticle.id}`}>Lire plus</Link>
+                      <Link href={`/article/${stickyArticle.slug}`}>Lire plus</Link>
                     </Button>
                   </>
                 )}

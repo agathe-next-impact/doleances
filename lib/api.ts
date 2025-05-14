@@ -37,6 +37,8 @@ export interface Post {
     adresse_evenement?: string
     descriptif?: string
     fichier_de_la_publication?: string
+    region_etats_generaux_communaux?: string
+    contenu_de_larticle?: string
     adress?: string
     adresse?: string
     latitude?: string | number

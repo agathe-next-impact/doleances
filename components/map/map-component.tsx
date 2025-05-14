@@ -159,7 +159,7 @@ export default function MapComponent() {
               phone: item.acf.telephone || "",
               email: item.acf.email || "",
               website: item.acf.site_web || "",
-              region: item.acf.region || "autre",
+              region: item.acf.region_groupes_locaux || "autre",
               thumbnail: item._embedded?.["wp:featuredmedia"]?.[0]?.source_url,
             }
           })

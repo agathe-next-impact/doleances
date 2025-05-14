@@ -7,7 +7,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { Badge } from "@/components/ui/badge"
 import { MapPin, Calendar, Users } from "lucide-react"
-import StaticMap from "@/components/static-map"
+import StaticMap from "@/components/map/static-map"
 import DateFormat, { TimeFormat } from "@/components/date-format"
 
 interface ArticleContentProps {
@@ -318,11 +318,21 @@ console.log("ACF Fields:", acfFields)
                   </Link>
                 </Badge>
                   <h1
-                    className="text-3xl md:text-4xl font-bold mb-4"
+                    className="text-3xl md:text-4xl mb-4"
                     dangerouslySetInnerHTML={{ __html: post.title.rendered }}
                   />
                   <div className="flex flex-wrap gap-3 text-sm text-muted-foreground mb-6">
                     <div><DateFormat dateStr={post.date} /></div>
+
+                    
+                    {post.acf?.region_etats_generaux_communaux && (
+                      <>
+                        <div className="text-sm font-medium text-muted-foreground capitalize"> - </div>
+                          <div className="text-primary hover:underline">
+                            {post.acf.region_etats_generaux_communaux}
+                          </div>
+                      </>
+                    )}
 
                     {/* Groupe local avec lien */}
                     {groupeLocalPost && (
@@ -336,37 +346,41 @@ console.log("ACF Fields:", acfFields)
                   </div>
                 </div>
                 {acfFields.length > 0 && !isEvent && (
-                <div className="ml-8 px-8 py-4 bg-muted/30 rounded-lg">
+                  acfFields.some(([key]) =>
+                  ["auteur", "lien_de_la_publication", "date_de_la_publication", "auteur_et_media", "lien_vers_larticle"].includes(key)
+                  ) && (
+                  <>
+                  <div className="ml-8 px-8 py-4 bg-muted/30 rounded-lg">
                   <dl className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <>
                       <div className="space-y-1">
 
-                          {attachedFile && (
-                            <>
-                              <dt className="text-sm font-medium text-muted-foreground capitalize">Fichier de la publication</dt>
-                                <dd className="text-sm">
-                              <a
-                                href={attachedFile}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-primary hover:underline ml-2"
-                              >
-                                Télécharger
-                              </a>
-                              </dd>
-                            </>
-                          )}
-                        
-                          {post.acf?.auteur && (
-                            <>
-                              <dt className="text-sm font-medium text-muted-foreground capitalize">Auteur</dt>
+                        {attachedFile && (
+                          <>
+                            <dt className="text-sm font-medium text-muted-foreground capitalize">Fichier de la publication</dt>
                               <dd className="text-sm">
-                                <div className="text-primary hover:underline ml-2">
-                                  {post.acf.auteur}
-                                </div>
-                              </dd>
-                            </>
-                          )}
+                            <a
+                              href={attachedFile}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-primary hover:underline ml-2"
+                            >
+                              Télécharger
+                            </a>
+                            </dd>
+                          </>
+                        )}
+                      
+                        {post.acf?.auteur && (
+                          <>
+                            <dt className="text-sm font-medium text-muted-foreground capitalize">Auteur</dt>
+                            <dd className="text-sm">
+                              <div className="text-primary hover:underline ml-2">
+                                {post.acf.auteur}
+                              </div>
+                            </dd>
+                          </>
+                        )}
                         {post.acf?.lien_de_la_publication && (
                           <>
                             <dt className="text-sm font-medium text-muted-foreground capitalize">Lien vers la publication</dt>
@@ -422,8 +436,9 @@ console.log("ACF Fields:", acfFields)
                   </dl>
 
                 </div>
-          
-      )}
+                  </>
+                  )
+                )}
           </div>
         </div>
       )}
@@ -437,6 +452,15 @@ console.log("ACF Fields:", acfFields)
               </div>
             </div>
         )}
+
+
+          {post.acf?.contenu_de_larticle && (
+            <div className="flex items-center gap-2 px-8 py-4 bg-muted/30 rounded-lg">
+              <div className="text-sm text-muted-foreground">
+                {post.acf.contenu_de_larticle}
+              </div>
+            </div>
+        )}  
 
       <article className="prose prose-lg max-w-none mb-8 py-8">
         <div dangerouslySetInnerHTML={{ __html: post.acf?.contenu_de_la_publication || "" }} />

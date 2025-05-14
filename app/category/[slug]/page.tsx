@@ -1,10 +1,10 @@
 // Améliorer la gestion des erreurs et ajouter des fallbacks pour les données manquantes
 import { fetchCategory, fetchPostsByCategory, extractGroupesLocauxCPTFromCategory, fetchCategoryBySlug } from "@/lib/api"
-import ArticleList from "@/components/article-list"
-import CategoryHero from "@/components/category-hero"
-import SearchFilter from "@/components/search-filter"
+import ArticleList from "@/components/actualites/article-list"
+import CategoryHero from "@/components/actualites/category-hero"
+import SearchFilter from "@/components/actualites/search-filter"
 import { Suspense } from "react"
-import Link from "next/link"
+
 
 export default async function CategoryPage({ params }: { params: { slug: string } }) {
   try {

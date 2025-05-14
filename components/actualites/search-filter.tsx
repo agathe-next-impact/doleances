@@ -105,7 +105,7 @@ export default function SearchFilter({
   };
 
   return (
-    <div className="bg-muted/40 p-4 rounded-lg">
+    <div className="py-4 rounded-lg">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="relative">
           <Input

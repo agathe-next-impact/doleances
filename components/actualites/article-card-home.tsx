@@ -5,7 +5,7 @@ import { CalendarIcon, MapIcon, User2 } from "lucide-react"
 import { formatDate } from "@/lib/utils"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import DateFormat, { TimeFormat } from "./date-format"
+import DateFormat, { TimeFormat } from "@/components/date-format"
 
 interface Article {
   id: number
