@@ -875,3 +875,31 @@ export async function fetchRandomVerbatim(): Promise<Verbatim | null> {
     return null;
   }
 }
+
+
+export async function getContactFormConfig() {
+  try {
+    const response = await fetch(
+      `${API_BASE_URL}/pages?slug=contribuer`,
+      {
+        cache: "no-store",
+        headers: {
+          Accept: "application/json",
+        },
+        next: { revalidate: 60 }, // Revalidate every minute as fallback
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch contact page data");
+    }
+
+    const pages = await response.json();
+    console.log("Pages récupérées:", pages);
+    return pages.length > 0 ? pages[0] : null; // Retourne la première page correspondant au slug
+  } catch (error) {
+    console.error("Error fetching contact page data:", error);
+    return null;
+  }
+}
+
