@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge"
 import { Calendar, Clock, MapPin, Users } from "lucide-react"
 import { useState, useEffect } from "react"
 import { fetchGroupeLocalById } from "@/lib/api"
+import DateFormat, { TimeFormat } from "@/components/date-format"
 
 interface ArticleCardProps {
   post: Post
@@ -16,6 +17,7 @@ interface ArticleCardProps {
 
 export default function ArticleCard({ post }: ArticleCardProps) {
   const [groupeLocalName, setGroupeLocalName] = useState<string | null>(null)
+  const [groupeLocalSlug, setGroupeLocalSlug] = useState<string | null>(null)
   const [isLoadingGroupe, setIsLoadingGroupe] = useState(false)
 
   // Get featured image if available
@@ -33,6 +35,7 @@ export default function ArticleCard({ post }: ArticleCardProps) {
   // Récupérer l'ID du groupe local depuis les champs ACF (utiliser tax_groupe_local ou groupe_local_tax)
   const groupeLocalId = post.acf?.tax_groupe_local || post.acf?.groupe_local_tax || null
 
+
   // Charger le nom du groupe local si on a un ID
   useEffect(() => {
     const loadGroupeLocalName = async () => {
@@ -42,6 +45,7 @@ export default function ArticleCard({ post }: ArticleCardProps) {
           const groupe = await fetchGroupeLocalById(groupeLocalId)
           if (groupe) {
             setGroupeLocalName(groupe.title.rendered)
+            setGroupeLocalSlug(groupe.slug)
           }
         } catch (error) {
           console.error(`Erreur lors du chargement du groupe local ${groupeLocalId}:`, error)
@@ -76,7 +80,7 @@ export default function ArticleCard({ post }: ArticleCardProps) {
   }
 
   // Check if this post is an event
-  const isEvent = post.acf?.date_de_levenement || post.acf?.heure_evenement || post.acf?.lieu_de_levenement
+  const isEvent = post.acf?.date_de_levenement || post.acf?.heure_de_levenement || post.acf?.lieu_de_levenement
 
   // Récupérer l'adresse du lieu de l'événement (structure imbriquée)
   const eventAddress = (() => {
@@ -151,13 +155,13 @@ export default function ArticleCard({ post }: ArticleCardProps) {
             {post.acf?.date_de_levenement && (
               <div className="flex items-center gap-1.5">
                 <Calendar className="h-4 w-4 text-muted-foreground" />
-                <span>{post.acf.date_de_levenement}</span>
+                <DateFormat dateStr={post.acf.date_de_levenement}/>
               </div>
             )}
-            {post.acf?.heure_evenement && (
+            {post.acf?.heure_de_levenement && (
               <div className="flex items-center gap-1.5">
                 <Clock className="h-4 w-4 text-muted-foreground" />
-                <span>{post.acf.heure_evenement}</span>
+                <span><TimeFormat timeStr={post.acf.heure_de_levenement} /></span>
               </div>
             )}
             <div className="flex items-start gap-1.5">
@@ -183,7 +187,7 @@ export default function ArticleCard({ post }: ArticleCardProps) {
               {isLoadingGroupe ? (
                 <span className="text-muted-foreground">Chargement du groupe local...</span>
               ) : (
-                <Link href={`/groupe-local/${groupeLocalId}`} className="text-primary hover:underline font-medium">
+                <Link href={`/groupe-local/${groupeLocalSlug}`} className="text-primary hover:underline font-medium">
                   {groupeLocalName || "Voir le groupe local"}
                 </Link>
               )}
@@ -199,8 +203,13 @@ export default function ArticleCard({ post }: ArticleCardProps) {
                   ([key]) =>
                     ![
                       "date_de_levenement",
+<<<<<<< HEAD:components/article-card.tsx
                       'descriptif',
                       "heure_evenement",
+=======
+                      "heure_de_levenement",
+                      "lieu_evenement",
+>>>>>>> db5dd6c7aba6fd3d9159cec2b320062ae31b6740:components/actualites/article-card.tsx
                       "adresse_evenement",
                       "adress",
                       "adresse",
@@ -243,9 +252,12 @@ export default function ArticleCard({ post }: ArticleCardProps) {
             </div>
           )}
       </CardContent>
+      {/* Affichage du footer si la carte n'est pas un événement */}
+      {!isEvent && (
       <CardFooter className="flex flex-wrap gap-2 items-center text-xs text-muted-foreground">
         <div>{formatDate(post.date)}</div>
       </CardFooter>
+      )}
     </Card>
   )
 }

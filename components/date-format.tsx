@@ -58,11 +58,15 @@ export const TimeFormat: React.FC<TimeFormatProps> = ({ timeStr }) => {
         return <span>Heure invalide</span>;
     }
 
-    // Formatage de l'heure en "HH:mm"
-    const formattedTime = new Intl.DateTimeFormat("fr-FR", {
-        hour: "2-digit",
-        minute: "2-digit",
-    }).format(date);
+    // Formatage de l'heure en "HHhmm"
+    let formattedTime = new Intl.DateTimeFormat("fr-FR", {
+      hour: "2-digit",
+      minute: "2-digit",
+    }).format(date).replace(":", "h");
+
+    if (formattedTime.startsWith("0")) {
+      formattedTime = formattedTime.substring(1);
+    }
     return <span>{formattedTime}</span>;
 }
 // export default TimeFormat    

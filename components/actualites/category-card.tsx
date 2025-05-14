@@ -5,7 +5,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { useEffect, useState } from "react"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import DateFormat, { TimeFormat } from "./date-format"
+import DateFormat, { TimeFormat } from "@/components/date-format"
 
 interface CategoryCardProps {
   category: Category
@@ -48,9 +48,9 @@ export default function CategoryCard({ category }: CategoryCardProps) {
 console.log(recentPosts)
 
   return (
-    <Card className="h-full flex flex-col overflow-hidden border shadow-lg">
+    <Card className="col-span-3 h-full flex flex-col overflow-hidden border shadow-lg">
       <CardHeader className="pb-2">
-        <CardTitle className="text-xl">
+        <CardTitle className="w-full mb-4 pb-3 text-2xl font-serif font-light uppercase border-b-[1px]">
           <Link href={`/category/${category.slug}`}>
             {category.name}
           </Link>
@@ -80,7 +80,7 @@ console.log(recentPosts)
                 <Link href={`/article/${post.slug}`} className="flex gap-6">
                   <div className="relative h-16 w-1/3 mb-2">
                     <Image
-                      src={post._embedded?.["wp:featuredmedia"][0].source_url || "/placeholder.svg"}
+                      src={post._embedded?.["wp:featuredmedia"]?.[0]?.source_url ?? "/placeholder.svg"}
                       alt={post.title.rendered}
                       fill
                       className="object-cover rounded"

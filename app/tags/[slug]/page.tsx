@@ -4,7 +4,7 @@ import { notFound } from "next/navigation"
 import { ArrowLeft } from "lucide-react"
 
 import { fetchArticles, fetchTags } from "@/lib/wordpress"
-import { ArticleGrid } from "@/components/article-grid"
+import { ArticleGrid } from "@/components/actualites/article-grid"
 import { Button } from "@/components/ui/button"
 import { Pagination } from "@/components/pagination"
 

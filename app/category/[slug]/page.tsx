@@ -1,9 +1,10 @@
 // Améliorer la gestion des erreurs et ajouter des fallbacks pour les données manquantes
 import { fetchCategory, fetchPostsByCategory, extractGroupesLocauxCPTFromCategory, fetchCategoryBySlug } from "@/lib/api"
-import ArticleList from "@/components/article-list"
-import CategoryHero from "@/components/category-hero"
-import SearchFilter from "@/components/search-filter"
+import ArticleList from "@/components/actualites/article-list"
+import CategoryHero from "@/components/actualites/category-hero"
+import SearchFilter from "@/components/actualites/search-filter"
 import { Suspense } from "react"
+
 
 export default async function CategoryPage({ params }: { params: { slug: string } }) {
   try {
@@ -23,7 +24,7 @@ export default async function CategoryPage({ params }: { params: { slug: string 
         name: `Catégorie ${category?.name}`,
         description: category?.description || "",
         count: 0,
-        link: "",
+        link: "", 
       }
     }
 
@@ -55,11 +56,11 @@ export default async function CategoryPage({ params }: { params: { slug: string 
       for (const post of posts) {
         if (post.acf?.date_de_levenement) {
           try {
-            // Format attendu pour date_de_levenement: DD/MM/YYYY
-            const dateParts = post.acf.date_de_levenement.split("/")
-            if (dateParts && dateParts.length === 3) {
-              const month = dateParts[1]
-              const year = dateParts[2]
+            // Format attendu pour date_de_levenement: YYYYMMDD
+            const dateParts = post.acf.date_de_levenement
+            if (dateParts.length === 8) {
+              const month = dateParts.slice(4, 6)
+              const year = dateParts.slice(0, 4)
 
               // Ajouter la date au format MM/YYYY pour le filtrage (comme pour les publications)
               const monthYearFormat = `${month}/${year}`
@@ -79,7 +80,7 @@ export default async function CategoryPage({ params }: { params: { slug: string 
       // Filtrer les dates uniques et les trier
       dates = [...new Set(eventDates)].sort((a, b) => {
         try {
-          const [monthA, yearA] = a.split("/").map(Number)
+          const [monthA, yearA] = (a?.includes("/") ? a.split("/") : ["0", "0"]).map(Number)
           const [monthB, yearB] = b.split("/").map(Number)
 
           // Trier par année décroissante, puis par mois décroissant
@@ -127,7 +128,7 @@ export default async function CategoryPage({ params }: { params: { slug: string 
         <div className="my-8">
           <Suspense fallback={<div>Chargement des filtres...</div>}>
             <SearchFilter
-              dates={dates}
+              dates={dates.filter((date): date is string => date !== null)}
               groupesLocauxCPT={groupesLocauxCPT}
               categoryId={category?.id}
               isEventCategory={isEventCategory}

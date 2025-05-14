@@ -80,9 +80,9 @@ export function SearchAutocomplete({
     }
   };
 
-  const handleSuggestionSelect = (slug: string) => {
+  const handleSuggestionSelect = (id: number) => {
     if (redirectOnSelect) {
-      router.push(`/article/${slug}`);
+      router.push(`/article/${id}`);
     } else if (onSearch) {
       onSearch(slug);
     }

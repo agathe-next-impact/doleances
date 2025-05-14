@@ -1,4 +1,4 @@
-import { PageCard } from "@/components/page-card"
+import { PageCard } from "@/components/pages/page-card"
 
 interface Page {
   id: number

@@ -1,7 +1,6 @@
 
 import type { Metadata } from "next"
-import { fetchGroupesLocaux } from "@/lib/wordpress"
-import MapComponent from "@/components/map-component"
+import MapComponent from "@/components/map/map-component"
 
 
 export const metadata: Metadata = {
@@ -11,11 +10,6 @@ export const metadata: Metadata = {
 
 
 export default async function CartographiePage() {
-  // Récupérer les données des groupes locaux depuis WordPress
-  {/*const groupesLocaux = await fetchGroupesLocaux()
-
-  // Convertir les données au format attendu par le composant FranceMap
-  const locations = convertToLocations(groupesLocaux)*/}
 
   return (
     <div className="container mx-auto px-4 py-8">

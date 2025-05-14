@@ -5,7 +5,7 @@ import Link from "next/link"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { formatDate } from "@/lib/utils"
 import { MapPin, Mail, Phone, Globe, Calendar, Clock, Bookmark } from "lucide-react"
-import StaticMap from "@/components/static-map"
+import StaticMap from "@/components/map/static-map"
 import { Badge } from "@/components/ui/badge"
 import type { Post, Category } from "@/lib/api"
 
@@ -327,7 +327,7 @@ export default async function GroupeLocalPage({ params }: { params: { slug: stri
                     <Card key={post.id} className="h-full flex flex-col">
                       <CardHeader className="pb-2">
                         <CardTitle className="text-lg">
-                          <Link href={`/article/${post.id}`} className="hover:underline">
+                          <Link href={`/article/${post.slug}`} className="hover:underline">
                             <span dangerouslySetInnerHTML={{ __html: post.title?.rendered || `Article ${post.id}` }} />
                           </Link>
                         </CardTitle>
@@ -357,7 +357,7 @@ export default async function GroupeLocalPage({ params }: { params: { slug: stri
                         />
                       </CardContent>
                       <CardFooter className="text-xs text-muted-foreground">
-                        <Link href={`/article/${post.id}`} className="text-primary hover:underline">
+                        <Link href={`/article/${post.slug}`} className="text-primary hover:underline">
                           Voir les détails
                         </Link>
                       </CardFooter>
@@ -393,7 +393,7 @@ export default async function GroupeLocalPage({ params }: { params: { slug: stri
                       <Card key={post.id} className="h-full flex flex-col">
                         <CardHeader className="pb-2">
                           <CardTitle className="text-lg">
-                            <Link href={`/article/${post.id}`} className="hover:underline">
+                            <Link href={`/article/${post.slug}`} className="hover:underline">
                               <span
                                 dangerouslySetInnerHTML={{ __html: post.title?.rendered || `Article ${post.id}` }}
                               />
@@ -409,7 +409,7 @@ export default async function GroupeLocalPage({ params }: { params: { slug: stri
                         <CardFooter className="text-xs text-muted-foreground">
                           <div className="flex justify-between w-full">
                             <span>{formatDate(post.date)}</span>
-                            <Link href={`/article/${post.id}`} className="text-primary hover:underline">
+                            <Link href={`/article/${post.slug}`} className="text-primary hover:underline">
                               Lire l'article
                             </Link>
                           </div>

@@ -4,8 +4,8 @@ import { ArrowRight, Video } from "lucide-react"
 import { CalendarIcon, User2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { formatDate } from "@/lib/utils"
-import { ArticleCardHome } from "@/components/article-card-home"
-import { PageCard } from "@/components/page-card"
+import { ArticleCardHome } from "@/components/actualites/article-card-home"
+import { PageCard } from "@/components/pages/page-card"
 import { fetchFeaturedArticles, fetchPages } from "@/lib/wordpress"
 import { SearchAutocomplete } from "@/components/search-autocomplete"
 import YouTubeEmbed from "@/components/ui/video"
@@ -16,14 +16,7 @@ export default async function Home() {
   const articles = await fetchFeaturedArticles()
   const pages = await fetchPages()
 
-  // Get specific pages by slug
-  const presentationPage = pages.find((page) => page.slug === "presentation")
   const stickyArticle = articles[0]
-  // Get pages for the different sections
-  const cartographiePage = pages.find((page) => page.slug === "cartographie")
-  const consulterPage = pages.find((page) => page.slug === "consulter")
-  const aboutPage = pages.find((page) => page.slug === "about")
-  const contributePage = pages.find((page) => page.slug === "contribute")
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -34,8 +27,8 @@ export default async function Home() {
         </p>
       </div>
 
-      <section className="mb-12 grid gap-8 md:grid-cols-6 md:grid-rows-3">
-        <div className="flex flex-col col-span-4 row-span-3 justify-between rounded-lg border bg-card shadow-lg overflow-hidden">
+      <section className="h-max mb-12 grid gap-8 md:grid-cols-6">
+        <div className="flex flex-col col-span-4 h-max justify-between rounded-lg border bg-card shadow-lg overflow-hidden">
             <div className="flex flex-col p-6">
               <h2 className="w-full mb-4 pb-3 text-2xl font-serif font-light uppercase border-b-[1px]">L'association Les doléances</h2>
               <div className="flex flex-col gap-4 mb-4 flex-grow text-sm text-muted-foreground">
@@ -62,65 +55,65 @@ export default async function Home() {
             <YouTubeEmbed videoLink="https://www.youtube.com/embed/8bof5Anluk4?si=H5M7BGGsvWFUODBM" />
             </div>
         </div>
-        <div className="flex flex-col col-span-2 row-span-2 rounded-lg border bg-card shadow-lg overflow-hidden">
-          {stickyArticle && stickyArticle.featuredImage && (
-            <div className="relative h-48 w-full">
-              <Image
-                src={stickyArticle.featuredImage || "/placeholder.svg"}
-                alt={stickyArticle.title}
-                fill
-                className="object-cover object-center"
-              />
-            </div>
-          )}
-          <div className="flex flex-col flex-grow p-6">
-            <h2 className="w-full mb-4 pb-3 text-2xl font-serif font-light uppercase border-b-[1px]">à la une</h2>
-            {stickyArticle && (
-              <>
-                <h3 className="mb-2 font-medium">
-                  <Link href={`/article/${stickyArticle.slug}`}>
-                    {stickyArticle.title}
-                  </Link></h3>
-                <div
-                  className="mb-4 flex-grow line-clamp-3 text-sm text-muted-foreground"
-                  dangerouslySetInnerHTML={{ __html: stickyArticle.excerpt }}
+        <div className="h-max flex flex-col col-span-2 ">
+          <div className="h-max flex flex-col rounded-lg border bg-card shadow-lg overflow-hidden">
+            {stickyArticle && stickyArticle.featuredImage && (
+              <div className="relative h-48 w-full">
+                <Image
+                  src={stickyArticle.featuredImage || "/placeholder.svg"}
+                  alt={stickyArticle.title}
+                  fill
+                  className="object-cover object-center"
                 />
-                    <div className="flex flex-wrap gap-2 pt-2">
-                    {stickyArticle.categories.map((category, index) => (
-                      <Badge key={`cat-${index}`} variant="secondary">            
-                        <Link href={`/category/${stickyArticle.categoriesSlug[index]}`}>
-                        {category}
-                        </Link>
-                      </Badge>
-                    ))}
-                    {stickyArticle.tags.slice(0, 2).map((tag, index, id) => (
-                      <Badge key={`tag-${index}`} variant="outline">
-                        <Link href={`article/?tag=${id}`}>{tag}</Link>
-                      </Badge>
-                    ))}
-                  </div>
-                  <div className="flex w-full items-center justify-between p-2 text-xs text-muted-foreground">
-                    <div className="flex items-center gap-1">
-                      <User2 className="h-3 w-3" />
-                      <span>{stickyArticle.author}</span>
-                    </div>
-                    <div className="flex items-center gap-1 pb-2">
-                      <CalendarIcon className="h-3 w-3" />
-                      <span>{formatDate(stickyArticle.date)}</span>
-                    </div>
-                  </div>
-                <Button variant="outline" asChild>
-                  <Link href={`/article/${stickyArticle.slug}`}>Lire plus</Link>
-                </Button>
-              </>
+              </div>
             )}
+            <div className="flex flex-col flex-grow p-6">
+              <h2 className="w-full mb-4 pb-3 text-2xl font-serif font-light uppercase border-b-[1px]">à la une</h2>
+              {stickyArticle && (
+                <>
+                  <h3 className="mb-2 font-medium">
+                    <Link href={`/article/${stickyArticle.slug}`}>
+                      {stickyArticle.title}
+                    </Link></h3>
+                  <div
+                    className="mb-4 flex-grow line-clamp-3 text-sm text-muted-foreground"
+                    dangerouslySetInnerHTML={{ __html: stickyArticle?.descriptif }}
+                  />
+                      <div className="flex flex-wrap gap-2 pt-2">
+                      {stickyArticle.categories.map((category, index) => (
+                        <Badge key={`cat-${index}`} variant="secondary">            
+                          <Link href={`/category/${stickyArticle.categoriesSlug[index]}`}>
+                          {category}
+                          </Link>
+                        </Badge>
+                      ))}
+                      {stickyArticle.tags.slice(0, 2).map((tag, index, id) => (
+                        <Badge key={`tag-${index}`} variant="outline">
+                          <Link href={`article/?tag=${id}`}>{tag}</Link>
+                        </Badge>
+                      ))}
+                    </div>
+                    <div className="flex w-full items-center justify-between p-2 text-xs text-muted-foreground">
+                      <div className="flex items-center gap-1">
+                        <User2 className="h-3 w-3" />
+                        <span>{stickyArticle.author}</span>
+                      </div>
+                      <div className="flex items-center gap-1 pb-2">
+                        <CalendarIcon className="h-3 w-3" />
+                        <span>{formatDate(stickyArticle.date)}</span>
+                      </div>
+                    </div>
+                  <Button variant="outline" asChild>
+                    <Link href={`/article/${stickyArticle.slug}`}>Lire plus</Link>
+                  </Button>
+                </>
+              )}
+            </div>
           </div>
-        </div>
-        <div className="flex flex-col col-span-2 row-span-1 overflow-hidden">
-          <div className="flex flex-col flex-grow p-6">
+          <div className="flex flex-col flex-grow justify-center p-6">
             <Verbatim />
           </div>
-          </div>
+        </div>
       </section> 
 
       <section className="mb-8 grid gap-8 grid-cols-2">
@@ -176,9 +169,9 @@ export default async function Home() {
           </Link>
         </div>
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {articles.map((article) => (
+            {articles.slice(1).map((article) => (
             <ArticleCardHome key={article.id} article={article} />
-          ))}
+            ))}
         </div>
       </section>
 

@@ -112,7 +112,7 @@ export async function fetchFeaturedArticles(): Promise<Article[]> {
 
   try {
     const apiUrl = ensureCorrectApiUrl(WORDPRESS_API_URL);
-    const response = await fetch(`${apiUrl}/posts?_embed&per_page=3`);
+    const response = await fetch(`${apiUrl}/posts?_embed&per_page=4`);
 
     if (!response.ok) {
       throw new Error(`Failed to fetch posts: ${response.status}`);

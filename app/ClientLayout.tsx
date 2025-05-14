@@ -154,6 +154,7 @@ export default function ClientLayout({
                               A propos
                             </Link>
                           </li>
+                          {/*
                           <li>
                             <Link
                               href="/doleances"
@@ -173,6 +174,7 @@ export default function ClientLayout({
                               Les doléances
                             </Link>
                           </li>
+                          */}
                         </ul>
                       </nav>
                     </SheetContent>
@@ -184,7 +186,7 @@ export default function ClientLayout({
                 </div>
                 <div className="flex items-center gap-4">
                   <div className="relative hidden md:block">
-                    <SearchAutocomplete placeholder="Rechercher des doléances..." className="w-64" showButton={false} />
+                    <SearchAutocomplete placeholder="Rechercher dans notre actu..." className="w-64" showButton={false} />
                   </div>
                   <Button variant="outline" size="sm" asChild>
                     <Link href="https://palegreen-capybara-652133.hostingersite.com/wp-admin" target="_blank">
@@ -201,9 +203,10 @@ export default function ClientLayout({
               <div className="container mx-auto px-4">
                 <div className="grid gap-8 md:grid-cols-3">
                   <div>
-                    <h3 className="mb-3 text-lg font-light">Les doléances</h3>
+                    <LottieAnimation animationPath="/animations/note.json" width="80px" height="80px"/>
+                    <h3 className="mb-3 text-xl font-serif font-light">Les doléances</h3>
                     <p className="text-sm text-muted-foreground">
-                      Archives des doléances de la convention citoyenne. 
+                    Wiki du corpus des doléances de 2018/2019 
                     </p>
                   </div>
                   <div>
@@ -215,8 +218,8 @@ export default function ClientLayout({
                         </Link>
                       </li>
                       <li>
-                        <Link href="/articles" className="text-muted-foreground hover:underline">
-                          Doléances
+                        <Link href="/cateogory/etats-generaux-communaux" className="text-muted-foreground hover:underline">
+                          Etats Généraux communaux
                         </Link>
                       </li>
                       <li>
@@ -242,7 +245,7 @@ export default function ClientLayout({
                     </ul>
                   </div>
                 </div>
-                <div className="mt-8 border-t pt-4 text-center text-sm text-muted-foreground">
+                <div className="mt-8 border-t pt-4 font-serif text-center">
                   © {new Date().getFullYear()} Les doléances
                 </div>
               </div>

@@ -35,6 +35,10 @@ export interface Post {
     heure_evenement?: string
     lieu_evenement?: string
     adresse_evenement?: string
+    descriptif?: string
+    fichier_de_la_publication?: string
+    region_etats_generaux_communaux?: string
+    contenu_de_larticle?: string
     adress?: string
     adresse?: string
     latitude?: string | number
@@ -72,6 +76,7 @@ export interface Post {
       }>
     >
   }
+  featured_media?: number // Add this property to match the usage in the code
 }
 
 // Interface pour le custom post type "groupe_local"
@@ -100,6 +105,22 @@ export interface GroupeLocal {
   name: string
 }
 
+export interface Media {
+  id: number
+  title: {
+    rendered: string
+  }
+  date: string
+  link: string
+  media_type: string
+  mime_type: string
+  source_url: string
+  alt_text?: string
+  caption?: {
+    rendered: string
+  }
+}
+
 const API_BASE_URL = "https://palegreen-capybara-652133.hostingersite.com/wp-json/wp/v2"
 
 // Cache for categories to avoid multiple requests
@@ -125,7 +146,7 @@ export async function fetchCategories(): Promise<Category[]> {
     }
 
     const response = await fetch(`${API_BASE_URL}/categories?per_page=100`, {
-      cache: "no-store",
+      cache: "no-store", 
       headers: {
         Accept: "application/json",
       },
@@ -360,7 +381,34 @@ export async function fetchRecentPostsByCategory(categoryId: number): Promise<Po
       throw new Error(`Failed to fetch recent posts: ${response.status}`)
     }
 
-    return response.json()
+    const posts: Post[] = await response.json()
+
+    // Fetch the featured media URL for each post
+    const postsWithMedia = await Promise.all(
+      posts.map(async (post) => {
+        if (post.featured_media) {
+          try {
+            const mediaResponse = await fetch(`${API_BASE_URL}/media/${post.featured_media}`, {
+              cache: "no-store",
+              headers: {
+                Accept: "application/json",
+              },
+            })
+
+            if (mediaResponse.ok) {
+              const mediaData = await mediaResponse.json()
+              post._embedded = post._embedded || {}
+              post._embedded["wp:featuredmedia"] = [{ source_url: mediaData.source_url }]
+            }
+          } catch (error) {
+            console.error(`Error fetching media for post ${post.id}:`, error)
+          }
+        }
+        return post
+      }),
+    )
+
+    return postsWithMedia
   } catch (error) {
     console.error(`Error fetching recent posts for category ${categoryId}:`, error)
     return []
@@ -385,6 +433,28 @@ export async function searchPosts(query: string, categoryId: number): Promise<Po
   } catch (error) {
     console.error(`Error searching posts for category ${categoryId}:`, error)
     return []
+  }
+}
+
+// récupérer les fichiers joints par des champs ACF 
+export async function fetchAttachmentById(id: number) {
+  try {
+    const response = await fetch(`${API_BASE_URL}/media/${id}`, {
+      cache: "no-store",
+      headers: {
+        Accept: "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch attachment: ${response.status}`);
+    }
+
+    const data = response.json();
+    return data;
+  } catch (error) {
+    console.error(`Error fetching attachment by ID ${id}:`, error);
+    return null;
   }
 }
 
@@ -771,7 +841,7 @@ export async function extractGroupesLocauxCPTFromCategory(categoryId: number): P
 export interface Verbatim {
   id: number;
   acf: {
-    texte_du_verbatim?: Node[];
+    texte_du_verbatim?: string;
     date?: string;
     departement?: string;
     groupe_local?: string;
