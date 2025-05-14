@@ -34,7 +34,6 @@ export async function getContactData() {
       return { emails: [], subjects: [] }
     }
 
-    console.log("Structure de la réponse API:", JSON.stringify(data, null, 2))
 
     // Vérifier si l'élément a une propriété acf
     if (data[0].acf) {
