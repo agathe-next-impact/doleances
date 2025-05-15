@@ -24,7 +24,7 @@ export default async function Home() {
         </p>
       </div>
 
-      <section className="h-max mb-12 grid gap-8 md:grid-cols-6">
+      <section className="h-max mb-12 grid gap-16 md:grid-cols-6">
         {accueil && (
         <div className="flex flex-col col-span-3 h-full justify-between rounded-lg border bg-card shadow-lg overflow-hidden">
             <div className="flex flex-col p-6">
@@ -54,7 +54,7 @@ export default async function Home() {
         </div>
       </section> 
 
-      <section className="mb-8 grid gap-8 grid-cols-3 grid-rows-2">
+      <section className="mb-8 grid gap-12 grid-cols-3 grid-rows-2">
         <Verbatim />
         <div className="flex flex-col row-span-2 rounded-lg border bg-card shadow-lg overflow-hidden">
         <div className="flex flex-col flex-grow justify-between p-6">
@@ -63,7 +63,7 @@ export default async function Home() {
                 <p className="mb-6 line-clamp-3 text-muted-foreground">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut pellentesque tristique dolor, dictum mollis neque. Morbi nisl nisi, tempor vitae turpis id, posuere venenatis augue. Nam consectetur purus eu mi malesuada, venenatis congue felis interdum. Nullam vehicula est vitae est dictum, vel lobortis nisl fermentum. Donec dapibus sed lorem a convallis. Sed in risus augue. Aliquam a tortor sit amet nisl tincidunt porta rhoncus quis mauris. Quisque in suscipit nibh.</p>
                </div>  
                   <Button variant="outline" asChild>
-                    <Link href='/cartographie'>Localiser les groupes</Link>
+                    <Link href='/cartographie'>Programme</Link>
                   </Button>
           </div>
           </div>
@@ -83,7 +83,7 @@ export default async function Home() {
                 <p className="mb-6 line-clamp-3 text-muted-foreground">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut pellentesque tristique dolor, dictum mollis neque. Morbi nisl nisi, tempor vitae turpis id, posuere venenatis augue. Nam consectetur purus eu mi malesuada, venenatis congue felis interdum. Nullam vehicula est vitae est dictum, vel lobortis nisl fermentum. Donec dapibus sed lorem a convallis. Sed in risus augue. Aliquam a tortor sit amet nisl tincidunt porta rhoncus quis mauris. Quisque in suscipit nibh.</p>
                </div>  
                   <Button variant="outline" asChild>
-                    <Link href='/cartographie'>Localiser les groupes</Link>
+                    <Link href='/cartographie'>La démarche</Link>
                   </Button>
           </div>
           </div>   
@@ -111,7 +111,7 @@ export default async function Home() {
             </div> 
       </section>
 
-      <section className="mb-12 p-6 rounded-lg shadow-lg">
+      <section className="my-24 p-6 rounded-lg shadow-lg">
         <div className="mb-6 flex items-center justify-between border-b-[1px] pb-3">
           <h2 className="text-2xl font-serif font-light uppercase">Actualités</h2>
           <Link href="/category" className="flex items-center text-sm font-medium text-lime-600">
