@@ -5,7 +5,7 @@ import { CalendarIcon, User2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { formatDate } from "@/lib/utils"
 import { ArticleCardHome } from "@/components/actualites/article-card-home"
-import { fetchLastFourPosts } from "@/lib/api"
+import { fetchLastFourPosts, fetchPageBySlug } from "@/lib/api"
 import YouTubeEmbed from "@/components/ui/video"
 import { Badge } from "@/components/ui/badge"
 import Verbatim from "@/components/verbatim"
@@ -13,6 +13,7 @@ import Verbatim from "@/components/verbatim"
 export default async function Home() {
   const articles = await fetchLastFourPosts()
   const stickyArticle = articles[0]
+  const accueil = await fetchPageBySlug("accueil")
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -24,103 +25,41 @@ export default async function Home() {
       </div>
 
       <section className="h-max mb-12 grid gap-8 md:grid-cols-6">
-        <div className="flex flex-col col-span-4 h-max justify-between rounded-lg border bg-card shadow-lg overflow-hidden">
+        {accueil && (
+        <div className="flex flex-col col-span-3 h-full justify-between rounded-lg border bg-card shadow-lg overflow-hidden">
             <div className="flex flex-col p-6">
-              <h2 className="w-full mb-4 pb-3 text-2xl font-serif font-light uppercase border-b-[1px]">L'association Les doléances</h2>
-              <div className="flex flex-col gap-4 mb-4 flex-grow text-sm text-muted-foreground">
-                  <p>Le 27 novembre 1903, Jean Jaurès interpella les députés : « Ces
-                  documents sont dispersés dans les archives ; ils ne sont même pas
-                  classés, et fussent-ils classés, il serait impossible à un travailleur
-                  isolé d'en prendre connaissance. Voilà pourquoi il faut que l'Etat, par
-                  une publication d'ensemble, mette au service des historiens qui
-                  veulent aller jusqu'au fond des choses les moyens nécessaires de
-                  travail. »</p>
-                  <p>Le 12 décembre 2024, réunis au deuxième sous-sol de l'Assemblée
-                  nationale, plus d'une centaine de citoyennes et citoyens réunis ont
-                  de nouveau fait échos aux paroles prononcées 121 ans plus tôt par
-                  le parlementaire.
-                  Au regard des crises politiques et sociales en cours, ils ont
-                  symboliquement exprimé le serment de travailler ensemble à leur
-                  publication sur une plateforme d'accès universel, et de poursuivre la
-                  mobilisation de collectifs de citoyens locaux.</p>                
-                  <p>La création le 17 novembre 2024 de l'association
-                  Les doléances vise à tenir cette promesse.</p>
-              </div>
+              <h2 className="w-full mb-4 pb-3 text-2xl font-serif font-light uppercase border-b-[1px]">
+                {accueil?.acf?.carte_de_une?.titre}
+              </h2>
+                <div
+                className="flex flex-col gap-4 mb-4 flex-grow text-sm text-muted-foreground"
+                dangerouslySetInnerHTML={{
+                  __html: accueil?.acf?.carte_de_une?.texte,
+                }}
+                />
             </div>
-            {/*<div className="relative w-full">
-            <YouTubeEmbed videoLink="https://www.youtube.com/embed/8bof5Anluk4?si=H5M7BGGsvWFUODBM" />
-            </div>*/}
         </div>
-        
-        <div className="h-max flex flex-col col-span-2 ">
 
-          
+        )}
+        
+        <div className="h-max flex flex-col col-span-3 item-end">          
           <div className="flex flex-col flex-grow justify-center p-6">
             <Verbatim />
           </div>
           <div className="h-max flex flex-col rounded-lg border bg-card shadow-lg overflow-hidden">
-            {stickyArticle && stickyArticle.featuredImage && (
-              <div className="relative h-48 w-full">
-                <Image
-                  src={stickyArticle.featuredImage || "/placeholder.svg"}
-                  alt={stickyArticle.title}
-                  fill
-                  className="object-cover object-center"
-                />
-              </div>
-            )}
-            
-            <div className="flex flex-col flex-grow p-6">
-              <h2 className="w-full mb-4 pb-3 text-2xl font-serif font-light uppercase border-b-[1px]">à la une</h2>
-              {stickyArticle && (
-                <>
-                  <h3 className="mb-2 font-medium">
-                    <Link href={`/article/${stickyArticle.slug}`}>
-                      {stickyArticle.title}
-                    </Link></h3>
-                  <div
-                    className="mb-4 flex-grow line-clamp-3 text-sm text-muted-foreground"
-                    dangerouslySetInnerHTML={{ __html: stickyArticle?.descriptif }}
-                  />
-                      <div className="flex flex-wrap gap-2 pt-2">
-                      {stickyArticle.categories.map((category, index) => (
-                        <Badge key={`cat-${index}`} variant="secondary">            
-                          <Link href={`/category/${stickyArticle.categoriesSlug[index]}`}>
-                          {category}
-                          </Link>
-                        </Badge>
-                      ))}
-                      {stickyArticle.tags.slice(0, 2).map((tag, index, id) => (
-                        <Badge key={`tag-${index}`} variant="outline">
-                          <Link href={`article/?tag=${id}`}>{tag}</Link>
-                        </Badge>
-                      ))}
-                    </div>
-                    <div className="flex w-full items-center justify-between p-2 text-xs text-muted-foreground">
-                      <div className="flex items-center gap-1">
-                        <User2 className="h-3 w-3" />
-                        <span>{stickyArticle.author}</span>
-                      </div>
-                      <div className="flex items-center gap-1 pb-2">
-                        <CalendarIcon className="h-3 w-3" />
-                        <span>{formatDate(stickyArticle.date)}</span>
-                      </div>
-                    </div>
-                  <Button variant="outline" asChild>
-                    <Link href={`/article/${stickyArticle.slug}`}>Lire plus</Link>
-                  </Button>
-                </>
-              )}
+            <div className="relative w-full">
+            <YouTubeEmbed videoLink="https://www.youtube.com/embed/8bof5Anluk4?si=H5M7BGGsvWFUODBM" />
             </div>
           </div>
         </div>
       </section> 
 
-      <section className="mb-8 grid gap-8 grid-cols-2">
-      <div className="flex flex-col rounded-lg border bg-card shadow-lg overflow-hidden">
+      <section className="mb-8 grid gap-8 grid-cols-3 grid-rows-2">
+        <Verbatim />
+        <div className="flex flex-col row-span-2 rounded-lg border bg-card shadow-lg overflow-hidden">
         <div className="flex flex-col flex-grow justify-between p-6">
                 <div>
-                <h2 className="w-full mb-4 pb-3 text-2xl font-serif font-light uppercase border-b-[1px]">Cartographie des groupes locaux</h2>
+                <h2 className="w-full mb-4 pb-3 text-2xl font-serif font-light uppercase border-b-[1px]">Le Festival des Doléances</h2>
                 <p className="mb-6 line-clamp-3 text-muted-foreground">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut pellentesque tristique dolor, dictum mollis neque. Morbi nisl nisi, tempor vitae turpis id, posuere venenatis augue. Nam consectetur purus eu mi malesuada, venenatis congue felis interdum. Nullam vehicula est vitae est dictum, vel lobortis nisl fermentum. Donec dapibus sed lorem a convallis. Sed in risus augue. Aliquam a tortor sit amet nisl tincidunt porta rhoncus quis mauris. Quisque in suscipit nibh.</p>
                </div>  
                   <Button variant="outline" asChild>
@@ -128,24 +67,49 @@ export default async function Home() {
                   </Button>
           </div>
           </div>
-        <div className="flex flex-col row-span-1 rounded-lg border bg-card shadow-lg overflow-hidden">
-          <div className="flex flex-col flex-grow p-6">
-            <h2 className="w-full mb-4 pb-3 text-2xl font-serif font-light uppercase border-b-[1px]">Participer à la démarche</h2>
-                <div
-                  className="mb-4 flex-grow line-clamp-3 text-sm text-muted-foreground">
-                  <p>Vous pouvez contribuer à la démarche en nous aidant à
-                  collecter les doléances, en nous aidant à les publier, ou en
-                  participant à la rédaction d'articles.</p>
-                  <p>Nous avons besoin de vous pour faire vivre cette plateforme et
-                  la rendre accessible à tous.</p>
-                  </div>
-                <Button variant="outline" asChild>
-                  <Link href={`/contribuer`}>Contribuer</Link>
-                </Button>
+        <div className="flex flex-col row-span-2 overflow-hidden">
+          <Image 
+            src="/img/festival_recto.jpg"
+            alt="Image d'illustration"
+            width={500}
+            height={300}
+            className="object-cover w-full h-full"
+          />
+        </div>  
+        <div className="flex flex-col row-span-2 rounded-lg border bg-card shadow-lg overflow-hidden">
+        <div className="flex flex-col flex-grow justify-between p-6">
+                <div>
+                <h2 className="w-full mb-4 pb-3 text-2xl font-serif font-light uppercase border-b-[1px]">Les Etats généraux communaux</h2>
+                <p className="mb-6 line-clamp-3 text-muted-foreground">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut pellentesque tristique dolor, dictum mollis neque. Morbi nisl nisi, tempor vitae turpis id, posuere venenatis augue. Nam consectetur purus eu mi malesuada, venenatis congue felis interdum. Nullam vehicula est vitae est dictum, vel lobortis nisl fermentum. Donec dapibus sed lorem a convallis. Sed in risus augue. Aliquam a tortor sit amet nisl tincidunt porta rhoncus quis mauris. Quisque in suscipit nibh.</p>
+               </div>  
+                  <Button variant="outline" asChild>
+                    <Link href='/cartographie'>Localiser les groupes</Link>
+                  </Button>
           </div>
-        </div>
+          </div>   
+        <div className="flex flex-col row-span-1 rounded-lg border bg-card shadow-lg overflow-hidden">
+        <div className="flex flex-col flex-grow justify-between p-6">
+                <div>
+                <h2 className="w-full mb-4 pb-3 text-2xl font-serif font-light uppercase border-b-[1px]">Les groupes locaux</h2>
+                <p className="mb-6 line-clamp-3 text-muted-foreground">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut pellentesque tristique dolor, dictum mollis neque. Morbi nisl nisi, tempor vitae turpis id, posuere venenatis augue. Nam consectetur purus eu mi malesuada, venenatis congue felis interdum. Nullam vehicula est vitae est dictum, vel lobortis nisl fermentum. Donec dapibus sed lorem a convallis. Sed in risus augue. Aliquam a tortor sit amet nisl tincidunt porta rhoncus quis mauris. Quisque in suscipit nibh.</p>
+               </div>  
+                  <Button variant="outline" asChild>
+                    <Link href='/cartographie'>Localiser les groupes</Link>
+                  </Button>
+          </div>
+          </div>  
+        <div className="flex flex-col row-span-1 rounded-lg border bg-card shadow-lg overflow-hidden">
+          <div className="flex flex-col flex-grow justify-between p-6">
+                  <div>
+                  <h2 className="w-full mb-4 pb-3 text-2xl font-serif font-light uppercase border-b-[1px]">Participer</h2>
+                  <p className="mb-6 line-clamp-3 text-muted-foreground">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut pellentesque tristique dolor, dictum mollis neque. Morbi nisl nisi, tempor vitae turpis id, posuere venenatis augue. Nam consectetur purus eu mi malesuada, venenatis congue felis interdum. Nullam vehicula est vitae est dictum, vel lobortis nisl fermentum. Donec dapibus sed lorem a convallis. Sed in risus augue. Aliquam a tortor sit amet nisl tincidunt porta rhoncus quis mauris. Quisque in suscipit nibh.</p>
+                  </div>  
+                    <Button variant="outline" asChild>
+                      <Link href='/contribuer'>Contribuer</Link>
+                    </Button>
+            </div>
+            </div> 
       </section>
-
 
       <section className="mb-12 p-6 rounded-lg shadow-lg">
         <div className="mb-6 flex items-center justify-between border-b-[1px] pb-3">
