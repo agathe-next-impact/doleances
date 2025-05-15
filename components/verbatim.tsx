@@ -69,10 +69,10 @@ export default function Verbatim() {
               : ""}
             {showFullVerbatim && (
               <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
+              initial={{ opacity: 0, scale: 0 }}
               animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.9 }}
-              className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+              exit={{ opacity: 0, scale: 0 }}
+              className="fixed inset-0 bg-black bg-opacity-10 flex items-center justify-center z-50"
               >
               <div
                 ref={popupRef}
@@ -103,6 +103,15 @@ export default function Verbatim() {
             )}
         </div>
       </div>
+      {verbatim.acf?.texte_du_verbatim.length > 150 && ( 
+      <button
+        className="item-right text-right mt-4 uppercase font-medium text-sm hover:underline"
+        onClick={() => setShowFullVerbatim(true)}
+      >
+        Lire la suite
+      </button>
+      )
+      }
       <p className="font-serif font-medium text-xl text-right">
         {verbatim.acf.departement}
       </p>
@@ -114,12 +123,6 @@ export default function Verbatim() {
         ""
       )}
 
-      <button
-        className="item-right text-right mt-4 uppercase font-medium text-sm hover:underline"
-        onClick={() => setShowFullVerbatim(true)}
-      >
-        Lire la suite
-      </button>
     </div>
   );
 }

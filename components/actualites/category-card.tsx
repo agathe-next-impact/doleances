@@ -45,8 +45,6 @@ export default function CategoryCard({ category }: CategoryCardProps) {
     }
   }, [category.slug])
 
-console.log(recentPosts)
-
   return (
     <Card className="col-span-3 h-full flex flex-col overflow-hidden border shadow-lg">
       <CardHeader className="pb-2">
@@ -57,28 +55,17 @@ console.log(recentPosts)
         </CardTitle>
         <CardDescription dangerouslySetInnerHTML={{ __html: category.description }} className="line-clamp-2" />
       </CardHeader>
-      {/*
-      <div className="relative h-48 w-full">
-        <Image
-          src={imageUrl || "/placeholder.svg"}
-          alt={category.name}
-          fill
-          className="object-cover"
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-        />
-      </div>
-      */}
       <CardContent className="flex-grow pt-4">
         {loading ? (
           <p>Chargement des articles...</p>
         ) : error ? (
           <p className="text-sm text-muted-foreground">{error}</p>
         ) : recentPosts.length > 0 ? (
-          <ul className="space-y-6">
-            {recentPosts.map((post) => (
+          <ul className="space-y-10">
+            {recentPosts.slice(0, 2).map((post) => (
               <li key={post.id} className="text-sm">
-                <Link href={`/article/${post.slug}`} className="flex gap-6">
-                  <div className="relative h-16 w-1/3 mb-2">
+                <Link href={`/article/${post.slug}`} className="flex gap-8">
+                  <div className="relative h-28 w-1/3 mb-2">
                     <Image
                       src={post._embedded?.["wp:featuredmedia"]?.[0]?.source_url ?? "/placeholder.svg"}
                       alt={post.title.rendered}
@@ -87,12 +74,12 @@ console.log(recentPosts)
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     />
                   </div>
-                  <div className="flex flex-col justify-between w-2/3">
+                  <div className="flex flex-col w-2/3">
                     <div dangerouslySetInnerHTML={{ __html: post.title.rendered }} />
                     {!post.acf?.date_de_levenement && (
                     <div 
                       className="text-sm text-muted-foreground line-clamp-2 mb-4">
-                      {post.excerpt.rendered.replace(/<\/?[^>]+(>|$)/g, "")}
+                      {post.acf?.descriptif.replace(/<\/?[^>]+(>|$)/g, "")}
                     </div>
                     )}  
                     <div className="text-xs text-muted-foreground">
@@ -110,6 +97,11 @@ console.log(recentPosts)
                       <div className="flex items-center gap-1.5">
                         <span>{post.acf.lieu_de_levenement.address}</span>
                       </div>
+                    )}
+                    {post.date && (
+                      <div className="flex items-center gap-1.5">
+                        <span><DateFormat dateStr={post.date} /></span>
+                        </div>
                     )}
                   </div>
                   </div>

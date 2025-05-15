@@ -154,10 +154,9 @@ export default function ClientLayout({
                               A propos
                             </Link>
                           </li>
-                          {/*
                           <li>
                             <Link
-                              href="/doleances"
+                              href="/etats-generaux-communaux"
                               className="flex items-center text-sm font-medium hover:text-primary"
                               onClick={(e) => {
                                 e.preventDefault(); // Empêche la navigation immédiate
@@ -166,15 +165,14 @@ export default function ClientLayout({
                             
                                 // Attendre un court instant pour que le Sheet se ferme avant de naviguer
                                 setTimeout(() => {
-                                  window.location.href = "/doleances"; // Naviguer manuellement
+                                  window.location.href = "/etats-generaux-communaux"; // Naviguer manuellement
                                 }, 300); // Ajustez le délai si nécessaire
                               }}
                             >
                               <Library className="mr-2 h-4 w-4" />
-                              Les doléances
+                              Etâts généraux communaux
                             </Link>
                           </li>
-                          */}
                         </ul>
                       </nav>
                     </SheetContent>

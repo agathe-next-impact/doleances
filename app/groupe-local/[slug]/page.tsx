@@ -1,13 +1,11 @@
 import { fetchGroupeLocalBySlug, fetchPostsByGroupeLocalTax, fetchCategory } from "@/lib/api"
 import { notFound } from "next/navigation"
-import Image from "next/image"
 import Link from "next/link"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { formatDate } from "@/lib/utils"
 import { MapPin, Mail, Phone, Globe, Calendar, Clock, Bookmark, User } from "lucide-react"
 import StaticMap from "@/components/map/static-map"
 import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
 import type { Post, Category } from "@/lib/api"
 
 // Interface pour les articles regroupés par catégorie

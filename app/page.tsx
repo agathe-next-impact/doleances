@@ -5,17 +5,13 @@ import { CalendarIcon, User2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { formatDate } from "@/lib/utils"
 import { ArticleCardHome } from "@/components/actualites/article-card-home"
-import { PageCard } from "@/components/pages/page-card"
-import { fetchFeaturedArticles, fetchPages } from "@/lib/wordpress"
-import { SearchAutocomplete } from "@/components/search-autocomplete"
+import { fetchLastFourPosts } from "@/lib/api"
 import YouTubeEmbed from "@/components/ui/video"
 import { Badge } from "@/components/ui/badge"
 import Verbatim from "@/components/verbatim"
 
 export default async function Home() {
-  const articles = await fetchFeaturedArticles()
-  const pages = await fetchPages()
-
+  const articles = await fetchLastFourPosts()
   const stickyArticle = articles[0]
 
   return (
@@ -51,9 +47,9 @@ export default async function Home() {
                   Les doléances vise à tenir cette promesse.</p>
               </div>
             </div>
-            <div className="relative w-full">
+            {/*<div className="relative w-full">
             <YouTubeEmbed videoLink="https://www.youtube.com/embed/8bof5Anluk4?si=H5M7BGGsvWFUODBM" />
-            </div>
+            </div>*/}
         </div>
         
         <div className="h-max flex flex-col col-span-2 ">
@@ -132,19 +128,6 @@ export default async function Home() {
                   </Button>
           </div>
           </div>
-        {/*<div className="flex flex-col rounded-lg border bg-card shadow-lg overflow-hidden">
-        <div className="flex flex-col flex-grow p-6">
-            <h2 className="w-full mb-4 pb-3 text-2xl font-serif font-light uppercase border-b-[1px]">Les archives des doléances</h2>
-            {stickyArticle && (
-                <>
-                    <p className="mb-6 line-clamp-3 text-muted-foreground">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut pellentesque tristique dolor, dictum mollis neque. Morbi nisl nisi, tempor vitae turpis id, posuere venenatis augue. Nam consectetur purus eu mi malesuada, venenatis congue felis interdum. Nullam vehicula est vitae est dictum, vel lobortis nisl fermentum. Donec dapibus sed lorem a convallis. Sed in risus augue. Aliquam a tortor sit amet nisl tincidunt porta rhoncus quis mauris. Quisque in suscipit nibh.</p>
-                  <Button variant="outline" asChild>
-                    <Link href='/articles'>Consulter les archives</Link>
-                  </Button>
-                </>
-            )}
-          </div>
-          </div>*/}
         <div className="flex flex-col row-span-1 rounded-lg border bg-card shadow-lg overflow-hidden">
           <div className="flex flex-col flex-grow p-6">
             <h2 className="w-full mb-4 pb-3 text-2xl font-serif font-light uppercase border-b-[1px]">Participer à la démarche</h2>
