@@ -189,8 +189,8 @@ export default function ClientLayout({
                     <SearchAutocomplete placeholder="Rechercher dans notre actu..." className="w-64" showButton={false} />
                   </div>
                   <Button variant="outline" size="sm" asChild>
-                    <Link href="https://palegreen-capybara-652133.hostingersite.com/wp-admin" target="_blank">
-                      Contributeur
+                    <Link href="/contribuer">
+                      Contribuer
                     </Link>
                   </Button>
                 </div>

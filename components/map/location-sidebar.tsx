@@ -4,6 +4,7 @@ import { Phone, Mail, Globe, MapPin, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useState } from "react";
+import Link from "next/link";
 
 interface Location {
   id: string;
@@ -11,11 +12,11 @@ interface Location {
   title: string;
   position: { lat: number; lng: number };
   address: string;
-  content?: string;
+  personne?: string;
   phone?: string;
   email?: string;
   website?: string;
-  region: string;
+  departement: string;
   thumbnail?: string;
 }
 
@@ -26,14 +27,14 @@ interface LocationSidebarProps {
   onLocationSelect: (location: Location) => void;
 }
 
-// Fonction pour regrouper les localisations par région
-const groupLocationsByRegion = (locations: Location[]) => {
+// Fonction pour regrouper les localisations par département
+const groupLocationsByDepartement = (locations: Location[]) => {
   return locations.reduce((groups: Record<string, Location[]>, location) => {
-    const region = location.region || "Autres";
-    if (!groups[region]) {
-      groups[region] = [];
+    const departement = location.departement || "Autres";
+    if (!groups[departement]) {
+      groups[departement] = [];
     }
-    groups[region].push(location);
+    groups[departement].push(location);
     return groups;
   }, {});
 };
@@ -56,9 +57,11 @@ export default function LocationSidebar({
     return { __html: htmlContent };
   };
 
-  // Regrouper les localisations par région
-  const groupedLocations = groupLocationsByRegion(locations);
+  // Regrouper les localisations par département
+  const groupedLocations = groupLocationsByDepartement(locations);
 
+
+  
   return (
     <div className="w-full md:w-1/3 bg-white border-l border-gray-200">
       {location ? (
@@ -90,12 +93,12 @@ export default function LocationSidebar({
               </div>
             )}
 
-            {location.content && (
+            {location.personne && (
               <div className="border-t border-gray-200 pt-4">
                 <div
-                  className="text-gray-700 prose prose-sm max-w-none"
-                  dangerouslySetInnerHTML={createMarkup(location.content)}
-                />
+                  className="text-gray-700 prose prose-sm max-w-none">
+                  {location.personne}
+                </div>
               </div>
             )}
 
@@ -118,29 +121,29 @@ export default function LocationSidebar({
             )}
 
             {location.slug && (
-              <div className="flex items-center gap-2">
-                <Globe className="h-5 w-5 text-gray-500" />
-                <a
+              <div className="flex items-center gap-2 pt-8">
+                <Button variant="outline">
+                <Link
                   href={location.slug ? `/groupe-local/${location.slug}` : "#"}
                   rel="noopener noreferrer"
                   className="text-primary hover:underline"
                 >
                   Voir l'activité du groupe local
-                </a>
+                </Link>
+                </Button> 
               </div>
             )}
           </div>
         </div>
       ) : (
         <div className="p-4 h-full">
-          <h2 className="text-xl font-bold mb-4">Toutes les localisations</h2>
           <ScrollArea className="h-[calc(100vh-200px)]">
             <div className="space-y-6">
-              {Object.entries(groupedLocations).map(([region, regionLocations]) => (
-                <div key={region}>
-                  <h3 className="text-lg font-semibold mb-2">{region}</h3>
+              {Object.entries(groupedLocations).map(([departement, departementLocations]) => (
+                <div key={departement}>
+                  <h3 className="text-lg font-semibold mb-2">{departement}</h3>
                   <div className="space-y-4">
-                    {regionLocations.map((loc) => (
+                    {departementLocations.map((loc) => (
                       <div
                         key={loc.id}
                         className="p-3 border border-gray-200 rounded-md hover:bg-gray-50 cursor-pointer"

@@ -13,18 +13,18 @@ interface Location {
   slug: string;
   title: { rendered: string };
   acf: {
+    personne: string;
     localisation: {
       lat: string | number;
       lng: string | number;
       address?: string;
     };
-    region: string;
+    departement: string;
     adresse: string;
     telephone: string;
     email: string;
     site_web: string;
   };
-  content?: { rendered: string };
   featured_media?: number;
   _embedded?: {
     "wp:featuredmedia"?: Array<{
@@ -43,11 +43,11 @@ interface ProcessedLocation {
   phone?: string;
   email?: string;
   website?: string;
-  region: string;
+  departement: string;
   thumbnail?: string;
 }
 
-interface GroupRegion {
+interface GroupDepartement {
   id: string;
   name: string;
   center: { lat: number; lng: number };
@@ -63,16 +63,16 @@ const containerStyle = {
 
 // Coordonnées par défaut pour la France
 const defaultCenter = { lat: 46.603354, lng: 2.3522 };
-const defaultZoom = 5;
+const defaultZoom = 6;
 
 // Clé API Google Maps
 const googleMapsApiKey = "AIzaSyA1lJXqXBc0-w5WUVO1KhvggK05FCbi7Yg"; // Remplacez par votre clé API
 const WORDPRESS_API_URL = "https://wp-starter.io/wp-json/wp/v2";
 
 export default function MapComponent() {
-  const [selectedRegion, setSelectedRegion] = useState<string | null>(null);
+  const [selectedDepartement, setSelectedDepartement] = useState<string | null>(null);
   const [selectedLocation, setSelectedLocation] = useState<ProcessedLocation | null>(null);
-  const [groupRegions, setGroupRegions] = useState<GroupRegion[]>([]);
+  const [groupDepartements, setGroupDepartements] = useState<GroupDepartement[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const mapRef = useRef<google.maps.Map | null>(null);
@@ -117,18 +117,17 @@ export default function MapComponent() {
               console.warn(`Coordonnées invalides pour ${item.id}:`, item.acf.localisation);
               return null;
             }
-
             return {
               id: item.id.toString(),
               slug: item.slug,
               title: item.title?.rendered || "Sans titre",
               position: { lat, lng },
               address: item.acf.adresse || "",
-              content: item.content?.rendered || "",
+              personne: item.acf?.personne_contact || "",
               phone: item.acf.telephone || "",
               email: item.acf.email || "",
               website: item.acf.site_web || "",
-              region: item.acf.region_groupes_locaux || "Autres",
+              departement: item.acf.departement || "Autres",
               thumbnail: item._embedded?.["wp:featuredmedia"]?.[0]?.source_url,
             };
           })
@@ -140,17 +139,16 @@ export default function MapComponent() {
           return;
         }
 
-        // Regrouper les localisations par région
-        const regionGroups: Record<string, ProcessedLocation[]> = {};
-
+        // Regrouper les localisations par département
+        const departementGroups: Record<string, ProcessedLocation[]> = {};
         processedLocations.forEach((location) => {
-          if (!regionGroups[location.region]) {
-            regionGroups[location.region] = [];
+          if (!departementGroups[location.departement]) {
+            departementGroups[location.departement] = [];
           }
-          regionGroups[location.region].push(location);
+          departementGroups[location.departement].push(location);
         });
 
-        const groups: GroupRegion[] = Object.entries(regionGroups).map(([region, locations]) => {
+        const groups: GroupDepartement[] = Object.entries(departementGroups).map(([departement, locations]) => {
           const center = locations.reduce(
             (acc, loc) => ({
               lat: acc.lat + loc.position.lat / locations.length,
@@ -160,15 +158,15 @@ export default function MapComponent() {
           );
 
           return {
-            id: region,
-            name: region,
+            id: departement,
+            name: departement,
             center,
-            zoom: 7,
+            zoom: 9,
             locations,
           };
         });
 
-        setGroupRegions(groups);
+        setGroupDepartements(groups);
         setLoading(false);
       } catch (err) {
         console.error("Erreur lors de la récupération des groupes locaux:", err);
@@ -185,23 +183,23 @@ export default function MapComponent() {
       mapRef.current.panTo(defaultCenter);
       mapRef.current.setZoom(defaultZoom);
       setSelectedLocation(null);
-      setSelectedRegion(null);
+      setSelectedDepartement(null);
       setViewingAllFrance(true);
     }
   }, []);
 
-  const handleRegionChange = useCallback(
-    (regionId: string) => {
-      setSelectedRegion(regionId);
+  const handleDepartementChange = useCallback(
+    (departementId: string) => {
+      setSelectedDepartement(departementId);
       setSelectedLocation(null);
 
-      const group = groupRegions.find((g) => g.id === regionId);
+      const group = groupDepartements.find((g) => g.id === departementId);
       if (group && mapRef.current) {
         mapRef.current.panTo(group.center);
         mapRef.current.setZoom(group.zoom);
       }
     },
-    [groupRegions]
+    [groupDepartements]
   );
 
   const handleMarkerClick = useCallback((location: ProcessedLocation) => {
@@ -209,7 +207,7 @@ export default function MapComponent() {
 
     if (mapRef.current) {
       mapRef.current.panTo(location.position);
-      mapRef.current.setZoom(14);
+      mapRef.current.setZoom(11);
     }
   }, []);
 
@@ -219,8 +217,8 @@ export default function MapComponent() {
     map.setZoom(defaultZoom);
   }, []);
 
-  const currentGroup = groupRegions.find((g) => g.id === selectedRegion);
-  const locations = currentGroup ? currentGroup.locations : groupRegions.flatMap((g) => g.locations);
+  const currentGroup = groupDepartements.find((g) => g.id === selectedDepartement);
+  const locations = currentGroup ? currentGroup.locations : groupDepartements.flatMap((g) => g.locations);
 
   const handleCloseLocation = useCallback(() => {
     setSelectedLocation(null);
@@ -284,21 +282,21 @@ export default function MapComponent() {
     <div className="flex flex-col h-screen">
       <div className="py-4 bg-white">
         <Select
-          value={selectedRegion || ""}
+          value={selectedDepartement || ""}
           onValueChange={(value) => {
             if (value === "all") {
               resetToFranceView();
             } else {
-              handleRegionChange(value);
+              handleDepartementChange(value);
             }
           }}
         >
           <SelectTrigger className="w-full md:w-[300px]">
-            <SelectValue placeholder="Sélectionnez une région" />
+            <SelectValue placeholder="Sélectionnez une département" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">Toutes les régions</SelectItem>
-            {groupRegions.map((group) => (
+            <SelectItem value="all">Toutes les départements</SelectItem>
+            {groupDepartements.map((group) => (
               <SelectItem key={group.id} value={group.id}>
                 {group.name} ({group.locations.length})
               </SelectItem>
