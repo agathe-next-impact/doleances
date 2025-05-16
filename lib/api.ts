@@ -546,10 +546,10 @@ export async function fetchSearchSuggestions(query: string): Promise<{
 export async function fetchPageBySlug(slug: string): Promise<Page | null> {
   try {
     const response = await fetch(`${API_BASE_URL}/pages?slug=${slug}`, {
-      cache: "no-store",
       headers: {
         Accept: "application/json",
       },
+      // Optionally, you can add: next: { revalidate: 3600 }, // Revalidate every hour
     })
 
     if (!response.ok) {

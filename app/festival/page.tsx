@@ -1,5 +1,4 @@
-import { fetchPageBySlug } from "@/lib/api";
-import { fetchAttachmentById } from "@/lib/api";
+import { fetchPageBySlug, fetchAttachmentById } from "@/lib/api";
 
 import Image from "next/image";
 import PopupImage from "@/components/ui/popup-image";
