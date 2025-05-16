@@ -196,7 +196,6 @@ export async function fetchCategories(): Promise<Category[]> {
     categoriesCacheTime = now
     // Sort categories by count in descending order
     return data.sort((a: Category, b: Category) => b.count - a.count)
-    return data.sort((a, b) => b.count - a.count)
   } catch (error) {
     console.error("Error fetching categories:", error)
     return []
@@ -348,10 +347,10 @@ export async function fetchAllPosts(): Promise<Post[]> {
 export async function fetchLastThreePosts(): Promise<Post[]> {
   try {
     const response = await fetch(`${API_BASE_URL}/posts?_embed&per_page=3`, {
-      cache: "no-store",
       headers: {
         Accept: "application/json",
       },
+      next: { revalidate: 3600 }, // Revalidate every hour (adjust as needed)
     })
 
     if (!response.ok) {
@@ -549,7 +548,7 @@ export async function fetchPageBySlug(slug: string): Promise<Page | null> {
       headers: {
         Accept: "application/json",
       },
-      // Optionally, you can add: next: { revalidate: 3600 }, // Revalidate every hour
+      next: { revalidate: 3600 }, // Revalidate every hour
     })
 
     if (!response.ok) {
@@ -570,17 +569,17 @@ export async function fetchPageBySlug(slug: string): Promise<Page | null> {
 export async function fetchAttachmentById(id: number) {
   try {
     const response = await fetch(`${API_BASE_URL}/media/${id}`, {
-      cache: "no-store",
       headers: {
         Accept: "application/json",
       },
+      next: { revalidate: 3600 }, // Revalidate every hour (adjust as needed)
     });
 
     if (!response.ok) {
       throw new Error(`Failed to fetch attachment: ${response.status}`);
     }
 
-    const data = response.json();
+    const data = await response.json();
     return data;
   } catch (error) {
     console.error(`Error fetching attachment by ID ${id}:`, error);
