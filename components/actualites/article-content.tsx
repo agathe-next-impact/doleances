@@ -448,7 +448,7 @@ console.log("ACF Fields:", acfFields)
           {post.acf?.descriptif && (
             <div className="flex items-center gap-2 px-8 py-4 bg-muted/30 rounded-lg">
               <div className="text-sm text-muted-foreground">
-                {post.acf.descriptif}
+                <div dangerouslySetInnerHTML={{ __html: post.acf.descriptif }} />
               </div>
             </div>
         )}

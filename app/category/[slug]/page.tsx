@@ -1,5 +1,5 @@
 // Améliorer la gestion des erreurs et ajouter des fallbacks pour les données manquantes
-import { fetchCategory, fetchPostsByCategory, extractGroupesLocauxCPTFromCategory, fetchCategoryBySlug } from "@/lib/api"
+import { fetchPostsByCategory, extractGroupesLocauxCPTFromCategory, fetchCategoryBySlug } from "@/lib/api"
 import ArticleList from "@/components/actualites/article-list"
 import CategoryHero from "@/components/actualites/category-hero"
 import SearchFilter from "@/components/actualites/search-filter"

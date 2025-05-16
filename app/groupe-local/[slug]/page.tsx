@@ -1,10 +1,9 @@
 import { fetchGroupeLocalBySlug, fetchPostsByGroupeLocalTax, fetchCategory } from "@/lib/api"
 import { notFound } from "next/navigation"
-import Image from "next/image"
 import Link from "next/link"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { formatDate } from "@/lib/utils"
-import { MapPin, Mail, Phone, Globe, Calendar, Clock, Bookmark } from "lucide-react"
+import { MapPin, Mail, Phone, Globe, Calendar, Clock, Bookmark, User } from "lucide-react"
 import StaticMap from "@/components/map/static-map"
 import { Badge } from "@/components/ui/badge"
 import type { Post, Category } from "@/lib/api"
@@ -28,11 +27,6 @@ export default async function GroupeLocalPage({ params }: { params: { slug: stri
     if (!groupeLocal.title || typeof groupeLocal.title !== "object") {
       console.error(`Le groupe local ${params.slug} a une structure de titre invalide:`, groupeLocal.title)
       groupeLocal.title = { rendered: `Groupe Local ${params.slug}` }
-    }
-
-    if (!groupeLocal.content || typeof groupeLocal.content !== "object") {
-      console.error(`Le groupe local ${params.slug} a une structure de contenu invalide:`, groupeLocal.content)
-      groupeLocal.content = { rendered: "" }
     }
 
     console.log("Groupe local récupéré:", groupeLocal)
@@ -109,6 +103,7 @@ export default async function GroupeLocalPage({ params }: { params: { slug: stri
 
     // Extraire les informations de contact
     const contact = {
+      personne: groupeLocal.acf?.personne_contact || null,
       email: groupeLocal.acf?.email || null,
       telephone: groupeLocal.acf?.telephone || groupeLocal.acf?.phone || null,
       site_web: groupeLocal.acf?.site_web || groupeLocal.acf?.website || null,
@@ -180,27 +175,23 @@ export default async function GroupeLocalPage({ params }: { params: { slug: stri
       <div className="container mx-auto px-4 py-8">
         <div className="px-4 py-8 mx-auto">
           {/* En-tête du groupe local avec image de fond et overlay */}
-          <div className="relative rounded-lg overflow-hidden mb-8">
-            <div className="relative h-64 w-full">
-              <Image
-                src={featuredImage || "/placeholder.svg"}
-                alt={groupeLocal.title?.rendered || `Groupe Local ${params.slug}`}
-                fill
-                className="object-cover"
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-              />
-              {/* Overlay sombre pour améliorer la lisibilité du texte */}
-              <div className="absolute inset-0 bg-black/40"></div>
-            </div>
+          <div className="flex relative rounded-lg overflow-hidden mb-8">
 
             {/* Titre et description superposés sur l'image */}
-            <div className="absolute inset-0 flex flex-col justify-end p-6 text-white">
+            <div className="w-full inset-0 flex flex-col justify-end flex-wrap p-6">
+              <Badge variant="outline" className="mb-8 w-max py-2 px-4 self-end">
+                <Link href="/cartographie">Tous les groupes locaux</Link>
+              </Badge>
+              
+              <div className="uppercase font-regular text-muted-foreground mb-2">
+                Groupe local
+              </div>
               <h1
-                className="text-3xl md:text-4xl font-bold mb-2 drop-shadow-md"
+                className="text-3xl md:text-4xl mb-2"
                 dangerouslySetInnerHTML={{ __html: groupeLocal.title?.rendered || `Groupe Local ${params.slug}` }}
               />
-              {groupeLocal.acf?.description && (
-                <div className="text-sm md:text-base max-w-2xl drop-shadow-md">{groupeLocal.acf.description}</div>
+              {groupeLocal.acf?.departement && (
+                <div className="text-sm md:text-base max-w-2xl">{groupeLocal?.acf.departement}</div>
               )}
             </div>
           </div>
@@ -210,7 +201,20 @@ export default async function GroupeLocalPage({ params }: { params: { slug: stri
             {/* Colonne de gauche: Informations de contact */}
             <div className="bg-muted/30 rounded-lg p-6">
               <h2 className="text-xl font-semibold mb-4">Informations de contact</h2>
+              
               <div className="space-y-4">
+
+                {contact.personne && (
+                  <div className="flex items-center gap-3">
+                    <div className="bg-primary/10 p-2 rounded-full">
+                      <User className="h-5 w-5 text-primary" />
+                    </div>
+                    <a href={`mailto:${contact.personne}`} className="text-primary hover:underline">
+                      {contact.personne}
+                    </a>
+                  </div>
+                )}
+
                 {contact.email && (
                   <div className="flex items-center gap-3">
                     <div className="bg-primary/10 p-2 rounded-full">
@@ -250,7 +254,7 @@ export default async function GroupeLocalPage({ params }: { params: { slug: stri
                 )}
 
                 {address && (
-                  <div className="flex items-start gap-3">
+                  <div className="flex items-center gap-3">
                     <div className="bg-primary/10 p-2 rounded-full mt-1">
                       <MapPin className="h-5 w-5 text-primary" />
                     </div>

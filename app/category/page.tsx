@@ -1,4 +1,4 @@
-import { fetchCategories } from "@/lib/api"
+import { fetchCategories, fetchLastFourPosts } from "@/lib/api"
 import CategoryCard from "@/components/actualites/category-card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -6,7 +6,6 @@ import { CalendarIcon, User2 } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
 import { formatDate } from "@/lib/utils"
-import { fetchFeaturedArticles } from "@/lib/wordpress"
 import Verbatim from "@/components/verbatim"
 
 
@@ -14,7 +13,7 @@ export default async function Home() {
   const categories = await fetchCategories()
   // order by count
   categories.sort((a, b) => b.count - a.count)
-  const articles = await fetchFeaturedArticles()
+  const articles = await fetchLastFourPosts()
   const stickyArticle = articles[0]
 
   return (
@@ -47,24 +46,19 @@ export default async function Home() {
                 {stickyArticle && (
                   <>
                     <h3 className="mb-2 font-medium">
-                      <Link href={`/article/${stickyArticle.id}`}>
+                      <Link href={`/article/${stickyArticle.slug}`}>
                         {stickyArticle.title}
                       </Link></h3>
                     <div
                       className="mb-4 flex-grow line-clamp-3 text-sm text-muted-foreground"
-                      dangerouslySetInnerHTML={{ __html: stickyArticle.excerpt }}
+                      dangerouslySetInnerHTML={{ __html: stickyArticle.descriptif }}
                     />
                         <div className="flex flex-wrap gap-2 pt-2">
                         {stickyArticle.categories.map((category, index) => (
                           <Badge key={`cat-${index}`} variant="secondary">            
-                            <Link href={`/article/${stickyArticle.categoriesSlug[index]}`}>
+                            <Link href={`/category/${stickyArticle.categoriesSlug[index]}`}>
                             {category}
                             </Link>
-                          </Badge>
-                        ))}
-                        {stickyArticle.tags.slice(0, 2).map((tag, index, id) => (
-                          <Badge key={`tag-${index}`} variant="outline">
-                            <Link href={`article/?tag=${id}`}>{tag}</Link>
                           </Badge>
                         ))}
                       </div>

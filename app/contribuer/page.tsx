@@ -26,7 +26,7 @@ export default async function ContactPage() {
 
     return (
       <main className="container mx-auto py-10">
-        <h1 className="text-3xl font-bold text-center mb-8">Contactez-nous</h1>
+        <h1 className="mb-4 text-4xl font-light tracking-tight text-center">Contactez-nous</h1>
         <ContactForm subjects={finalSubjects} />
       </main>
     )
@@ -34,7 +34,7 @@ export default async function ContactPage() {
     console.error("Erreur dans la page de contact:", error)
     return (
       <main className="container mx-auto py-10">
-        <h1 className="text-3xl font-bold text-center mb-8">Contactez-nous</h1>
+        <h1 className="mb-4 text-4xl font-light tracking-tight md:text-5xl">Contactez-nous</h1>
         <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
           <strong className="font-bold">Erreur!</strong>
           <span className="block sm:inline">
