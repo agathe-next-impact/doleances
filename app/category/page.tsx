@@ -1,4 +1,4 @@
-import { fetchCategories, fetchLastFourPosts } from "@/lib/api"
+import { fetchCategories, fetchLastThreePosts } from "@/lib/api"
 import CategoryCard from "@/components/actualites/category-card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -13,7 +13,7 @@ export default async function Home() {
   const categories = await fetchCategories()
   // order by count
   categories.sort((a, b) => b.count - a.count)
-  const articles = await fetchLastFourPosts()
+  const articles = await fetchLastThreePosts()
   const stickyArticle = articles[0]
 
   return (
@@ -30,10 +30,10 @@ export default async function Home() {
       ) : (
         <div className="grid grid-cols-3 gap-6 mb-8">
             <div className="col-span-2 flex row-span-2 rounded-lg border bg-card shadow-lg overflow-hidden">
-              {stickyArticle && stickyArticle.featuredImage && (
+              {stickyArticle && (
                 <div className="relative h-full w-1/3">
                   <Image
-                    src={stickyArticle.featuredImage || "/placeholder.svg"}
+                    src={stickyArticle.featuredImage || "/img/doleance_couv.png"}
                     alt={stickyArticle.title}
                     fill
                     className="object-cover object-center"

@@ -26,10 +26,10 @@ export default function ArticleCard({ post }: ArticleCardProps) {
     try {
       return (
         post._embedded?.["wp:featuredmedia"]?.[0]?.source_url ||
-        `/placeholder.svg?height=200&width=400&query=Article ${encodeURIComponent(post.title.rendered)}`
+        `/img/doleance_couv.png`
       )
     } catch (error) {
-      return `/placeholder.svg?height=200&width=400&query=Article`
+      return `/img/doleance_couv.png`
     }
   })()
 
@@ -126,10 +126,10 @@ export default function ArticleCard({ post }: ArticleCardProps) {
   })()
 
   return (
-    <Card className="h-full flex flex-col">
+    <Card className="h-full flex flex-col"> 
       <div className="relative h-48 w-full">
         <Image
-          src={featuredImage || "/placeholder.svg"}
+          src={featuredImage || "/img/doleance_couv.png"}
           alt=""
           fill
           className="object-cover rounded-t-lg"

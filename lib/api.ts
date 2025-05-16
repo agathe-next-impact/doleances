@@ -344,9 +344,9 @@ export async function fetchAllPosts(): Promise<Post[]> {
 }
 
 // Fetch last 4 posts
-export async function fetchLastFourPosts(): Promise<Post[]> {
+export async function fetchLastThreePosts(): Promise<Post[]> {
   try {
-    const response = await fetch(`${API_BASE_URL}/posts?_embed&per_page=4`, {
+    const response = await fetch(`${API_BASE_URL}/posts?_embed&per_page=3`, {
       cache: "no-store",
       headers: {
         Accept: "application/json",

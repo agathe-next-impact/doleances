@@ -67,7 +67,7 @@ export default function CategoryCard({ category }: CategoryCardProps) {
                 <Link href={`/article/${post.slug}`} className="flex gap-8">
                   <div className="relative h-28 w-1/3 mb-2">
                     <Image
-                      src={post._embedded?.["wp:featuredmedia"]?.[0]?.source_url ?? "/placeholder.svg"}
+                      src={post._embedded?.["wp:featuredmedia"]?.[0]?.source_url ?? "/img/doleance_couv.png"}
                       alt={post.title.rendered}
                       fill
                       className="object-cover rounded"

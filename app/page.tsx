@@ -5,16 +5,13 @@ import { CalendarIcon, User2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { formatDate } from "@/lib/utils"
 import { ArticleCardHome } from "@/components/actualites/article-card-home"
-import { fetchLastFourPosts, fetchPageBySlug } from "@/lib/api"
+import { fetchLastThreePosts, fetchPageBySlug } from "@/lib/api"
 import YouTubeEmbed from "@/components/ui/video"
-import { Badge } from "@/components/ui/badge"
 import Verbatim from "@/components/verbatim"
-import { Popup } from "leaflet"
 import PopupImage from "@/components/ui/popup-image"
 
 export default async function Home() {
-  const articles = await fetchLastFourPosts()
-  const stickyArticle = articles[0]
+  const articles = await fetchLastThreePosts()
   const accueil = await fetchPageBySlug("accueil")
 
   return (
@@ -114,7 +111,7 @@ export default async function Home() {
                 <p className="mb-6 line-clamp-3 text-muted-foreground">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut pellentesque tristique dolor, dictum mollis neque. Morbi nisl nisi, tempor vitae turpis id, posuere venenatis augue. Nam consectetur purus eu mi malesuada, venenatis congue felis interdum. Nullam vehicula est vitae est dictum, vel lobortis nisl fermentum. Donec dapibus sed lorem a convallis. Sed in risus augue. Aliquam a tortor sit amet nisl tincidunt porta rhoncus quis mauris. Quisque in suscipit nibh.</p>
                </div>  
               <Button variant="outline" asChild>
-                <Link href='/cartographie'>Découvrir le festival</Link>
+                <Link href='/festival'>Découvrir le festival</Link>
               </Button>
           </div>
           </div>
@@ -148,7 +145,7 @@ export default async function Home() {
           </Link>
         </div>
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {articles.slice(1).map((article) => (
+            {articles.map((article) => (
             <ArticleCardHome key={article.id} article={article} />
             ))}
         </div>

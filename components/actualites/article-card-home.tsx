@@ -33,13 +33,13 @@ export function ArticleCardHome({ article }: ArticleCardProps) {
 
   return (
     <Card className="flex flex-col overflow-hidden border-none shadow-none">
-      {article.featuredImage && (
+      {article && (
         <div className="relative h-48 w-full">
           <Image
-            src={article.featuredImage || "/placeholder.svg?height=192&width=384&query=article"}
+            src={article.featuredImage || "/img/doleance_couv.png"}
             alt={article.title}
             fill
-            className="object-cover object-center rounded"
+            className="object-cover object-center rounded-lg"
           />
         </div>
       )}
@@ -51,7 +51,7 @@ export function ArticleCardHome({ article }: ArticleCardProps) {
         </CardTitle>
       </CardHeader>
       <CardContent className="flex-grow pl-0">
-        <p className="line-clamp-3 text-muted-foreground">{article?.descriptif}</p>
+        <span dangerouslySetInnerHTML={{ __html: article?.descriptif || "" }} />
       </CardContent>
       <CardFooter className="flex flex-col items-start gap-2 pl-0">
         <div className="flex flex-wrap gap-2">
