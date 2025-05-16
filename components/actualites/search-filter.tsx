@@ -7,7 +7,7 @@ import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { useState, useEffect, useCallback } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/actualites/select";
 import { Search, X, Calendar } from "lucide-react";
 
 interface SearchFilterProps {
@@ -76,11 +76,11 @@ export default function SearchFilter({
     updateUrl({ date: value });
   };
 
-  // Gestionnaire pour le changement de groupe local
-  const handleGroupeLocalChange = (value: string) => {
-    setGroupeLocalFilter(value);
-    updateUrl({ groupe_local_cpt: value });
-  };
+// Gestionnaire pour le changement de groupe local
+const handleGroupeLocalChange = (value: string) => {
+  setGroupeLocalFilter(value);
+  updateUrl({ groupe_local_cpt: value }); // value est maintenant le slug
+};
 
   // Réinitialiser tous les filtres
   const resetFilters = () => {

@@ -186,11 +186,6 @@ export default function ClientLayout({
                   <div className="relative hidden md:block">
                     <SearchAutocomplete placeholder="Rechercher dans notre actu..." className="w-64" showButton={false} />
                   </div>
-                {/*  <Button variant="outline" size="sm" asChild>
-                    <Link href="/contribuer">
-                      Contribuer
-                    </Link>
-                  </Button> */}
                 </div>
               </div>
             </header>

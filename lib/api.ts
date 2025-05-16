@@ -842,6 +842,7 @@ export async function fetchGroupeLocalBySlug(slug: string): Promise<GroupeLocalP
   }
 }
 
+
 // Améliorer la fonction fetchGroupeLocalById pour mieux gérer les erreurs et ajouter des logs
 export async function fetchGroupeLocalById(id: number): Promise<GroupeLocalPost | null> {
   try {
@@ -937,6 +938,7 @@ export async function fetchGroupeLocalById(id: number): Promise<GroupeLocalPost 
     }
   }
 }
+
 
 // Mettre à jour la fonction extractGroupesLocauxCPTFromCategory pour utiliser groupe_local_tax
 export async function extractGroupesLocauxCPTFromCategory(categoryId: number): Promise<GroupeLocalPost[]> {

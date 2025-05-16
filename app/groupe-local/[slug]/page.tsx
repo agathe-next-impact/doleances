@@ -287,7 +287,7 @@ export default async function GroupeLocalPage({ params }: { params: { slug: stri
             </div>
           )}
 
-          {/* Statistiques des articles */}
+          {/* Statistiques des articles
           {relatedPosts.length > 0 && (
             <div className="mb-8 bg-muted/20 p-6 rounded-lg">
               <h2 className="text-2xl font-bold mb-4">Articles associés</h2>
@@ -302,7 +302,7 @@ export default async function GroupeLocalPage({ params }: { params: { slug: stri
                 </div>
               </div>
             </div>
-          )}
+          )}*:}
 
           {/* Événements à venir */}
           {eventPosts.length > 0 && (
@@ -378,8 +378,7 @@ export default async function GroupeLocalPage({ params }: { params: { slug: stri
               {postsByCategory.map((categoryGroup) => (
                 <div key={categoryGroup.category.id} className="bg-muted/10 p-6 rounded-lg">
                   <div className="flex items-center gap-2 mb-6">
-                    <Bookmark className="h-6 w-6 text-primary" />
-                    <h2 className="text-2xl font-bold">{categoryGroup.category.name}</h2>
+                    <h2 className="text-2xl font-serif font-medium">{categoryGroup.category.name}</h2>
                     <Badge variant="outline" className="ml-2">
                       {categoryGroup.posts.length} article{categoryGroup.posts.length > 1 ? "s" : ""}
                     </Badge>
@@ -424,7 +423,7 @@ export default async function GroupeLocalPage({ params }: { params: { slug: stri
 
                   <div className="mt-4 text-center">
                     <Link
-                      href={`/category/${categoryGroup.category.id}`}
+                      href={`/category/${categoryGroup.category.slug}?groupe_local_cpt=${groupeLocal.id}`}
                       className="text-primary hover:underline inline-flex items-center gap-1"
                     >
                       Voir tous les articles de cette catégorie

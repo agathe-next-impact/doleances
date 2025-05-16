@@ -75,8 +75,6 @@ export default async function CategoryPage({ params }: { params: { slug: string 
         }
       }
 
-      console.log(`Nombre total de dates d'événements trouvées: ${eventDates.length}`)
-
       // Filtrer les dates uniques et les trier
       dates = [...new Set(eventDates)].sort((a, b) => {
         try {

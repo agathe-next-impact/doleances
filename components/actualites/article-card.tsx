@@ -3,6 +3,7 @@
 import type { Post } from "@/lib/api"
 import Image from "next/image"
 import Link from "next/link"
+import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { formatDate } from "@/lib/utils"
 import { Badge } from "@/components/ui/badge"
@@ -35,7 +36,6 @@ export default function ArticleCard({ post }: ArticleCardProps) {
   // Récupérer l'ID du groupe local depuis les champs ACF (utiliser tax_groupe_local ou groupe_local_tax)
   const groupeLocalId = post.acf?.tax_groupe_local || post.acf?.groupe_local_tax || null
 
-
   // Charger le nom du groupe local si on a un ID
   useEffect(() => {
     const loadGroupeLocalName = async () => {
@@ -57,6 +57,7 @@ export default function ArticleCard({ post }: ArticleCardProps) {
 
     loadGroupeLocalName()
   }, [groupeLocalId])
+
 
   // Get all ACF fields except groupe_local which we handle separately
   const acfFields = []
@@ -180,16 +181,17 @@ export default function ArticleCard({ post }: ArticleCardProps) {
         />
 
         {/* Affichage du groupe local avec lien */}
-        {groupeLocalId && (
+        {groupeLocalSlug && (
           <div className="flex items-start gap-1.5 mt-3 mb-2">
-            <Users className="h-4 w-4 text-primary mt-0.5" />
             <div>
               {isLoadingGroupe ? (
                 <span className="text-muted-foreground">Chargement du groupe local...</span>
               ) : (
-                <Link href={`/groupe-local/${groupeLocalSlug}`} className="text-primary hover:underline font-medium">
+                <Badge variant="secondary">
+                <Link href={`/groupe-local/${groupeLocalSlug}`}>
                   {groupeLocalName || "Voir le groupe local"}
                 </Link>
+                </Badge>
               )}
             </div>
           </div>
@@ -203,13 +205,8 @@ export default function ArticleCard({ post }: ArticleCardProps) {
                   ([key]) =>
                     ![
                       "date_de_levenement",
-<<<<<<< HEAD:components/article-card.tsx
                       'descriptif',
                       "heure_evenement",
-=======
-                      "heure_de_levenement",
-                      "lieu_evenement",
->>>>>>> db5dd6c7aba6fd3d9159cec2b320062ae31b6740:components/actualites/article-card.tsx
                       "adresse_evenement",
                       "adress",
                       "adresse",
