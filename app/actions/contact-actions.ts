@@ -61,9 +61,6 @@ export async function getContactData() {
         })
       }
 
-      console.log("Emails trouvés:", emails)
-      console.log("Objets de message trouvés:", subjects)
-
       return { emails, subjects }
     }
 
@@ -103,8 +100,6 @@ export async function sendContactForm(formData: FormData) {
   // Valider les données du formulaire
   const validatedData = formSchema.parse(formData)
 
-  console.log("Données du formulaire validées:", validatedData)
-
   try {
     // Récupérer les emails destinataires depuis l'API
     const contactData = await getContactData()
@@ -129,7 +124,6 @@ export async function sendContactForm(formData: FormData) {
     let emailsList = "";
     recipientEmails.forEach(email => {
       emailsList += email.email_de_destination + ", ";
-      console.log("Emails de destination:", emailsList);
     });
 
     // Envoyer l'email
@@ -156,9 +150,13 @@ export async function sendContactForm(formData: FormData) {
       `,
     })
 
-    return { success: true }
+    return { success: true, message: "Email envoyé avec succès" }
   } catch (error) {
     console.error("Erreur lors de l'envoi de l'email:", error)
-    throw error
+    return {
+      success: false,
+      message: "Erreur lors de l'envoi de l'email. Veuillez réessayer plus tard.", 
+    }
+
   }
 }

@@ -11,6 +11,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { sendContactForm } from "@/app/actions/contact-actions"
 import { useToast } from "@/hooks/use-toast"
+import { set } from "lodash"
 
 // Définition du schéma de validation
 const formSchema = z.object({
@@ -28,6 +29,7 @@ type ContactFormProps = {
 
 export default function ContactForm({ subjects }: ContactFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false)
+
   const { toast } = useToast()
 
   const form = useForm<FormValues>({
