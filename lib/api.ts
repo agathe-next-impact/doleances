@@ -153,6 +153,13 @@ export interface Verbatim {
   };
 }
 
+export interface VerbatimImage {
+  id: number;
+  acf: {
+    image_du_verbatim?: string;
+  };
+}
+
 const API_BASE_URL = env.NEXT_PUBLIC_API_BASE_URL || "https://wp-starter.io/wp-json/wp/v2"
 
 // Cache for categories to avoid multiple requests
@@ -998,5 +1005,32 @@ export async function fetchRandomVerbatim(): Promise<Verbatim | null> {
   }
 }
 
+export async function fetchRandomVerbatimImage(): Promise<VerbatimImage[] | null> {
+  
+  try {
+    const response = await fetch(`${API_BASE_URL}/image`, {
+      cache: "no-store",
+      headers: {
+        Accept: "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch verbatim: ${response.status}`);
+    }
+
+    const verbatimImages: VerbatimImage[] = await response.json();
+
+    if (verbatimImages.length === 0) {
+      return null;
+    }
+
+    // Sélectionner un verbatim aléatoire
+    return verbatimImages;
+  } catch (error) {
+    console.error("Error fetching random verbatim:", error);
+    return null;
+  }
+}
 
 

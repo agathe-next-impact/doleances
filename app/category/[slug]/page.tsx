@@ -6,6 +6,7 @@ import SearchFilter from "@/components/actualites/search-filter"
 import { Suspense } from "react"
 
 
+
 export default async function CategoryPage({ params }: { params: { slug: string } }) {
   try {
 

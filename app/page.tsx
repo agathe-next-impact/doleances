@@ -1,18 +1,32 @@
 import Link from "next/link"
 import Image from "next/image"
 import { ArrowRight, Video } from "lucide-react"
-import { CalendarIcon, User2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { formatDate } from "@/lib/utils"
 import { ArticleCardHome } from "@/components/actualites/article-card-home"
-import { fetchLastThreePosts, fetchPageBySlug } from "@/lib/api"
+import { fetchLastThreePosts, fetchPageBySlug, fetchRandomVerbatimImage, fetchAttachmentById } from "@/lib/api"
 import YouTubeEmbed from "@/components/ui/video"
 import Verbatim from "@/components/verbatim"
 import PopupImage from "@/components/ui/popup-image"
+import CrossfadeImageTransition from "@/components/ui/crossfade-image-transition"
 
 export default async function Home() {
   const articles = await fetchLastThreePosts()
   const accueil = await fetchPageBySlug("accueil")
+
+  const images = await fetchRandomVerbatimImage()
+  const imagesURLs = await Promise.all(
+    (images ?? []).map((image) => fetchAttachmentById(image.acf?.image_du_verbatim))
+  )
+  // Créer un tableau d'URLs d'images en ordre aléatoire
+  const randomImages = imagesURLs
+    .map((image) => image?.source_url)
+    .filter((url) => url !== undefined) as string[]
+
+  // Mélanger les images et les retourner en ordre aléatoire en tableau sans index
+  const shuffledImages = randomImages.sort(() => Math.random() - 0.5)
+
+
+
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -79,7 +93,7 @@ export default async function Home() {
                 </Button>
         </div>
         </div> 
- 
+
         <div className="flex flex-col row-span-1 rounded-lg border bg-card shadow-lg overflow-hidden">
         <div className="flex flex-col flex-grow justify-between p-6">
                 <div>
@@ -92,19 +106,8 @@ export default async function Home() {
           </div>
           </div> 
 
-        <div className="flex flex-col row-span-2 overflow-hidden">
-          <div className="flex flex-col flex-grow justify-between p-6">
-              <Image
-                src="/img/doleance_couv.png"
-                alt="Image d'illustration"
-                width={500}
-                height={300}
-                className="object-contain w-full h-full mb-4 "
-              />
-          </div>
-        </div>  
 
-          <div className="flex flex-col row-span-2 rounded-lg border bg-card shadow-lg overflow-hidden">
+          <div className="flex flex-col row-span-1 rounded-lg border bg-card shadow-lg overflow-hidden">
             <div className="flex flex-col flex-grow justify-between p-6">
                 <div>
                 <h2 className="w-full mb-4 pb-3 text-2xl font-serif font-light uppercase border-b-[1px]">Le Festival des Doléances</h2>
@@ -116,11 +119,19 @@ export default async function Home() {
           </div>
           </div>
 
-          <div className="flex flex-col row-span-1 overflow-hidden">
-            <div className="flex flex-col flex-grow justify-between p-6">
-                  <Verbatim />
-            </div>
-          </div> 
+        <div className="flex flex-col col-span-2 row-span-2">
+          <div className="flex flex-col flex-grow justify-between">
+            <CrossfadeImageTransition
+                images={shuffledImages}
+                height={500}
+                displayDuration={4000}
+                transitionDuration={1500}
+                className=""
+                random={true}
+                preloadCount={3}
+              />
+          </div>
+        </div>  
 
         <div className="flex flex-col row-span-1 rounded-lg border bg-card shadow-lg overflow-hidden">
           <div className="flex flex-col flex-grow justify-between p-6">
@@ -136,7 +147,7 @@ export default async function Home() {
           
       </section>
 
-      <section className="my-24 p-6 rounded-lg shadow-lg">
+      <section className="my-24 p-6 rounded-lg border bg-card shadow-lg overflow-hidden">
         <div className="mb-6 flex items-center justify-between border-b-[1px] pb-3">
           <h2 className="text-2xl font-serif font-light uppercase">Actualités</h2>
           <Link href="/category" className="flex items-center text-sm font-medium text-lime-600">
