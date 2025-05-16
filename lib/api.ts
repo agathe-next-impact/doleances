@@ -178,10 +178,11 @@ export async function fetchCategories(): Promise<Category[]> {
     }
 
     const response = await fetch(`${API_BASE_URL}/categories?per_page=100`, {
-      cache: "no-store", 
+      // Remove 'cache: "no-store"' to allow static rendering and ISR
       headers: {
         Accept: "application/json",
       },
+      // Optionally, you can add: next: { revalidate: 3600 }, // Revalidate every hour
     })
 
     if (!response.ok) {
@@ -193,8 +194,8 @@ export async function fetchCategories(): Promise<Category[]> {
     // Update cache
     categoriesCache = data
     categoriesCacheTime = now
-
     // Sort categories by count in descending order
+    return data.sort((a: Category, b: Category) => b.count - a.count)
     return data.sort((a, b) => b.count - a.count)
   } catch (error) {
     console.error("Error fetching categories:", error)
