@@ -151,6 +151,22 @@ export default function ArticleCard({ post }: ArticleCardProps) {
         </CardTitle>
       </CardHeader>
       <CardContent className="flex-grow">
+                {/* Affichage du groupe local avec lien */}
+        {groupeLocalSlug && (
+          <div className="flex items-start gap-1.5 my-4">
+            <div>
+              {isLoadingGroupe ? (
+                <span className="text-muted-foreground">Chargement du groupe local...</span>
+              ) : (
+                <Badge variant="secondary">
+                <Link href={`/groupe-local/${groupeLocalSlug}`}>
+                  {groupeLocalName || "Voir le groupe local"}
+                </Link>
+                </Badge>
+              )}
+            </div>
+          </div>
+        )}
         {isEvent && (
           <div className="mb-3 space-y-1.5 text-sm">
             {post.acf?.date_de_levenement && (
@@ -179,23 +195,6 @@ export default function ArticleCard({ post }: ArticleCardProps) {
           className="text-sm text-muted-foreground line-clamp-3 mb-4"
           dangerouslySetInnerHTML={{ __html: post.acf?.descriptif || post.excerpt.rendered }}
         />
-
-        {/* Affichage du groupe local avec lien */}
-        {groupeLocalSlug && (
-          <div className="flex items-start gap-1.5 mt-3 mb-2">
-            <div>
-              {isLoadingGroupe ? (
-                <span className="text-muted-foreground">Chargement du groupe local...</span>
-              ) : (
-                <Badge variant="secondary">
-                <Link href={`/groupe-local/${groupeLocalSlug}`}>
-                  {groupeLocalName || "Voir le groupe local"}
-                </Link>
-                </Badge>
-              )}
-            </div>
-          </div>
-        )}
 
         {acfFields.length > 0 &&
           !isEvent && ( // N'affiche pas les autres champs ACF si c'est un événement (déjà affiché au-dessus)
