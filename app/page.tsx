@@ -152,23 +152,6 @@ export default async function Home() {
             </div>           
       </section>
 
-      <section className="my-24 ">
-            <DraggableCardContainer className="relative flex md:min-h-screen min-h-[50rem] w-full md:items-center items-start justify-center">
-              <p className="absolute top-1/2 mx-auto max-w-sm -translate-y-3/4 text-center text-2xl font-serif md:text-4xl dark:text-neutral-800">
-                Cahier de la colère et de l'espoir
-              </p>
-              {verbatimImages.map((item) => (
-                <DraggableCardBody className={item.className}>
-                  <img
-                    src={item.image}
-                    alt={item.title}
-                    className="pointer-events-none relative z-10 w-[40rem] object-contain"
-                  />
-                </DraggableCardBody>
-              ))}
-            </DraggableCardContainer>
-      </section>
-
       <section className="my-36 p-6 rounded-lg border bg-card shadow-lg overflow-hidden">
         <div className="mb-6 flex items-center justify-between border-b-[1px] pb-3">
           <h2 className="text-2xl font-serif font-light uppercase">Actualités</h2>
@@ -184,7 +167,22 @@ export default async function Home() {
         </div>
       </section>
 
-
+      <section className="mb-24 ">
+            <DraggableCardContainer className="relative flex md:min-h-screen min-h-[50rem] w-full md:items-center items-start justify-center">
+              <p className="absolute top-1/2 mx-auto max-w-sm -translate-y-3/4 text-center text-2xl font-serif md:text-4xl dark:text-neutral-800">
+                Cahier de la colère et de l'espoir
+              </p>
+              {verbatimImages.map((item) => (
+                <DraggableCardBody className={item.className}>
+                  <img
+                    src={item.image}
+                    alt={item.title}
+                    className="pointer-events-none relative z-10 w-[40rem] object-contain"
+                  />
+                </DraggableCardBody>
+              ))}
+            </DraggableCardContainer>
+      </section>
     </div>
   )
 }

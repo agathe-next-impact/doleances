@@ -26,7 +26,7 @@ export default async function DraggableCardDemo() {
   // Créer un tableau au format title, url et className d'images en ordre aléatoire  
   const items = shuffledImages.map((image, index) => ({
     image: image?.source_url,
-    className: `absolute top-${Math.floor(Math.random() * 100)}% left-${Math.floor(Math.random() * 100)}% rotate-[${Math.floor(Math.random() * 20) - 10}deg]`,
+    className: `absolute`,
   }));
 
   const accueil = await fetchPageBySlug("a-propos");
