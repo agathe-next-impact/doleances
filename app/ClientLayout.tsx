@@ -71,7 +71,7 @@ export default function ClientLayout({
                         <span className="sr-only">Toggle menu</span>
                       </Button>
                     </SheetTrigger>
-                    <SheetContent side="left" className="w-[250px] sm:w-[300px]">
+                    <SheetContent side="left" className="w-[250px] w-[100%]">
                       <SheetHeader>
                         <LottieAnimation animationPath="/animations/note.json" width="80px" height="80px"/>
                         <SheetTitle className="text-left font-light text-2xl">Les doléances</SheetTitle>

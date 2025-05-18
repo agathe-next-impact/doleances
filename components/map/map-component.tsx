@@ -279,7 +279,7 @@ export default function MapComponent() {
   }
 
   return (
-    <div className="flex flex-col h-screen">
+    <div className="flex flex-col h-full">
       <div className="py-4 bg-white">
         <Select
           value={selectedDepartement || ""}
@@ -306,7 +306,7 @@ export default function MapComponent() {
       </div>
 
       <div className="flex flex-col md:flex-row flex-1 h-full">
-        <div className="w-full md:w-2/3 h-[500px] md:h-auto">
+        <div className="w-full md:w-2/3 h-[500px] h-auto">
           <GoogleMap
             mapContainerStyle={containerStyle}
             center={currentGroup?.center || defaultCenter}

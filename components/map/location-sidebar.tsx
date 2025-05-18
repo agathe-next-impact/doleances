@@ -63,7 +63,7 @@ export default function LocationSidebar({
 
   
   return (
-    <div className="w-full md:w-1/3 bg-white border-l border-gray-200">
+    <div className="w-full md:w-1/3 md:mt-0 bg-white border-l border-gray-200">
       {location ? (
         <div className="p-4 h-full flex flex-col">
           <div className="flex justify-between items-center mb-4">

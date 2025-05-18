@@ -29,7 +29,7 @@ export default async function Home() {
               </div>
       ) : (
         <div className="grid grid-cols-3 gap-6 mb-8">
-            <div className="col-span-2 flex row-span-2 rounded-lg border bg-card shadow-lg overflow-hidden">
+            <div className="md:col-span-2 col-span-3 flex row-span-2 rounded-lg border bg-card shadow-lg overflow-hidden">
               {stickyArticle && (
                 <div className="relative h-full w-1/3">
                   <Image
@@ -79,7 +79,7 @@ export default async function Home() {
                 )}
               </div>
             </div>
-            <div className="col-span-1 flex flex-col gap-6">
+            <div className="md:col-span-1 col-span-3 flex flex-col gap-6">
               <Verbatim />
             </div>
 
@@ -87,7 +87,7 @@ export default async function Home() {
 
         <div className="col-span-3 grid grid-cols-6 gap-6">
           {categories.map((category) => (
-            <CategoryCard key={category.id} category={category} />
+            <CategoryCard key={category.id} category={category}/>
           ))}
         </div>
 

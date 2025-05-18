@@ -376,7 +376,7 @@ export default async function GroupeLocalPage({ params }: { params: { slug: stri
           {postsByCategory.length > 0 && (
             <div className="space-y-12 mb-8">
               {postsByCategory.map((categoryGroup) => (
-                <div key={categoryGroup.category.id} className="bg-muted/10 p-6 rounded-lg">
+                <div key={categoryGroup.category.id}>
                   <div className="flex items-center gap-2 mb-6">
                     <h2 className="text-2xl font-serif font-medium">{categoryGroup.category.name}</h2>
                     <Badge variant="outline" className="ml-2">

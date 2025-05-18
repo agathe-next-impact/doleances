@@ -99,7 +99,7 @@ export default async function Page () {
       </section> 
       <section className="mb-8 grid gap-12 grid-cols-3">
         <div className="flex flex-col col-span-4 h-full w-full justify-between rounded-lg border bg-card shadow-lg overflow-hidden">
-            <div className="flex justify-between gap-8 p-6">
+            <div className="flex md:flex-row flex-col justify-between gap-8 p-6">
               {page?.acf?.edito_fabrice && (
               <div className="basis-1/2">
                 <h2 className="w-full mb-4 pb-3 text-2xl font-serif font-light uppercase border-b-[1px]">Fabrice Dalongeville</h2>

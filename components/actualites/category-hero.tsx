@@ -10,7 +10,7 @@ interface CategoryHeroProps {
 export default function CategoryHero({ category }: CategoryHeroProps) {
 
   return (
-    <div className="rounded-lg py-8 text-center">
+    <div className="rounded-lg pt-8 text-center">
         <div className="flex mb-4">
         <Badge variant="secondary">
           <Link href={`/category`}>

@@ -46,7 +46,7 @@ export default function CategoryCard({ category }: CategoryCardProps) {
   }, [category.slug])
 
   return (
-    <Card className="col-span-3 h-full flex flex-col overflow-hidden border shadow-lg">
+    <Card className="md:col-span-3 col-span-6 h-full flex flex-col overflow-hidden border shadow-lg">
       <CardHeader className="pb-2">
         <CardTitle className="w-full mb-4 pb-3 text-2xl font-serif font-light uppercase border-b-[1px]">
           <Link href={`/category/${category.slug}`}>

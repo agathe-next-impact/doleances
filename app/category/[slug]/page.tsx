@@ -122,9 +122,9 @@ export default async function CategoryPage({ params }: { params: { slug: string 
     const groupesLocauxCPT = await extractGroupesLocauxCPTFromCategory(category?.id)
 
     return (
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 md:py-8 pt-2">
         <CategoryHero category={category?.name} description={category?.description } />
-        <div className="my-8">
+        <div className="mb-8">
           <Suspense fallback={<div>Chargement des filtres...</div>}>
             <SearchFilter
               dates={dates.filter((date): date is string => date !== null)}

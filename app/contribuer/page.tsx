@@ -25,7 +25,7 @@ export default async function ContactPage() {
           ]
 
     return (
-      <main className="container mx-auto py-10">
+      <main className="container mx-auto py-10 px-4">
         <h1 className="mb-4 text-4xl font-light tracking-tight text-center">Contactez-nous</h1>
         <ContactForm subjects={finalSubjects} />
       </main>

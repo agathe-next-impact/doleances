@@ -18,8 +18,8 @@ export default async function CartographiePage() {
     <div className="container mx-auto px-4 py-8">
       <div className="mb-8">
         <h1 className="mb-4 text-3xl text-center md:text-4xl">Cartographie des groupes locaux</h1>
-        <div className="w-[60%] mx-auto mb-6">
-          <p className="text-lg text-muted-foreground text-center">
+        <div className="md:w-[60%] w-[90%] mx-auto mb-6">
+          <p className="md:text-lg text-sm text-muted-foreground text-center">
           {page && page.acf?.texte_dintro ? (
             page.acf?.texte_dintro
           ) : "Tous les groupes locaux de la France à rencontrer"}

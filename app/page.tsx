@@ -42,17 +42,17 @@ export default async function Home() {
 
 
   return (
-    <div className="container mx-auto py-8">
-      <div className="mb-12 text-center">
+    <div className="container mx-auto md:p-8 p-4">
+      <div className="mt-8 mb-12 md:mt-4 md:mt-8 text-center">
         <h1 className="mb-4 text-4xl font-light tracking-tight md:text-5xl">Les doléances</h1> 
         <p className="mx-auto mb-6 max-w-2xl text-lg text-muted-foreground">
         Wiki du corpus des doléances de 2018/2019
         </p>
       </div>
 
-      <section className="h-max mb-12 grid gap-12 md:grid-cols-6 place-items-end">
+      <section className="h-max mb-12 grid gap-12 grid-cols-6 place-items-end">
         {accueil && (
-        <div className="flex flex-col col-span-4 h-full justify-between rounded-lg border bg-card shadow-lg overflow-hidden">
+        <div className="flex flex-col md:col-span-4 col-span-6 h-full justify-between rounded-lg border bg-card shadow-lg overflow-hidden">
             <div className="flex flex-col p-6">
               <h2 className="w-full mb-4 pb-3 text-2xl font-serif font-light uppercase border-b-[1px]">
                 {accueil?.acf?.carte_de_une?.titre}
@@ -74,7 +74,7 @@ export default async function Home() {
 
         )}
         
-        <div className="h-max flex flex-col col-span-2 gap-12">          
+        <div className="h-max flex flex-col md:col-span-2 col-span-6 gap-12">          
           <div className="flex flex-col flex-grow justify-center p-6">
             <Verbatim />
           </div>
@@ -93,9 +93,9 @@ export default async function Home() {
         </div>
       </section> 
 
-      <section className="mb-8 grid gap-12 grid-cols-3 grid-rows-2">
+      <section className="mb-8 grid gap-12 md:grid-cols-3 grid-rows-2">
 
-        <div className="flex flex-col row-span-2 rounded-lg border bg-card shadow-lg overflow-hidden">
+        <div className="flex flex-col md:col-span-1 col-span-3 row-span-2 rounded-lg border bg-card shadow-lg overflow-hidden">
           <div className="flex flex-col flex-grow justify-between p-6">
               <div>
               <h2 className="w-full mb-4 pb-3 text-2xl font-serif font-light uppercase border-b-[1px]">Les Etats généraux communaux</h2>
@@ -107,7 +107,7 @@ export default async function Home() {
         </div>
         </div> 
 
-        <div className="flex flex-col row-span-1 rounded-lg border bg-card shadow-lg overflow-hidden">
+        <div className="flex flex-col md:col-span-1 col-span-3 row-span-1 rounded-lg border bg-card shadow-lg overflow-hidden">
         <div className="flex flex-col flex-grow justify-between p-6">
                 <div>
                 <h2 className="w-full mb-4 pb-3 text-2xl font-serif font-light uppercase border-b-[1px]">Les groupes locaux</h2>
@@ -119,20 +119,19 @@ export default async function Home() {
           </div>
           </div> 
 
+        <div className="flex flex-col md:col-span-1 col-span-3 row-span-1 rounded-lg border bg-card shadow-lg overflow-hidden">
+          <div className="flex flex-col flex-grow justify-between p-6">
+              <div>
+              <h2 className="w-full mb-4 pb-3 text-2xl font-serif font-light uppercase border-b-[1px]">Le Festival des Doléances</h2>
+              <p className="mb-6 line-clamp-3 text-muted-foreground">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut pellentesque tristique dolor, dictum mollis neque. Morbi nisl nisi, tempor vitae turpis id, posuere venenatis augue. Nam consectetur purus eu mi malesuada, venenatis congue felis interdum. Nullam vehicula est vitae est dictum, vel lobortis nisl fermentum. Donec dapibus sed lorem a convallis. Sed in risus augue. Aliquam a tortor sit amet nisl tincidunt porta rhoncus quis mauris. Quisque in suscipit nibh.</p>
+              </div>  
+            <Button variant="outline" asChild>
+              <Link href='/festival'>Découvrir le festival</Link>
+            </Button>
+        </div>
+        </div>
 
-          <div className="flex flex-col row-span-1 rounded-lg border bg-card shadow-lg overflow-hidden">
-            <div className="flex flex-col flex-grow justify-between p-6">
-                <div>
-                <h2 className="w-full mb-4 pb-3 text-2xl font-serif font-light uppercase border-b-[1px]">Le Festival des Doléances</h2>
-                <p className="mb-6 line-clamp-3 text-muted-foreground">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut pellentesque tristique dolor, dictum mollis neque. Morbi nisl nisi, tempor vitae turpis id, posuere venenatis augue. Nam consectetur purus eu mi malesuada, venenatis congue felis interdum. Nullam vehicula est vitae est dictum, vel lobortis nisl fermentum. Donec dapibus sed lorem a convallis. Sed in risus augue. Aliquam a tortor sit amet nisl tincidunt porta rhoncus quis mauris. Quisque in suscipit nibh.</p>
-               </div>  
-              <Button variant="outline" asChild>
-                <Link href='/festival'>Découvrir le festival</Link>
-              </Button>
-          </div>
-          </div>
-
-        <div className="flex flex-col col-span-2 row-span-1 rounded-lg border bg-card shadow-lg overflow-hidden">
+        <div className="flex flex-col md:col-span-1 col-span-3 row-span-1 rounded-lg border bg-card shadow-lg overflow-hidden">
           <div className="flex flex-col flex-grow justify-between p-6">
                   <div>
                   <h2 className="w-full mb-4 pb-3 text-2xl font-serif font-light uppercase border-b-[1px]">Participer</h2>
@@ -146,7 +145,7 @@ export default async function Home() {
       </section>
 
       <section className="my-24 ">
-            <DraggableCardContainer className="relative flex min-h-screen w-full items-center justify-center">
+            <DraggableCardContainer className="relative flex md:min-h-screen min-h-[50rem] w-full md:items-center items-start justify-center">
               <p className="absolute top-1/2 mx-auto max-w-sm -translate-y-3/4 text-center text-2xl font-serif md:text-4xl dark:text-neutral-800">
                 Cahier de la colère et de l'espoir
               </p>
