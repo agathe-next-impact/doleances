@@ -26,7 +26,11 @@ export default async function DraggableCardDemo() {
   }));
 
   const accueil = await fetchPageBySlug("a-propos");
+  const imageALaUne = await fetchAttachmentById(accueil?.featured_media);
+  // convertir l'url youtube en lien youtube
+  const youtubeLink = accueil?.acf?.infos_documentaire?.video;
 
+  console.log("accueil", accueil);
 
   return (
      <div className="container mx-auto px-4 py-8">
@@ -49,30 +53,52 @@ export default async function DraggableCardDemo() {
                     dangerouslySetInnerHTML={{
                       __html: accueil?.acf?.presentation_de_la_demarche || "",
                     }}
-                    />
-                  <div className="h-max flex flex-col rounded-lg border bg-card shadow-lg overflow-hidden">
-                    <div className="relative w-full">
-                    <YouTubeEmbed videoLink="https://www.youtube.com/embed/8bof5Anluk4?si=H5M7BGGsvWFUODBM" />
-                    </div>
-                  </div>
-              
+                    />              
                 </div>
             </div>
 
             )}
           
-          <div className="h-max flex flex-col md:col-span-2 col-span-6 gap-12">          
+          <div className="h-max flex flex-col md:col-span-2 col-span-6 gap-12">       
+            <div className="flex flex-col col-span-2 overflow-hidden border rounded-lg bg-card shadow-lg overflow-hidden">
+              <Image 
+                src={imageALaUne.source_url}
+                alt="Image d'illustration"
+                width={500}
+                height={300}
+                className="object-cover w-full h-full"
+              />
+            </div>
             <div className="flex flex-col flex-grow justify-center p-6">
               <Verbatim />
             </div>
-            <div className="flex flex-col row-span-2 overflow-hidden border rounded-lg bg-card shadow-lg overflow-hidden">
-
-            </div>  
           </div>
-      </section> 
-    
-          <section className="w-full h-max mb-12 flex flex-col gap-12 md:grid md:grid-cols-6 md:gap-12">  
-            <DraggableCardContainer className="relative flex min-h-screen w-full items-center justify-center overflow-clip">
+          </section> 
+
+          <section className="h-max mb-12 grid gap-12 grid-cols-6 place-items-end">
+              <div className="h-max flex flex-col md:col-span-2 col-span-6 gap-12">  
+                <div className="relative h-full w-full overflow-hidden rounded-lg border bg-card shadow-lg">
+                  <YouTubeEmbed videoLink={youtubeLink} />        
+                </div>    
+              </div>
+              <div className="flex flex-col md:col-span-4 col-span-6 h-full justify-between rounded-lg border bg-card shadow-lg overflow-hidden">
+                <div className="flex flex-col p-6">
+                  <h2 className="w-full mb-4 pb-3 text-2xl font-serif font-light uppercase border-b-[1px]">
+                    Le documentaire sur les doléances
+                  </h2>
+                    <div
+                    className="flex flex-col gap-4 mb-4 flex-grow text-sm text-muted-foreground"
+                    dangerouslySetInnerHTML={{
+                      __html: accueil?.acf?.infos_documentaire.presentation_du_docu || "",
+                    }}
+                    />              
+                </div>
+              </div>
+          </section>
+
+          <section className="w-full h-max my-24 flex flex-col gap-12 md:grid md:grid-cols-6 md:gap-12">  
+            
+            <DraggableCardContainer className="relative md:col-span-6 flex min-h-screen w-full items-center justify-center">
               <p className="absolute top-1/2 mx-auto max-w-sm -translate-y-3/4 text-center text-2xl font-serif md:text-4xl dark:text-neutral-800">
                 Cahier de la colère et de l'espoir
               </p>
