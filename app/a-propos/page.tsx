@@ -3,10 +3,14 @@ import {
   DraggableCardBody,
   DraggableCardContainer,
 } from "@/components/ui/draggable-card";
-import { fetchPageBySlug, fetchRandomVerbatimImage, fetchAttachmentById } from "@/lib/api";
+import { fetchPageBySlug, fetchRandomVerbatimImage, fetchAttachmentById, fetchGroupesLocaux } from "@/lib/api";
 import YouTubeEmbed from "@/components/ui/video";
 import Verbatim from "@/components/verbatim";
 import Image from "next/image";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import CardMap from "@/components/map/map-card";
+
 
 export default async function DraggableCardDemo() {
   const images = await fetchRandomVerbatimImage()
@@ -27,10 +31,17 @@ export default async function DraggableCardDemo() {
 
   const accueil = await fetchPageBySlug("a-propos");
   const imageALaUne = await fetchAttachmentById(accueil?.featured_media);
-  // convertir l'url youtube en lien youtube
-  const youtubeLink = accueil?.acf?.infos_documentaire?.video;
+  const dossierDePresse = await fetchAttachmentById(accueil?.acf?.infos_documentaire?.dossier_de_presse);
+  const locations = await fetchGroupesLocaux()
+  // Adapter les données pour correspondre à l'interface attendue par CardMap
+  const mapLocations = locations.map((location) => ({
+    id: String(location.id),
+    position: {
+      lat: parseFloat(location.acf?.localisation.lat),
+      lng: parseFloat(location.acf?.localisation.lng),
+    },
+  }));
 
-  console.log("accueil", accueil);
 
   return (
      <div className="container mx-auto px-4 py-8">
@@ -76,23 +87,41 @@ export default async function DraggableCardDemo() {
           </section> 
 
           <section className="h-max mb-12 grid gap-12 grid-cols-6 place-items-end">
-              <div className="h-max flex flex-col md:col-span-2 col-span-6 gap-12">  
+          <div className="h-full w-full flex flex-col md:col-span-2 col-span-6 rounded-lg border bg-card shadow-lg overflow-hidden">
+            <div className="flex flex-col flex-grow justify-between content-stretch p-6">
+                <h2 className="w-full mb-4 pb-3 text-2xl font-serif font-light uppercase border-b-[1px]">
+                  Les groupes locaux
+                 </h2>
+                    <CardMap
+                      locations={mapLocations}
+                    />
+                  <Button variant="outline" asChild className="mt-4"> 
+                    <Link href='/cartographie'>Voir les groupes</Link>
+                  </Button>
+              </div>  
+          </div>
+          <div className="flex flex-col md:col-span-4 col-span-6 h-full justify-betweenrounded-lg border bg-card shadow-lg overflow-hidden">
+            <div className="w-full h-full flex flex-col p-6">
+              <h2 className="w-full mb-4 pb-3 text-2xl font-serif font-light uppercase border-b-[1px]">
+                Le documentaire sur les doléances
+              </h2>
+                <div
+                className="flex flex-col gap-4 mb-4 flex-grow text-sm text-muted-foreground"
+                dangerouslySetInnerHTML={{
+                  __html: accueil?.acf?.infos_documentaire.presentation_du_docu || "",
+                }}
+                />  
+              <Button variant="outline" asChild>
+                <Link href={dossierDePresse.source_url} target="_blank" rel="noopener noreferrer">
+                  Dossier de presse
+                </Link>
+              </Button>            
+            </div>
+          </div>
+              <div className="h-max w-full flex flex-col md:col-span-6 col-span-6 gap-12">  
                 <div className="relative h-full w-full overflow-hidden rounded-lg border bg-card shadow-lg">
-                  <YouTubeEmbed videoLink={youtubeLink} />        
+                  <YouTubeEmbed videoLink={accueil?.acf.infos_documentaire?.video} />        
                 </div>    
-              </div>
-              <div className="flex flex-col md:col-span-4 col-span-6 h-full justify-between rounded-lg border bg-card shadow-lg overflow-hidden">
-                <div className="flex flex-col p-6">
-                  <h2 className="w-full mb-4 pb-3 text-2xl font-serif font-light uppercase border-b-[1px]">
-                    Le documentaire sur les doléances
-                  </h2>
-                    <div
-                    className="flex flex-col gap-4 mb-4 flex-grow text-sm text-muted-foreground"
-                    dangerouslySetInnerHTML={{
-                      __html: accueil?.acf?.infos_documentaire.presentation_du_docu || "",
-                    }}
-                    />              
-                </div>
               </div>
           </section>
 
