@@ -58,7 +58,7 @@ export default function ClientLayout({
           }
         `}</style>
       </head>
-      <body className={inter.className}>
+      <body className={`${inter.className} overflow-x-hidden`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           <div className="flex min-h-screen flex-col">
             <header className="sticky top-0 z-10 border-b bg-background">

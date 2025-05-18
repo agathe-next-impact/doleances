@@ -7,29 +7,42 @@ import { fetchLastThreePosts, fetchPageBySlug, fetchRandomVerbatimImage, fetchAt
 import YouTubeEmbed from "@/components/ui/video"
 import Verbatim from "@/components/verbatim"
 import PopupImage from "@/components/ui/popup-image"
-import CrossfadeImageTransition from "@/components/ui/crossfade-image-transition"
+import React from "react";
+import {
+  DraggableCardBody,
+  DraggableCardContainer,
+} from "@/components/ui/draggable-card";
+import { title } from "process"
 
 export default async function Home() {
   const articles = await fetchLastThreePosts()
   const accueil = await fetchPageBySlug("accueil")
 
   const images = await fetchRandomVerbatimImage()
-  const imagesURLs = await Promise.all(
-    (images ?? []).map((image) => fetchAttachmentById(image.acf?.image_du_verbatim))
-  )
-  // Créer un tableau d'URLs d'images en ordre aléatoire
-  const randomImages = imagesURLs
-    .map((image) => image?.source_url)
-    .filter((url) => url !== undefined) as string[]
-
-  // Mélanger les images et les retourner en ordre aléatoire en tableau sans index
-  const shuffledImages = randomImages.sort(() => Math.random() - 0.5)
+    const imagesObjects = await Promise.all(
+      (images ?? [])
+        .map((image) => image.acf?.image_du_verbatim)
+        .map((id) => fetchAttachmentById(Number(id)))
+    )
+  
+    // Mélanger les images et les retourner en ordre aléatoire en tableau sans index
+    const shuffledImages = imagesObjects.sort(() => Math.random() - 0.5)
+  
+    // Créer un tableau au format title, url et className d'images en ordre aléatoire  
+    const verbatimImages = shuffledImages.map((image) => ({
+      title: image?.title?.rendered,
+      image: image?.source_url,
+      className: `absolute`
+        + ` top-[${Math.floor(Math.random() * 70) + 10}%]`
+        + ` left-[${Math.floor(Math.random() * 70) + 10}%]`
+        + ` rotate-[${Math.floor(Math.random() * 20) - 10}deg]`,
+    }));
 
 
 
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto py-8">
       <div className="mb-12 text-center">
         <h1 className="mb-4 text-4xl font-light tracking-tight md:text-5xl">Les doléances</h1> 
         <p className="mx-auto mb-6 max-w-2xl text-lg text-muted-foreground">
@@ -119,21 +132,7 @@ export default async function Home() {
           </div>
           </div>
 
-        <div className="flex flex-col col-span-2 row-span-2">
-          <div className="flex flex-col flex-grow justify-between">
-            <CrossfadeImageTransition
-                images={shuffledImages}
-                height={500}
-                displayDuration={4000}
-                transitionDuration={1500}
-                className=""
-                random={true}
-                preloadCount={3}
-              />
-          </div>
-        </div>  
-
-        <div className="flex flex-col row-span-1 rounded-lg border bg-card shadow-lg overflow-hidden">
+        <div className="flex flex-col col-span-2 row-span-1 rounded-lg border bg-card shadow-lg overflow-hidden">
           <div className="flex flex-col flex-grow justify-between p-6">
                   <div>
                   <h2 className="w-full mb-4 pb-3 text-2xl font-serif font-light uppercase border-b-[1px]">Participer</h2>
@@ -143,11 +142,30 @@ export default async function Home() {
                       <Link href='/contribuer'>Contribuer</Link>
                     </Button>
             </div>
-            </div> 
-          
+            </div>           
       </section>
 
-      <section className="my-24 p-6 rounded-lg border bg-card shadow-lg overflow-hidden">
+      <section className="my-24 ">
+            <DraggableCardContainer className="relative flex min-h-screen w-full items-center justify-center">
+              <p className="absolute top-1/2 mx-auto max-w-sm -translate-y-3/4 text-center text-2xl font-serif md:text-4xl dark:text-neutral-800">
+                Cahier de la colère et de l'espoir
+              </p>
+              {verbatimImages.map((item) => (
+                <DraggableCardBody className={item.className}>
+                  <img
+                    src={item.image}
+                    alt={item.title}
+                    className="pointer-events-none relative z-10 w-[40rem] object-contain"
+                  />
+                  <h3 className="mt-4 text-center text-2xl font-bold text-neutral-700 dark:text-neutral-300">
+                    
+                  </h3>
+                </DraggableCardBody>
+              ))}
+            </DraggableCardContainer>
+      </section>
+
+      <section className="my-36 p-6 rounded-lg border bg-card shadow-lg overflow-hidden">
         <div className="mb-6 flex items-center justify-between border-b-[1px] pb-3">
           <h2 className="text-2xl font-serif font-light uppercase">Actualités</h2>
           <Link href="/category" className="flex items-center text-sm font-medium text-lime-600">
