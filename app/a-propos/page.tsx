@@ -87,11 +87,6 @@ export default async function DraggableCardDemo() {
           </section> 
 
           <section className="h-max mb-12 grid gap-12 grid-cols-6 place-items-end">
-<<<<<<< HEAD
-              <div className="h-max flex flex-col md:col-span-2 col-span-6 gap-12">  
-                <div className="relative w-s">ggg
-                  <YouTubeEmbed videoLink={youtubeLink} />        
-=======
           <div className="h-full w-full flex flex-col md:col-span-2 col-span-6 rounded-lg border bg-card shadow-lg overflow-hidden">
             <div className="flex flex-col flex-grow justify-between content-stretch p-6">
                 <h2 className="w-full mb-4 pb-3 text-2xl font-serif font-light uppercase border-b-[1px]">
@@ -126,7 +121,6 @@ export default async function DraggableCardDemo() {
               <div className="h-max w-full flex flex-col md:col-span-6 col-span-6 gap-12">  
                 <div className="relative h-full w-full overflow-hidden rounded-lg border bg-card shadow-lg">
                   <YouTubeEmbed videoLink={accueil?.acf.infos_documentaire?.video} />        
->>>>>>> 45451128737f6778a6d70ce74f0e65c2dcf928be
                 </div>    
               </div>
           </section>
