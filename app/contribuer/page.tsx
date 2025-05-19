@@ -33,7 +33,7 @@ export default async function ContactPage() {
   } catch (error) {
     console.error("Erreur dans la page de contact:", error)
     return (
-      <main className="container mx-auto py-10">
+      <main className="container mx-auto md:p-8 p-4">
         <h1 className="mb-4 text-4xl font-light tracking-tight md:text-5xl">Contactez-nous</h1>
         <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
           <strong className="font-bold">Erreur!</strong>

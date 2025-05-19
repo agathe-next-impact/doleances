@@ -55,7 +55,7 @@ export default function CategoryCard({ category }: CategoryCardProps) {
         </CardTitle>
         <CardDescription dangerouslySetInnerHTML={{ __html: category.description }} className="line-clamp-2" />
       </CardHeader>
-      <CardContent className="flex-grow pt-4">
+      <CardContent className="flex-grow pt-4 cards">
         {loading ? (
           <p>Chargement des articles...</p>
         ) : error ? (
@@ -114,7 +114,7 @@ export default function CategoryCard({ category }: CategoryCardProps) {
         )}
       </CardContent>
       <CardFooter>
-        <Link href={`/category/${category.slug}`} className="text-sm text-muted-foreground hover:underline">
+        <Link href={`/category/${category.slug}`} className="text-sm text-primary">
           {category.name} : Voir tout
         </Link>
       </CardFooter>

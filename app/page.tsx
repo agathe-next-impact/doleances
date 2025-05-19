@@ -1,6 +1,6 @@
 import Link from "next/link"
 import Image from "next/image"
-import { ArrowRight, Video } from "lucide-react"
+import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { ArticleCardHome } from "@/components/actualites/article-card-home"
 import { fetchLastThreePosts, fetchPageBySlug, fetchRandomVerbatimImage, fetchAttachmentById, fetchGroupesLocaux } from "@/lib/api"
@@ -157,10 +157,11 @@ export default async function Home() {
       <section className="my-36 p-6 rounded-lg border bg-card shadow-lg overflow-hidden">
         <div className="mb-6 flex items-center justify-between border-b-[1px] pb-3">
           <h2 className="text-2xl font-serif font-light uppercase">Actualités</h2>
-          <Link href="/category" className="flex items-center text-sm font-medium text-lime-600">
+          <Badge variant="secondary" className="hidden md:flex">
+          <Link href="/category" className="flex items-center">
             Voir toute l'actualité
-            <ArrowRight className="ml-1 h-4 w-4" />
           </Link>
+          </Badge>
         </div>
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {articles.map((article) => (

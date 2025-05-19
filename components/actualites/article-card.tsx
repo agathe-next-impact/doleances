@@ -145,7 +145,7 @@ export default function ArticleCard({ post }: ArticleCardProps) {
       </div>
       <CardHeader className="pb-2">
         <CardTitle className="text-lg">
-          <Link href={`/article/${post.slug}`} className="hover:underline">
+          <Link href={`/article/${post.slug}`} className="hover:text-primary">
             <span dangerouslySetInnerHTML={{ __html: post.title.rendered }} />
           </Link>
         </CardTitle>
@@ -230,7 +230,7 @@ export default function ArticleCard({ post }: ArticleCardProps) {
                           href={value}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-primary hover:underline"
+                          className="text-primary"
                           >
                           Voir en ligne
                           </a>

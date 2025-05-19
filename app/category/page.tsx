@@ -17,7 +17,7 @@ export default async function Home() {
   const stickyArticle = articles[0]
 
   return (
-    <main className="container mx-auto px-4 py-8">
+    <main className="container mx-auto md:p-8 p-4">
         <div className="py-8 text-center">
           <h1 className="">L'actualité des doléances</h1> 
           <p className="mx-auto mb-6 max-w-2xl text-lg text-muted-foreground">
@@ -72,9 +72,6 @@ export default async function Home() {
                           <span>{formatDate(stickyArticle.date)}</span>
                         </div>
                       </div>
-                    <Button variant="outline" asChild>
-                      <Link href={`/article/${stickyArticle.slug}`}>Lire plus</Link>
-                    </Button>
                   </>
                 )}
               </div>

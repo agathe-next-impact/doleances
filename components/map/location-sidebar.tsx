@@ -66,11 +66,11 @@ export default function LocationSidebar({
   return (
     <div className="w-full md:w-1/3 md:mt-0 bg-white border-l border-gray-200">
       {location ? (
-        <div className="p-4 h-full flex flex-col">
-          <div className="flex justify-between items-center mb-4">
+        <div className="px-4 h-full flex flex-col">
+          <div className="flex justify-between items-center">
             <h2>{decode(location.title)}</h2>
-            <Button variant="ghost" size="icon" onClick={onClose}>
-              <X className="h-4 w-4" />
+            <Button size="icon" className="bg-white" onClick={onClose}>
+              <X className="h-4 w-4 text-black" />
               <span className="sr-only">Fermer</span>
             </Button>
           </div>
@@ -122,12 +122,12 @@ export default function LocationSidebar({
             )}
 
             {location.slug && (
-              <div className="flex items-center gap-2 pt-8">
-                <Button variant="outline">
+              <div className="flex items-start gap-2 pt-8">
+                <Button variant="outline" size={"sm"}>
                 <Link
                   href={location.slug ? `/groupe-local/${location.slug}` : "#"}
                   rel="noopener noreferrer"
-                  className="text-primary hover:underline"
+                  className="text-sm"
                 >
                   Voir l'activité du groupe local
                 </Link>

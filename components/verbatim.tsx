@@ -103,15 +103,6 @@ export default function Verbatim() {
             )}
         </div>
       </div>
-      {verbatim.acf?.texte_du_verbatim.length > 150 && ( 
-      <button
-        className="item-right text-right mt-4 uppercase font-medium text-sm hover:underline"
-        onClick={() => setShowFullVerbatim(true)}
-      >
-        Lire la suite
-      </button>
-      )
-      }
       <p className="font-serif font-medium text-xl text-right">
         {verbatim.acf.departement}
       </p>
@@ -122,6 +113,15 @@ export default function Verbatim() {
       ) : (
         ""
       )}
+      {verbatim.acf?.texte_du_verbatim.length > 150 && ( 
+      <button
+        className="item-right text-right mt-4 uppercase font-medium text-sm text-primary hover:text-primary-foreground"
+        onClick={() => setShowFullVerbatim(true)}
+      >
+        Lire la suite
+      </button>
+      )
+      }
 
     </div>
   );

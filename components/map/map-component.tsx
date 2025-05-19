@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import { GoogleMap, useJsApiLoader, Marker, MarkerClusterer } from "@react-google-maps/api";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/actualites/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import LocationSidebar from "./location-sidebar";
 import { AlertCircle } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";

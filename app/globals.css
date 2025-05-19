@@ -11,19 +11,19 @@
     --card-foreground: 222.2 84% 4.9%;
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
-    --primary: #0f6466;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --primary: 136.15, 42.98%, 47.45%;
+    --primary-foreground: 136.15, 42.98%, 47.45%;
+    --secondary: 156.52, 25.84%, 34.9%;
+    --secondary-foreground: 156.52, 25.84%, 34.9%, 0.3;
     --muted: 210 40% 96.1%;
     --muted-foreground: 215.3,25%,26.7%;
     --accent: 135.65, 35.03%, 61.37%;
-    --accent-foreground: 135.65, 35.03%, 61.37%, 0.8;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --accent-foreground: 135.65, 35.03%, 61.37%, 0.6;
+    --destructive: 131.9, 78.75%, 68.63%;
+    --destructive-foreground: 131.9, 78.75%, 68.63%, 0.1;
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 221.2 83.2% 53.3%;
+    --ring: 135.65, 35.03%, 61.37%;
     --radius: 0.5rem;
     --links: 208.21, 83.43%, 35.49%;
   }
@@ -67,18 +67,19 @@
   h2 {
     @apply text-3xl;
   }
-  button {
-    @apply font-sansserif text-sm font-semibold text-foreground;
-  }
   p {
-    @apply font-sansserif text-base leading-normal text-foreground;
+    @apply py-2 font-sansserif text-base leading-normal;
+  }
+  li {
+    @apply ml-4 pl-4 py-2 list-disc;
   }
 }
 
+.\[\&_svg\]\:size-4 svg {
+  width: 2rem !important;
+  height: 2rem !important;
+}
 
-
-p {
-  font-size: 1rem;
-  line-height: 1.5rem;
-  color: var(--muted-foreground);
+.left-sheet li, .cards li {
+  @apply m-0 p-0 list-none;
 }

@@ -16,7 +16,7 @@ export default async function ArticlePage({ params }: { params: { slug: string }
     console.log("Données de l'article:", post)
 
     return (
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto md:p-8 p-4">
         <ArticleContent post={post} />
       </div>
     )

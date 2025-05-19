@@ -44,7 +44,7 @@ export default async function DraggableCardDemo() {
 
 
   return (
-     <div className="container mx-auto px-4 py-8">
+     <div className="container mx-auto md:p-8 p-4">
           <div className="mb-12 text-center">
             <h1 className="mb-4 text-43xl font-light tracking-tight">A propos de la démarche</h1> 
             <p className="mx-auto mb-6 max-w-2xl text-lg text-muted-foreground">
