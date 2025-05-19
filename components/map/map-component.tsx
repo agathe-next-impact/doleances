@@ -7,6 +7,7 @@ import LocationSidebar from "./location-sidebar";
 import { AlertCircle } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
+
 // Types
 interface Location {
   id: string;
@@ -67,7 +68,7 @@ const defaultZoom = 6;
 
 // Clé API Google Maps
 const googleMapsApiKey = "AIzaSyA1lJXqXBc0-w5WUVO1KhvggK05FCbi7Yg"; // Remplacez par votre clé API
-const WORDPRESS_API_URL = "https://wp-starter.io/wp-json/wp/v2";
+const WORDPRESS_API_URL = process.env.WORDPRESS_API_URL || "https://wp-starter.io/wp-json/wp/v2";
 
 export default function MapComponent() {
   const [selectedDepartement, setSelectedDepartement] = useState<string | null>(null);
@@ -89,7 +90,7 @@ export default function MapComponent() {
     const fetchGroupesLocaux = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`${WORDPRESS_API_URL}/groupe_local?_embed`, {
+        const response = await fetch(`${WORDPRESS_API_URL}/groupe_local?_embed&per_page=100`, {
           mode: "cors",
           credentials: "omit",
           headers: {
@@ -139,6 +140,7 @@ export default function MapComponent() {
           return;
         }
 
+
         // Regrouper les localisations par département
         const departementGroups: Record<string, ProcessedLocation[]> = {};
         processedLocations.forEach((location) => {
@@ -147,6 +149,7 @@ export default function MapComponent() {
           }
           departementGroups[location.departement].push(location);
         });
+
 
         const groups: GroupDepartement[] = Object.entries(departementGroups).map(([departement, locations]) => {
           const center = locations.reduce(
@@ -157,6 +160,7 @@ export default function MapComponent() {
             { lat: 0, lng: 0 }
           );
 
+
           return {
             id: departement,
             name: departement,
@@ -165,6 +169,9 @@ export default function MapComponent() {
             locations,
           };
         });
+
+        // Trier les groupes par nom
+        groups.sort((a, b) => a.name.localeCompare(b.name));
 
         setGroupDepartements(groups);
         setLoading(false);
@@ -177,6 +184,7 @@ export default function MapComponent() {
 
     fetchGroupesLocaux();
   }, []);
+
 
   const resetToFranceView = useCallback(() => {
     if (mapRef.current) {
@@ -201,6 +209,7 @@ export default function MapComponent() {
     },
     [groupDepartements]
   );
+
 
   const handleMarkerClick = useCallback((location: ProcessedLocation) => {
     setSelectedLocation(location);
@@ -228,6 +237,7 @@ export default function MapComponent() {
       mapRef.current.setZoom(defaultZoom);
     }
   }, []);
+
 
   if (loadError) {
     return (
@@ -298,7 +308,7 @@ export default function MapComponent() {
             <SelectItem value="all">Toutes les départements</SelectItem>
             {groupDepartements.map((group) => (
               <SelectItem key={group.id} value={group.id}>
-                {group.name} ({group.locations.length})
+              {group.name} ({group.locations.length})
               </SelectItem>
             ))}
           </SelectContent>

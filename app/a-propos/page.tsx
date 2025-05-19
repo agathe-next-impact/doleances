@@ -77,7 +77,7 @@ export default async function DraggableCardDemo() {
 
           <section className="h-max mb-12 grid gap-12 grid-cols-6 place-items-end">
               <div className="h-max flex flex-col md:col-span-2 col-span-6 gap-12">  
-                <div className="relative h-full w-full overflow-hidden rounded-lg border bg-card shadow-lg">
+                <div className="relative w-s">ggg
                   <YouTubeEmbed videoLink={youtubeLink} />        
                 </div>    
               </div>

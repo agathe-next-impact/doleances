@@ -73,8 +73,20 @@ export default function ClientLayout({
                     </SheetTrigger>
                     <SheetContent side="left" className="w-[250px] w-[100%]">
                       <SheetHeader>
+                        <Link href="/"
+                          onClick={(e) => {
+                                e.preventDefault(); // Empêche la navigation immédiate
+                                const closeEvent = new CustomEvent("close-sheet");
+                                window.dispatchEvent(closeEvent);
+                            
+                                // Attendre un court instant pour que le Sheet se ferme avant de naviguer
+                                setTimeout(() => {
+                                  window.location.href = "/"; // Naviguer manuellement
+                                }, 300); // Ajustez le délai si nécessaire
+                              }}>
                         <LottieAnimation animationPath="/animations/note.json" width="80px" height="80px"/>
                         <SheetTitle className="text-left font-light text-2xl">Les doléances</SheetTitle>
+                        </Link>
                       </SheetHeader>
                       <nav className="mt-6">
                         <ul className="space-y-4">
