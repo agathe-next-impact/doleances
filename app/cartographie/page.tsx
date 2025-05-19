@@ -12,7 +12,6 @@ export const metadata: Metadata = {
 export default async function CartographiePage() {
 
   const page = await fetchPageBySlug("cartographie")
-  console.log(page)
 
   return (
     <div className="container mx-auto px-4 py-8">

@@ -318,32 +318,34 @@ export default function MapComponent() {
 
       <div className="flex flex-col md:flex-row flex-1 h-full">
         <div className="w-full md:w-2/3 h-[500px] h-auto">
-          <GoogleMap
-            mapContainerStyle={containerStyle}
-            center={currentGroup?.center || defaultCenter}
-            zoom={currentGroup?.zoom || defaultZoom}
-            onLoad={onMapLoad}
-            options={{
+            <GoogleMap
+              mapContainerStyle={containerStyle}
+              center={currentGroup?.center || defaultCenter}
+              zoom={currentGroup?.zoom || defaultZoom}
+              onLoad={onMapLoad}
+              options={{
               mapTypeControl: true,
-              streetViewControl: true,
+              streetViewControl: false,
               fullscreenControl: true,
-            }}
-          >
+              zoomControl: true, // Ajoute les boutons de zoom/dézoom
+              scrollwheel: true, // Active le zoom avec la molette de la souris
+              }}
+            >
             <MarkerClusterer>
               {(clusterer) => (
-                <>
-                  {locations.map((location) => (
-                    <Marker
-                      key={location.id}
-                      position={location.position}
-                      onClick={() => handleMarkerClick(location)}
-                      clusterer={clusterer}
-                    />
-                  ))}
-                </>
+              <>
+                {locations.map((location) => (
+                <Marker
+                  key={location.id}
+                  position={location.position}
+                  onClick={() => handleMarkerClick(location)}
+                  clusterer={clusterer}
+                />
+                ))}
+              </>
               )}
             </MarkerClusterer>
-          </GoogleMap>
+            </GoogleMap>
         </div>
 
         <LocationSidebar

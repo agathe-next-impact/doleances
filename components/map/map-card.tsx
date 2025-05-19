@@ -8,6 +8,7 @@ import { GoogleMap, useJsApiLoader, Marker, MarkerClusterer } from "@react-googl
 interface StaticMapProps {
   locations: {
     id: string;
+    slug: string;
     position: { lat: number; lng: number };
   }[];
   height?: string | number;
@@ -35,6 +36,7 @@ export default function CardMap({
 }: StaticMapProps) {
   const mapRef = useRef<google.maps.Map | null>(null);
   
+  console.log("locations", locations);
 
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey,
@@ -49,6 +51,10 @@ export default function CardMap({
     );
   }
 
+  const handleMarkerLink = (slug: string) => {
+    window.location.href = `/groupe-local/${slug}`;
+  };
+
   return (
     <div style={{ height, width }} className="rounded-lg overflow-hidden">
       <GoogleMap
@@ -57,8 +63,6 @@ export default function CardMap({
         zoom={zoom}
         options={{
           draggable: false,
-          zoomControl: false,
-          scrollwheel: false,
           disableDoubleClickZoom: true,
           streetViewControl: false,
           mapTypeControl: false,
@@ -74,7 +78,8 @@ export default function CardMap({
                   key={location.id}
                   position={location.position}
                   clusterer={clusterer}
-                  clickable={false}
+                  onClick={() => handleMarkerLink(location.slug)}
+                  clickable={true}
                 />
               ))}
             </>

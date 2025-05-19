@@ -68,7 +68,7 @@ export default function LocationSidebar({
       {location ? (
         <div className="p-4 h-full flex flex-col">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-bold">{decode(location.title)}</h2>
+            <h2>{decode(location.title)}</h2>
             <Button variant="ghost" size="icon" onClick={onClose}>
               <X className="h-4 w-4" />
               <span className="sr-only">Fermer</span>
