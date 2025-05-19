@@ -987,7 +987,6 @@ export async function fetchRandomVerbatim(): Promise<Verbatim | null> {
   
   try {
     const response = await fetch(`${API_BASE_URL}/verbatim`, {
-      cache: "no-store",
       headers: {
         Accept: "application/json",
       },

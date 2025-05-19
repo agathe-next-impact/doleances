@@ -67,7 +67,7 @@ const defaultCenter = { lat: 46.603354, lng: 2.3522 };
 const defaultZoom = 6;
 
 // Clé API Google Maps
-const googleMapsApiKey = "AIzaSyA1lJXqXBc0-w5WUVO1KhvggK05FCbi7Yg"; // Remplacez par votre clé API
+const googleMapsApiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API; // Remplacez par votre clé API
 const WORDPRESS_API_URL = process.env.WORDPRESS_API_URL || "https://wp-starter.io/wp-json/wp/v2";
 
 export default function MapComponent() {
@@ -80,10 +80,18 @@ export default function MapComponent() {
   const [viewingAllFrance, setViewingAllFrance] = useState<boolean>(true);
 
   // Utiliser useJsApiLoader au lieu de LoadScript pour une meilleure gestion des erreurs
-  const { isLoaded, loadError } = useJsApiLoader({
-    googleMapsApiKey,
-    preventGoogleFontsLoading: true,
-  });
+  if (!googleMapsApiKey) {
+  return (
+    <div className="p-4 text-red-500">
+      Clé API Google Maps manquante. Veuillez configurer NEXT_PUBLIC_GOOGLE_MAPS_API_KEY.
+    </div>
+  );
+}
+
+const { isLoaded, loadError } = useJsApiLoader({
+  googleMapsApiKey,
+  preventGoogleFontsLoading: true,
+});
 
   // Récupérer les données des groupes locaux depuis l'API WordPress
   useEffect(() => {

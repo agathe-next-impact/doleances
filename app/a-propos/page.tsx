@@ -36,6 +36,7 @@ export default async function DraggableCardDemo() {
   // Adapter les données pour correspondre à l'interface attendue par CardMap
   const mapLocations = locations.map((location) => ({
     id: String(location.id),
+    slug: location.slug,
     position: {
       lat: parseFloat(location.acf?.localisation.lat),
       lng: parseFloat(location.acf?.localisation.lng),

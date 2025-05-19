@@ -13,7 +13,6 @@ import {
   DraggableCardContainer,
 } from "@/components/ui/draggable-card";
 import CardMap from "@/components/map/map-card";
-import { title } from "process"
 
 export default async function Home() {
   const articles = await fetchLastThreePosts()
