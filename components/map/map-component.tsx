@@ -229,6 +229,7 @@ export default function MapComponent() {
   const currentGroup = groupDepartements.find((g) => g.id === selectedDepartement);
   const locations = currentGroup ? currentGroup.locations : groupDepartements.flatMap((g) => g.locations);
 
+
   const handleCloseLocation = useCallback(() => {
     setSelectedLocation(null);
 
@@ -355,3 +356,4 @@ export default function MapComponent() {
     </div>
   );
 }
+

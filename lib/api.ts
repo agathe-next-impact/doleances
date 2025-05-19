@@ -112,6 +112,10 @@ export interface GroupeLocalPost {
   }
   slug: string
   link: string
+  position?: {
+    lat: number
+    lng: number
+  }
   acf?: {
     [key: string]: any
   }
@@ -584,6 +588,7 @@ export async function fetchAttachmentById(id: number) {
 
     if (!response.ok) {
       throw new Error(`Failed to fetch attachment: ${response.status}`);
+      console.log
     }
 
     const data = await response.json();

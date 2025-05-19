@@ -3,7 +3,7 @@ import Image from "next/image"
 import { ArrowRight, Video } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { ArticleCardHome } from "@/components/actualites/article-card-home"
-import { fetchLastThreePosts, fetchPageBySlug, fetchRandomVerbatimImage, fetchAttachmentById } from "@/lib/api"
+import { fetchLastThreePosts, fetchPageBySlug, fetchRandomVerbatimImage, fetchAttachmentById, fetchGroupesLocaux } from "@/lib/api"
 import YouTubeEmbed from "@/components/ui/video"
 import Verbatim from "@/components/verbatim"
 import PopupImage from "@/components/ui/popup-image"
@@ -12,6 +12,7 @@ import {
   DraggableCardBody,
   DraggableCardContainer,
 } from "@/components/ui/draggable-card";
+import CardMap from "@/components/map/map-card";
 import { title } from "process"
 
 export default async function Home() {
@@ -19,25 +20,32 @@ export default async function Home() {
   const accueil = await fetchPageBySlug("accueil")
 
   const images = await fetchRandomVerbatimImage()
-    const imagesObjects = await Promise.all(
-      (images ?? [])
-        .map((image) => image.acf?.image_du_verbatim)
-        .map((id) => fetchAttachmentById(Number(id)))
-    )
-  
-    // Mélanger les images et les retourner en ordre aléatoire en tableau sans index
-    const shuffledImages = imagesObjects.sort(() => Math.random() - 0.5)
-  
-    // Créer un tableau au format title, url et className d'images en ordre aléatoire  
-    const verbatimImages = shuffledImages.map((image) => ({
+  const imagesObjects = await Promise.all(
+    (images ?? [])
+      .map((image) => image.acf?.image_du_verbatim)
+      .map((id) => fetchAttachmentById(Number(id)))
+  )
+
+  // Mélanger les images et les retourner en ordre aléatoire en tableau sans index
+  const shuffledImages = imagesObjects.sort(() => Math.random() - 0.5)
+  const verbatimImages = shuffledImages.map((image) => {
+
+    return {
       title: image?.title?.rendered,
       image: image?.source_url,
-      className: `absolute`
-        + ` top-[${Math.floor(Math.random() * 70) + 10}%]`
-        + ` left-[${Math.floor(Math.random() * 70) + 10}%]`
-        + ` rotate-[${Math.floor(Math.random() * 20) - 10}deg]`,
-    }));
+      className: `absolute`,
+    };
+  });
 
+  const locations = await fetchGroupesLocaux()
+  // Adapter les données pour correspondre à l'interface attendue par CardMap
+  const mapLocations = locations.map((location) => ({
+    id: String(location.id),
+    position: {
+      lat: parseFloat(location.acf?.localisation.lat),
+      lng: parseFloat(location.acf?.localisation.lng),
+    },
+    }));
 
 
 
@@ -107,12 +115,12 @@ export default async function Home() {
         </div>
         </div> 
 
-        <div className="flex flex-col md:col-span-1 col-span-3 row-span-1 rounded-lg border bg-card shadow-lg overflow-hidden">
-        <div className="flex flex-col flex-grow justify-between p-6">
-                <div>
-                <h2 className="w-full mb-4 pb-3 text-2xl font-serif font-light uppercase border-b-[1px]">Les groupes locaux</h2>
-                <p className="mb-6 line-clamp-3 text-muted-foreground">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut pellentesque tristique dolor, dictum mollis neque. Morbi nisl nisi, tempor vitae turpis id, posuere venenatis augue. Nam consectetur purus eu mi malesuada, venenatis congue felis interdum. Nullam vehicula est vitae est dictum, vel lobortis nisl fermentum. Donec dapibus sed lorem a convallis. Sed in risus augue. Aliquam a tortor sit amet nisl tincidunt porta rhoncus quis mauris. Quisque in suscipit nibh.</p>
-               </div>  
+        <div className="flex flex-col md:col-span-1 col-span-3 row-span-2 rounded-lg border bg-card shadow-lg overflow-hidden">
+        <div className="flex flex-col flex-grow justify-between gap-4 p-6">
+              <h2 className="w-full mb-4 pb-3 text-2xl font-serif font-light uppercase border-b-[1px]">Les groupes locaux</h2>
+              <CardMap
+                locations={mapLocations}
+              /> 
               <Button variant="outline" asChild>
                 <Link href='/cartographie'>Voir les groupes</Link>
               </Button>
@@ -144,26 +152,6 @@ export default async function Home() {
             </div>           
       </section>
 
-      <section className="my-24 ">
-            <DraggableCardContainer className="relative flex md:min-h-screen min-h-[50rem] w-full md:items-center items-start justify-center">
-              <p className="absolute top-1/2 mx-auto max-w-sm -translate-y-3/4 text-center text-2xl font-serif md:text-4xl dark:text-neutral-800">
-                Cahier de la colère et de l'espoir
-              </p>
-              {verbatimImages.map((item) => (
-                <DraggableCardBody className={item.className}>
-                  <img
-                    src={item.image}
-                    alt={item.title}
-                    className="pointer-events-none relative z-10 w-[40rem] object-contain"
-                  />
-                  <h3 className="mt-4 text-center text-2xl font-bold text-neutral-700 dark:text-neutral-300">
-                    
-                  </h3>
-                </DraggableCardBody>
-              ))}
-            </DraggableCardContainer>
-      </section>
-
       <section className="my-36 p-6 rounded-lg border bg-card shadow-lg overflow-hidden">
         <div className="mb-6 flex items-center justify-between border-b-[1px] pb-3">
           <h2 className="text-2xl font-serif font-light uppercase">Actualités</h2>
@@ -179,7 +167,22 @@ export default async function Home() {
         </div>
       </section>
 
-
+      <section className="mb-24 ">
+            <DraggableCardContainer className="relative flex md:min-h-screen min-h-[50rem] w-full md:items-center items-start justify-center">
+              <p className="absolute top-1/2 mx-auto max-w-sm -translate-y-3/4 text-center text-2xl font-serif md:text-4xl dark:text-neutral-800">
+                Cahier de la colère et de l'espoir
+              </p>
+              {verbatimImages.map((item) => (
+                <DraggableCardBody className={item.className}>
+                  <img
+                    src={item.image}
+                    alt={item.title}
+                    className="pointer-events-none relative z-10 w-[40rem] object-contain"
+                  />
+                </DraggableCardBody>
+              ))}
+            </DraggableCardContainer>
+      </section>
     </div>
   )
 }
