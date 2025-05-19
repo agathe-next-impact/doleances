@@ -46,7 +46,7 @@ export default async function Home() {
       lat: parseFloat(location.acf?.localisation.lat),
       lng: parseFloat(location.acf?.localisation.lng),
     },
-    }));
+  }));
 
 
 
@@ -59,7 +59,7 @@ export default async function Home() {
         </p>
       </div>
 
-      <section className="h-max mb-12 grid gap-12 grid-cols-6 place-items-end">
+      <section className="h-max mb-12 grid gap-12 grid-cols-6 place-items-start">
         {accueil && (
         <div className="flex flex-col md:col-span-4 col-span-6 h-full justify-between rounded-lg border bg-card shadow-lg overflow-hidden">
             <div className="flex flex-col p-6">
@@ -83,10 +83,7 @@ export default async function Home() {
 
         )}
         
-        <div className="h-max flex flex-col md:col-span-2 col-span-6 gap-12">          
-          <div className="flex flex-col flex-grow justify-center p-6">
-            <Verbatim />
-          </div>
+        <div className="h-max flex flex-col md:col-span-2 col-span-6 gap-12">      
           <div className="flex flex-col row-span-2 overflow-hidden border rounded-lg bg-card shadow-lg overflow-hidden">
             <Image 
               src="/img/festival_recto.jpg"
@@ -98,7 +95,11 @@ export default async function Home() {
             <div className="items-end">
             <PopupImage image="/img/festival_verso.jpg"/>
             </div>
-          </div>  
+          </div>      
+          <div className="flex flex-col flex-grow justify-center p-6">
+            <Verbatim />
+          </div>
+
         </div>
       </section> 
 

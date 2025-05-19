@@ -33,7 +33,6 @@ export default async function GroupeLocalPage({ params }: { params: { slug: stri
 
     // Récupérer les articles liés à ce groupe local via le champ tax_groupe_local
     const relatedPosts = await fetchPostsByGroupeLocalTax(groupeLocal.id)
-    console.log(`Nombre d'articles associés au groupe local ${params.slug}: ${relatedPosts.length}`)
 
     // Récupérer l'image du groupe local si disponible
     const featuredImage = (() => {
@@ -128,7 +127,17 @@ export default async function GroupeLocalPage({ params }: { params: { slug: stri
 
       // Vérifier si les catégories sont disponibles dans _embedded
       if (post._embedded?.["wp:term"]?.[0]) {
-        postCategories.push(...post._embedded["wp:term"][0])
+        postCategories.push(
+          ...post._embedded["wp:term"][0].map((term: any) => ({
+            id: term.id,
+            name: term.name,
+            slug: term.slug,
+            taxonomy: term.taxonomy,
+            description: term.description ?? "",
+            count: term.count ?? 0,
+            link: term.link ?? "",
+          }))
+        )
       }
       // Sinon, utiliser les IDs de catégorie pour récupérer les détails
       else if (post.categories && Array.isArray(post.categories)) {
@@ -155,7 +164,7 @@ export default async function GroupeLocalPage({ params }: { params: { slug: stri
         const uncategorizedId = 1 // ID standard pour "Non classé" dans WordPress
         if (!categoriesMap.has(uncategorizedId)) {
           categoriesMap.set(uncategorizedId, {
-            category: { id: uncategorizedId, name: "Non classé", description: "", count: 0, link: "" },
+            category: { id: uncategorizedId, slug: "non-classe", name: "Non classé", description: "", count: 0, link: "" },
             posts: [],
           })
         }

@@ -26,6 +26,7 @@ export interface Post {
   excerpt: {
     rendered: string
   }
+  author: number
   slug: string
   link: string
   categories?: number[]
@@ -129,6 +130,7 @@ export interface GroupeLocalPost {
 export interface GroupeLocal {
   id: number
   name: string
+  slug: string
 }
 
 export interface Media {

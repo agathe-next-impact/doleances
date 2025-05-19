@@ -12,8 +12,9 @@ const config: Config = {
   	extend: {
 		fontFamily: {
 			serif: ['Crimson Pro', 'serif'],
-			sansserif: ['Open Sans', 'sans-serif'],
+			sansserif: ['Inter', 'sans-serif'],
 			handwritten: ['Caveat', 'cursive'],
+			cta: ['Varela Round', 'sans-serif'],
 		},
   		colors: {
   			background: 'hsl(var(--background))',

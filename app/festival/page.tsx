@@ -10,9 +10,6 @@ export default async function Page () {
   const page = await fetchPageBySlug("festival-mai-2025");
   const bd: { id: number }[] = page?.acf?.bd ?? [];
   const imagesBd = await Promise.all(bd.map((image) => fetchAttachmentById(image)));
-  
-  console.log(imagesBd);
-
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -28,7 +25,7 @@ export default async function Page () {
 
 
       <section className="w-full h-max mb-12 flex flex-col gap-12 md:grid md:grid-cols-6 md:gap-12">                     
-          <div className="h-full flex flex-col col-span-2 overflow-hidden border rounded-lg bg-card shadow-lg overflow-hidden">
+          <div className="h-max flex flex-col col-span-2 overflow-hidden border rounded-lg bg-card shadow-lg overflow-hidden">
             <Image 
               src="/img/festival_recto.jpg"
               alt="Image d'illustration"
@@ -59,17 +56,15 @@ export default async function Page () {
               {page?.acf?.lieu_de_levenement?.postal_code} {page?.acf?.lieu_de_levenement?.city}
             </div>
             
-            <p className="text-lg">
-              {page?.acf?.intro && (
-                <span
-                  className="flex flex-col gap-4 mb-4 flex-grow text-sm text-muted-foreground"
-                  dangerouslySetInnerHTML={{
-                    __html: page?.acf?.intro,
-                  }}
-                />
-              )}
-            </p>
-            <div className="mt-8">
+            {page?.acf?.intro && (
+              <div
+              className="text-muted-foreground my-4"
+              dangerouslySetInnerHTML={{
+                __html: page?.acf?.intro,
+              }}
+              />
+            )}
+            <div className="mt-4">
             <StaticMap
               address={page?.acf?.lieu_de_levenement?.address}
               latitude={

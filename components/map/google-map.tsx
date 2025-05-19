@@ -25,32 +25,36 @@ export default function GoogleMap({
   apiKey = "",
 }: GoogleMapProps) {
   const mapRef = useRef<HTMLDivElement>(null)
+  const mapInstance = useRef<google.maps.Map | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const [google, setGoogle] = useState<any>(null)
 
   useEffect(() => {
+    let isMounted = true
+
     // Fonction pour charger et initialiser la carte
     const initMap = async () => {
       try {
-        // Vérifier si une clé API est disponible
         if (!apiKey) {
-          setError(
-            "Aucune clé API Google Maps fournie. Veuillez configurer une clé API dans les paramètres de l'application.",
-          )
-          setLoading(false)
+          if (isMounted) {
+            setError(
+              "Aucune clé API Google Maps fournie. Veuillez configurer une clé API dans les paramètres de l'application.",
+            )
+            setLoading(false)
+          }
+          return
+        }
+
+        if (!address && (typeof latitude !== "number" || typeof longitude !== "number")) {
+          if (isMounted) {
+            setError("Aucune coordonnée ou adresse fournie")
+            setLoading(false)
+          }
           return
         }
 
         setLoading(true)
         setError(null)
-
-        // Vérifier si nous avons des données de localisation
-        if (!address && (!latitude || !longitude)) {
-          setError("Aucune coordonnée ou adresse fournie")
-          setLoading(false)
-          return
-        }
 
         // Charger l'API Google Maps
         const loader = new Loader({
@@ -58,91 +62,67 @@ export default function GoogleMap({
           version: "weekly",
         })
 
-        // Charger l'API Google Maps
-        try {
-          const googleObj = await loader.load()
-          setGoogle(googleObj)
-        } catch (loadError) {
-          console.error("Erreur lors du chargement de l'API Google Maps:", loadError)
-          setError(
-            "Impossible de charger l'API Google Maps. Veuillez vérifier votre connexion internet et votre clé API.",
-          )
-          setLoading(false)
-          return
-        }
+        const googleObj = await loader.load()
 
         // Si nous avons des coordonnées, utiliser directement
-        if (latitude && longitude) {
-          try {
-            const { Map, Marker } = (await google.maps.importLibrary("maps")) as any
-
-            const position = { lat: latitude, lng: longitude }
-            const map = new Map(mapRef.current!, {
+        if (typeof latitude === "number" && typeof longitude === "number") {
+          const { Map, Marker } = (await googleObj.maps.importLibrary("maps")) as typeof google.maps
+          const position = { lat: latitude, lng: longitude }
+          if (mapRef.current) {
+            mapInstance.current = new Map(mapRef.current, {
               center: position,
               zoom: zoom,
               mapId: "DEMO_MAP_ID",
             })
-
             new Marker({
               position,
-              map,
+              map: mapInstance.current,
               title: address || "Emplacement",
             })
-
-            setLoading(false)
-          } catch (mapError) {
-            console.error("Erreur lors de la création de la carte:", mapError)
-            setError("Impossible de créer la carte Google Maps")
-            setLoading(false)
           }
+          if (isMounted) setLoading(false)
         }
         // Sinon, si nous avons une adresse, géocoder
         else if (address) {
-          try {
-            const { Map, Marker } = (await google.maps.importLibrary("maps")) as any
-            const geocoder = new google.maps.Geocoder()
-
-            geocoder.geocode({ address }, (results, status) => {
-              try {
-                if (status === google.maps.GeocoderStatus.OK && results && results[0]) {
-                  const position = results[0].geometry.location
-                  const map = new Map(mapRef.current!, {
+          const { Map, Marker } = (await googleObj.maps.importLibrary("maps")) as typeof google.maps
+          const geocoder = new googleObj.maps.Geocoder()
+          geocoder.geocode({ address }, (results, status) => {
+            if (!isMounted) return
+            try {
+              if (status === googleObj.maps.GeocoderStatus.OK && results && results[0]) {
+                const position = results[0].geometry.location
+                if (mapRef.current) {
+                  mapInstance.current = new Map(mapRef.current, {
                     center: position,
                     zoom: zoom,
                     mapId: "DEMO_MAP_ID",
                   })
-
                   new Marker({
                     position,
-                    map,
+                    map: mapInstance.current,
                     title: address,
                   })
-
-                  setLoading(false)
-                } else {
-                  // Convertir le statut en chaîne de caractères de manière sécurisée
-                  const statusString = typeof status === "string" ? status : "UNKNOWN_ERROR"
-                  setError(`Impossible de localiser l'adresse: ${statusString}`)
-                  setLoading(false)
                 }
-              } catch (geocodeError) {
-                console.error("Erreur lors du géocodage:", geocodeError)
-                setError("Erreur lors de la localisation de l'adresse")
+                setLoading(false)
+              } else {
+                const statusString = typeof status === "string" ? status : "UNKNOWN_ERROR"
+                setError(`Impossible de localiser l'adresse: ${statusString}`)
                 setLoading(false)
               }
-            })
-          } catch (geocoderError) {
-            console.error("Erreur lors de l'initialisation du géocodeur:", geocoderError)
-            setError("Impossible d'initialiser le service de géocodage")
-            setLoading(false)
-          }
+            } catch (geocodeError) {
+              console.error("Erreur lors du géocodage:", geocodeError)
+              setError("Erreur lors de la localisation de l'adresse")
+              setLoading(false)
+            }
+          })
         }
       } catch (err) {
-        // Convertir l'erreur en chaîne de caractères de manière sécurisée
         const errorMessage = err instanceof Error ? err.message : "Erreur inconnue"
         console.error("Erreur lors du chargement de la carte:", errorMessage)
-        setError(`Impossible de charger la carte Google Maps: ${errorMessage}`)
-        setLoading(false)
+        if (isMounted) {
+          setError(`Impossible de charger la carte Google Maps: ${errorMessage}`)
+          setLoading(false)
+        }
       }
     }
 
@@ -151,7 +131,16 @@ export default function GoogleMap({
     }
 
     return () => {
-      // Nettoyage si nécessaire
+      isMounted = false
+      // Nettoyage de la carte pour éviter les fuites mémoire
+      if (mapInstance.current) {
+        // Google Maps ne fournit pas de méthode officielle pour détruire une carte,
+        // mais on peut vider le conteneur pour libérer la mémoire.
+        if (mapRef.current) {
+          mapRef.current.innerHTML = ""
+        }
+        mapInstance.current = null
+      }
     }
   }, [address, latitude, longitude, zoom, apiKey])
 
