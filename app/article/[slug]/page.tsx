@@ -1,13 +1,10 @@
 import { fetchPostBySlug } from "@/lib/api"
 import { notFound } from "next/navigation"
-import ArticleContent from "@/components/article-content"
-
+import ArticleContent from "@/components/actualites/article-content" 
 export default async function ArticlePage({ params }: { params: { slug: string } }) {
   try {
     console.log(`Récupération de l'article avec l'ID ${params.slug}`)
     const post = await fetchPostBySlug(params.slug)
-
-    console.log(`Article récupéré: "${post.title.rendered}"`)
 
     // Vérifier si l'article a un groupe local associé
     if (post.acf?.groupe_local_tax) {

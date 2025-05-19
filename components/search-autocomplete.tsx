@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { Search, Loader2, FileText } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { fetchSearchSuggestions } from "@/lib/wordpress";
+import { fetchSearchSuggestions } from "@/lib/api";
 import { cn } from "@/lib/utils";
 
 interface SearchAutocompleteProps {
@@ -132,7 +132,7 @@ export function SearchAutocomplete({
                   <button
                     key={article.id}
                     className="flex w-full items-center px-4 py-2 text-left text-sm hover:bg-accent"
-                    onClick={() => handleSuggestionSelect(article.id)}
+                    onClick={() => handleSuggestionSelect(article.slug)}
                   >
                     <FileText className="mr-2 h-4 w-4 text-muted-foreground" />
                     {article.title}

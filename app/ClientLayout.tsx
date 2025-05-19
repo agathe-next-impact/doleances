@@ -58,7 +58,7 @@ export default function ClientLayout({
           }
         `}</style>
       </head>
-      <body className={inter.className}>
+      <body className={`${inter.className} overflow-x-hidden`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           <div className="flex min-h-screen flex-col">
             <header className="sticky top-0 z-10 border-b bg-background">
@@ -71,32 +71,25 @@ export default function ClientLayout({
                         <span className="sr-only">Toggle menu</span>
                       </Button>
                     </SheetTrigger>
-                    <SheetContent side="left" className="w-[250px] sm:w-[300px]">
+                    <SheetContent side="left" className="w-[250px] w-[100%]">
                       <SheetHeader>
-                        <LottieAnimation animationPath="/animations/note.json" width="80px" height="80px"/>
-                        <SheetTitle className="text-left font-light text-2xl">Les doléances</SheetTitle>
-                      </SheetHeader>
-                      <nav className="mt-6">
-                        <ul className="space-y-4">
-                        <li>
-                            <Link
-                              href="/category"
-                              className="flex items-center text-sm font-medium hover:text-primary"
-                              onClick={(e) => {
+                        <Link href="/"
+                          onClick={(e) => {
                                 e.preventDefault(); // Empêche la navigation immédiate
                                 const closeEvent = new CustomEvent("close-sheet");
                                 window.dispatchEvent(closeEvent);
                             
                                 // Attendre un court instant pour que le Sheet se ferme avant de naviguer
                                 setTimeout(() => {
-                                  window.location.href = "/category"; // Naviguer manuellement
+                                  window.location.href = "/"; // Naviguer manuellement
                                 }, 300); // Ajustez le délai si nécessaire
-                              }}
-                            >
-                              <FileText className="mr-2 h-4 w-4" />
-                              Actualités
-                            </Link>
-                          </li>
+                              }}>
+                        <LottieAnimation animationPath="/animations/note.json" width="80px" height="80px"/>
+                        <SheetTitle className="text-left font-light text-2xl">Les doléances</SheetTitle>
+                        </Link>
+                      </SheetHeader>
+                      <nav className="mt-6">
+                        <ul className="space-y-4">
                           <li>
                             <Link
                               href="/cartographie"
@@ -114,6 +107,44 @@ export default function ClientLayout({
                             >
                               <Map className="mr-2 h-4 w-4" />
                               Cartographie des groupes locaux
+                            </Link>
+                          </li>
+                          <li>
+                            <Link
+                              href="/etats-generaux-communaux"
+                              className="flex items-center text-sm font-medium hover:text-primary"
+                              onClick={(e) => {
+                                e.preventDefault(); // Empêche la navigation immédiate
+                                const closeEvent = new CustomEvent("close-sheet");
+                                window.dispatchEvent(closeEvent);
+                            
+                                // Attendre un court instant pour que le Sheet se ferme avant de naviguer
+                                setTimeout(() => {
+                                  window.location.href = "/etats-generaux-communaux"; // Naviguer manuellement
+                                }, 300); // Ajustez le délai si nécessaire
+                              }}
+                            >
+                              <Library className="mr-2 h-4 w-4" />
+                              Etats généraux communaux
+                            </Link>
+                          </li>
+                          <li>
+                            <Link
+                              href="/category"
+                              className="flex items-center text-sm font-medium hover:text-primary"
+                              onClick={(e) => {
+                                e.preventDefault(); // Empêche la navigation immédiate
+                                const closeEvent = new CustomEvent("close-sheet");
+                                window.dispatchEvent(closeEvent);
+                            
+                                // Attendre un court instant pour que le Sheet se ferme avant de naviguer
+                                setTimeout(() => {
+                                  window.location.href = "/category"; // Naviguer manuellement
+                                }, 300); // Ajustez le délai si nécessaire
+                              }}
+                            >
+                              <FileText className="mr-2 h-4 w-4" />
+                              Actualités
                             </Link>
                           </li>
                           <li>
@@ -154,25 +185,6 @@ export default function ClientLayout({
                               A propos
                             </Link>
                           </li>
-                          <li>
-                            <Link
-                              href="/doleances"
-                              className="flex items-center text-sm font-medium hover:text-primary"
-                              onClick={(e) => {
-                                e.preventDefault(); // Empêche la navigation immédiate
-                                const closeEvent = new CustomEvent("close-sheet");
-                                window.dispatchEvent(closeEvent);
-                            
-                                // Attendre un court instant pour que le Sheet se ferme avant de naviguer
-                                setTimeout(() => {
-                                  window.location.href = "/doleances"; // Naviguer manuellement
-                                }, 300); // Ajustez le délai si nécessaire
-                              }}
-                            >
-                              <Library className="mr-2 h-4 w-4" />
-                              Les doléances
-                            </Link>
-                          </li>
                         </ul>
                       </nav>
                     </SheetContent>
@@ -186,11 +198,6 @@ export default function ClientLayout({
                   <div className="relative hidden md:block">
                     <SearchAutocomplete placeholder="Rechercher dans notre actu..." className="w-64" showButton={false} />
                   </div>
-                  <Button variant="outline" size="sm" asChild>
-                    <Link href="https://palegreen-capybara-652133.hostingersite.com/wp-admin" target="_blank">
-                      Contributeur
-                    </Link>
-                  </Button>
                 </div>
               </div>
             </header>
@@ -216,8 +223,8 @@ export default function ClientLayout({
                         </Link>
                       </li>
                       <li>
-                        <Link href="/articles" className="text-muted-foreground hover:underline">
-                          Doléances
+                        <Link href="/cateogory/etats-generaux-communaux" className="text-muted-foreground hover:underline">
+                          Etats Généraux communaux
                         </Link>
                       </li>
                       <li>

@@ -1,10 +1,11 @@
 // Améliorer la gestion des erreurs et ajouter des fallbacks pour les données manquantes
-import { fetchCategory, fetchPostsByCategory, extractGroupesLocauxCPTFromCategory, fetchCategoryBySlug } from "@/lib/api"
-import ArticleList from "@/components/article-list"
-import CategoryHero from "@/components/category-hero"
-import SearchFilter from "@/components/search-filter"
+import { fetchPostsByCategory, extractGroupesLocauxCPTFromCategory, fetchCategoryBySlug } from "@/lib/api"
+import ArticleList from "@/components/actualites/article-list"
+import CategoryHero from "@/components/actualites/category-hero"
+import SearchFilter from "@/components/actualites/search-filter"
 import { Suspense } from "react"
-import Link from "next/link"
+
+
 
 export default async function CategoryPage({ params }: { params: { slug: string } }) {
   try {
@@ -75,8 +76,6 @@ export default async function CategoryPage({ params }: { params: { slug: string 
         }
       }
 
-      console.log(`Nombre total de dates d'événements trouvées: ${eventDates.length}`)
-
       // Filtrer les dates uniques et les trier
       dates = [...new Set(eventDates)].sort((a, b) => {
         try {
@@ -123,9 +122,9 @@ export default async function CategoryPage({ params }: { params: { slug: string 
     const groupesLocauxCPT = await extractGroupesLocauxCPTFromCategory(category?.id)
 
     return (
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 md:py-8 pt-2">
         <CategoryHero category={category?.name} description={category?.description } />
-        <div className="my-8">
+        <div className="mb-8">
           <Suspense fallback={<div>Chargement des filtres...</div>}>
             <SearchFilter
               dates={dates.filter((date): date is string => date !== null)}
