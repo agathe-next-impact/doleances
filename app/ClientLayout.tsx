@@ -66,8 +66,8 @@ export default function ClientLayout({
                 <div className="flex items-center gap-4">
                   <Sheet>
                     <SheetTrigger asChild>
-                      <Button variant="ghost" size="icon" className="mr-2">
-                        <Menu className="h-5 w-5" />
+                      <Button size="icon" className="mr-2" variant="link">
+                        <Menu className="h-5 w-5"/>
                         <span className="sr-only">Toggle menu</span>
                       </Button>
                     </SheetTrigger>
@@ -89,7 +89,7 @@ export default function ClientLayout({
                         </Link>
                       </SheetHeader>
                       <nav className="mt-6">
-                        <ul className="space-y-4">
+                        <ul className="space-y-4 left-sheet">
                           <li>
                             <Link
                               href="/cartographie"

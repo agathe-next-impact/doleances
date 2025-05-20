@@ -55,7 +55,7 @@ export default async function Home() {
                     />
                         <div className="flex flex-wrap gap-2 pt-2">
                         {stickyArticle.categories.map((category, index) => (
-                          <Badge key={`cat-${index}`} variant="secondary">            
+                          <Badge key={`cat-${index}`} variant="secondary" className="mx-0">            
                             <Link href={`/category/${stickyArticle.categoriesSlug[index]}`}>
                             {category}
                             </Link>
@@ -72,9 +72,6 @@ export default async function Home() {
                           <span>{formatDate(stickyArticle.date)}</span>
                         </div>
                       </div>
-                    <Button variant="outline" asChild>
-                      <Link href={`/article/${stickyArticle.slug}`}>Lire plus</Link>
-                    </Button>
                   </>
                 )}
               </div>
