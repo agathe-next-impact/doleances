@@ -29,13 +29,15 @@ export default function GoogleMap({
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
+  const effectiveApiKey = apiKey || process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
+
   useEffect(() => {
     let isMounted = true
 
     // Fonction pour charger et initialiser la carte
     const initMap = async () => {
       try {
-        if (!apiKey) {
+        if (!effectiveApiKey) {
           if (isMounted) {
             setError(
               "Aucune clé API Google Maps fournie. Veuillez configurer une clé API dans les paramètres de l'application.",
@@ -58,7 +60,7 @@ export default function GoogleMap({
 
         // Charger l'API Google Maps
         const loader = new Loader({
-          apiKey,
+          apiKey: effectiveApiKey,
           version: "weekly",
         })
 
@@ -142,10 +144,10 @@ export default function GoogleMap({
         mapInstance.current = null
       }
     }
-  }, [address, latitude, longitude, zoom, apiKey])
+  }, [address, latitude, longitude, zoom, effectiveApiKey])
 
   // Afficher un message d'information si aucune clé API n'est fournie
-  if (!apiKey) {
+  if (!effectiveApiKey) {
     return (
       <div
         className="bg-muted/50 rounded-md flex items-center justify-center text-muted-foreground p-4 text-center"

@@ -114,13 +114,8 @@ export default function CategoryCard({ category }: CategoryCardProps) {
         )}
       </CardContent>
       <CardFooter>
-<<<<<<< HEAD
-        <Link href={`/category/${category.slug}`} className="text-sm text-primary">
-          {category.name} : Voir tout
-=======
         <Link href={`/category/${category.slug}`} className="text-sm text-primary uppercase mx-auto text-base font-medium underline-offset-4 underline hover:opacity-80">
           Voir tout
->>>>>>> 8a2bf5b9e97e5d44e654e03244bd12b6261289d3
         </Link>
       </CardFooter>
     </Card>

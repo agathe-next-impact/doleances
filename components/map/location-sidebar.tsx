@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useState } from "react";
 import Link from "next/link";
-import { decode } from "he";
 
 interface Location {
   id: string;
@@ -68,7 +67,7 @@ export default function LocationSidebar({
       {location ? (
         <div className="px-4 h-full flex flex-col">
           <div className="flex justify-between items-center">
-            <h2>{decode(location.title)}</h2>
+            <h2 dangerouslySetInnerHTML={{__html: location.title}}/>
             <Button size="icon" className="bg-white" onClick={onClose}>
               <X className="h-4 w-4 text-black" />
               <span className="sr-only">Fermer</span>
@@ -79,7 +78,7 @@ export default function LocationSidebar({
             <div className="mb-4 relative h-48 rounded-lg overflow-hidden">
               <img
                 src={location.thumbnail || ""}
-                alt={decode(location.title)}
+                alt={location.title}
                 className="w-full h-full object-cover"
                 onError={() => handleImageError(location.id)}
               />
@@ -152,7 +151,7 @@ export default function LocationSidebar({
                       >
                         <div className="flex items-center gap-2">
                           <MapPin className="h-5 w-5 text-gray-500" />
-                          <h3 className="font-medium">{decode(loc.title)}</h3>
+                          <h3 className="font-medium" dangerouslySetInnerHTML={{__html: loc.title}}/>
                         </div>
                         {loc.address && (
                           <p className="text-sm text-gray-500 truncate mt-1">{loc.address}</p>

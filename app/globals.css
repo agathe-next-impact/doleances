@@ -75,15 +75,6 @@
   }
 }
 
-<<<<<<< HEAD
-.\[\&_svg\]\:size-4 svg {
-  width: 2rem !important;
-  height: 2rem !important;
-}
-
-.left-sheet li, .cards li {
-  @apply m-0 p-0 list-none;
-=======
 @layer base {
   * {
     @apply border-border;
@@ -122,5 +113,4 @@
 
 button:focus {
   --tw-ring-offset-width: 0 !important;
->>>>>>> 8a2bf5b9e97e5d44e654e03244bd12b6261289d3
 }

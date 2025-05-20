@@ -66,13 +66,8 @@ export default function ClientLayout({
                 <div className="flex items-center gap-4">
                   <Sheet>
                     <SheetTrigger asChild>
-<<<<<<< HEAD
-                      <Button variant="ghost" className="mr-2 hover:bg-transparent hover:text-black">
-                        <Menu />
-=======
                       <Button size="icon" className="mr-2" variant="link">
                         <Menu className="h-5 w-5"/>
->>>>>>> 8a2bf5b9e97e5d44e654e03244bd12b6261289d3
                         <span className="sr-only">Toggle menu</span>
                       </Button>
                     </SheetTrigger>

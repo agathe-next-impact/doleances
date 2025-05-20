@@ -82,13 +82,8 @@ export default async function Home() {
 
         )}
         
-<<<<<<< HEAD
-        <div className="h-max flex flex-col md:col-span-2 col-span-6 gap-12">      
-          <div className="flex flex-col row-span-2 overflow-hidden border rounded-lg bg-card shadow-lg overflow-hidden">
-=======
         <div className="h-full flex flex-col md:col-span-2 col-span-6 grow gap-12"> 
           <div className="flex flex-col row-span-2 overflow-hidden border rounded-lg bg-card shadow-lg">
->>>>>>> 8a2bf5b9e97e5d44e654e03244bd12b6261289d3
             <Image 
               src="/img/festival_recto.jpg"
               alt="Image d'illustration"
@@ -99,18 +94,10 @@ export default async function Home() {
             <div className="items-end">
             <PopupImage image="/img/festival_verso.jpg"/>
             </div>
-<<<<<<< HEAD
-          </div>      
-          <div className="flex flex-col flex-grow justify-center p-6">
-            <Verbatim />
-          </div>
-
-=======
           </div>           
           <div className="flex flex-col flex-grow justify-start p-6">
             <Verbatim />
           </div>
->>>>>>> 8a2bf5b9e97e5d44e654e03244bd12b6261289d3
         </div>
       </section> 
 
@@ -168,12 +155,8 @@ export default async function Home() {
       <section className="my-36 p-6 rounded-lg border bg-card shadow-lg overflow-hidden">
         <div className="mb-6 flex items-center justify-between border-b-[1px] pb-3">
           <h2 className="text-2xl font-serif font-light uppercase">Actualités</h2>
-<<<<<<< HEAD
-          <Badge variant="secondary" className="hidden md:flex">
-          <Link href="/category" className="flex items-center">
-=======
+          <Badge className="text-sm">
           <Link href="/category" className="flex items-center text-primary uppercase font-medium underline-offset-4 underline hover:opacity-80">
->>>>>>> 8a2bf5b9e97e5d44e654e03244bd12b6261289d3
             Voir toute l'actualité
           </Link>
           </Badge>
@@ -183,7 +166,7 @@ export default async function Home() {
             <ArticleCardHome key={article.id} article={article} />
             ))}
         </div>
-      </section>
+      </section>  
 
       <section className="mb-24 ">
             <DraggableCardContainer className="relative flex md:min-h-screen min-h-[50rem] w-full md:items-center items-start justify-center">
