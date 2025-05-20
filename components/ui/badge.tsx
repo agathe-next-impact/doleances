@@ -11,7 +11,11 @@ const badgeVariants = cva(
         default:
           "border-transparent bg-primary text-primary-foreground hover:bg-primary/80",
         secondary:
+<<<<<<< HEAD
           "py-1 px-4 border-transparent font-light text-white bg-accent hover:opacity-90",
+=======
+          "border-accent-foreground py-1 px-4 text-primary uppercase mx-auto font-medium hover:bg-destructive-foreground",
+>>>>>>> 8a2bf5b9e97e5d44e654e03244bd12b6261289d3
         destructive:
           "border-transparent bg-destructive text-destructive-foreground hover:bg-destructive/80",
         outline: "text-foreground",

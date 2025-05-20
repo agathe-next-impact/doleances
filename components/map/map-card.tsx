@@ -62,8 +62,10 @@ export default function CardMap({
           scrollwheel: false,
           disableDoubleClickZoom: true,
           streetViewControl: false,
-          mapTypeControl: false,
-          fullscreenControl: false,
+          mapTypeControl: true,
+          fullscreenControl: false,          
+          zoomControl: true, // Ajoute les boutons de zoom/dézoom
+          scrollwheel: true, // Active le zoom avec la molette de la souris
         }}
         onLoad={(map) => { mapRef.current = map; }}
       >

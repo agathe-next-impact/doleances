@@ -75,6 +75,7 @@
   }
 }
 
+<<<<<<< HEAD
 .\[\&_svg\]\:size-4 svg {
   width: 2rem !important;
   height: 2rem !important;
@@ -82,4 +83,44 @@
 
 .left-sheet li, .cards li {
   @apply m-0 p-0 list-none;
+=======
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground font-sansserif;
+  }
+  h1, h2 {
+    @apply font-serif leading-tight tracking-tight text-foreground;
+  }
+  h1 {
+    @apply text-4xl;
+  }
+  h2 {
+    @apply text-3xl;
+  }
+  p {
+    @apply py-2 font-sansserif text-base leading-normal;
+  }
+  li {
+    @apply ml-4 pl-4 py-2 list-disc;
+  }
+}
+
+.\[\&_svg\]\:size-4 svg {
+  width: 1.6rem !important;
+  height: 1.6rem !important;
+  color: black !important;
+}
+
+.left-sheet li, .cards li, footer li {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+button:focus {
+  --tw-ring-offset-width: 0 !important;
+>>>>>>> 8a2bf5b9e97e5d44e654e03244bd12b6261289d3
 }

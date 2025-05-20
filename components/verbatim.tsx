@@ -103,19 +103,22 @@ export default function Verbatim() {
             )}
         </div>
       </div>
-      <p className="font-serif font-medium text-xl text-right">
-        {verbatim.acf.departement}
-      </p>
-      {verbatim.acf.date ? (
-        <p className="font-serif text-xl text-right">
-          <DateFormat dateStr={verbatim.acf.date || ""} short={true} />
+      {verbatim.acf?.departement && (
+        <p className="font-serif font-medium text-xl text-right">
+          {verbatim.acf.departement}
         </p>
-      ) : (
-        ""
-      )}
-      {verbatim.acf?.texte_du_verbatim.length > 150 && ( 
+          )
+      }
+        {verbatim.acf.date ? (
+          <p className="font-serif text-xl text-right">
+            <DateFormat dateStr={verbatim.acf.date || ""} short={true} />
+          </p>
+        ) : (
+          ""
+        )}
+            {verbatim.acf?.texte_du_verbatim.length > 150 && ( 
       <button
-        className="item-right text-right mt-4 uppercase font-medium text-sm text-primary hover:text-primary-foreground"
+        className="item-right text-right uppercase font-medium text-sm text-primary underline-offset-4 hover:underline"
         onClick={() => setShowFullVerbatim(true)}
       >
         Lire la suite
