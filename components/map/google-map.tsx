@@ -29,7 +29,8 @@ export default function GoogleMap({
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  const effectiveApiKey = apiKey || process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
+  // Utiliser la clé API fournie ou celle de l'environnement
+  const effectiveApiKey = apiKey || process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEYS || process.env.GOOGLE_MAPS_API_KEY
 
   useEffect(() => {
     let isMounted = true

@@ -25,7 +25,7 @@ const containerStyle = {
 
 
 
-const googleMapsApiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || ""; // Remplacez par votre clé API
+const googleMapsApiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEYS || process.env.GOOGLE_MAPS_API_KEY;
 
 export default function CardMap({
   locations,
