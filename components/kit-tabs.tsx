@@ -61,7 +61,7 @@ export default function KitTabs({ kits }: { kits: Kit[] }) {
             </TabsTrigger>
           ))}
         </TabsList>
-        <div className="relative flex-grow h-[400px] overflow-hidden">
+        <div className="relative flex-grow overflow-hidden h-[600px]">
           {kitsWithFiles.map((kit, index) => (
             <TabsContent key={index} value={`kit-${index}`} className="absolute inset-0 mt-8 mx-auto w-fit flex justify-between">
               <motion.div
@@ -70,7 +70,7 @@ export default function KitTabs({ kits }: { kits: Kit[] }) {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
                 transition={{ duration: 0.25, ease: "easeInOut" }}
-                className="p-4"
+                className="p-4 border rounded-lg bg-card shadow-lg p-8"
               >
                 <h3 className="text-xl font-semibold">{kit.titre}</h3>
                 <div className="grid grid-cols-2 gap-4 p-4">

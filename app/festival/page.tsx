@@ -10,15 +10,11 @@ import DateFormat from "@/components/date-format";
 export default async function Page() {
   const page = await fetchPageBySlug("festival-mai-2025");
   const bd: { id: number }[] = page?.acf?.bd ?? [];
-<<<<<<< HEAD
-  const imagesBd = await Promise.all(bd.map((image) => fetchAttachmentById(image)));
-=======
   const imagesBd = await Promise.all(
     bd.map((image) => fetchAttachmentById(image))
   );
   const imageDeUne = await fetchAttachmentById(page?.acf?.image_de_une);
   console.log("imageDeUne", imageDeUne.source_url);
->>>>>>> 8a2bf5b9e97e5d44e654e03244bd12b6261289d3
 
   return (
     <div className="container mx-auto md:p-8 p-4">
@@ -34,12 +30,6 @@ export default async function Page() {
         </div>
       </div>
 
-<<<<<<< HEAD
-
-      <section className="w-full h-max mb-12 flex flex-col gap-12 md:grid md:grid-cols-6 md:gap-12">                     
-          <div className="h-max flex flex-col col-span-2 overflow-hidden border rounded-lg bg-card shadow-lg overflow-hidden">
-            <Image 
-=======
       <section className="w-full h-max mb-12 flex flex-col gap-12 md:grid md:grid-cols-6 md:gap-12">
         <div className="h-max flex flex-col col-span-2 gap-6 overflow-hidden">
           {page?.acf?.image_de_une && (
@@ -80,7 +70,6 @@ export default async function Page() {
           )}
           <div className="h-max mt-8 flex flex-col col-span-2 border rounded-lg bg-card shadow-lg overflow-hidden">
             <Image
->>>>>>> 8a2bf5b9e97e5d44e654e03244bd12b6261289d3
               src="/img/festival_recto.jpg"
               alt="Image d'illustration"
               width={500}
@@ -106,22 +95,6 @@ export default async function Page() {
                 </span>
               )}
             </p>
-<<<<<<< HEAD
-            </div>        
-            <div className="text-lg uppercase font-regular text-muted-foreground"><span>à</span> 
-              {page?.acf?.lieu_de_levenement?.postal_code} {page?.acf?.lieu_de_levenement?.city}
-            </div>
-            
-            {page?.acf?.intro && (
-              <div
-              className="text-muted-foreground my-4"
-              dangerouslySetInnerHTML={{
-                __html: page?.acf?.intro,
-              }}
-              />
-            )}
-            <div className="mt-4">
-=======
           </div>
           <div className="text-lg uppercase font-regular text-muted-foreground">
             <span>à</span>
@@ -140,7 +113,6 @@ export default async function Page() {
             )}
           </p>
           <div className="mt-8">
->>>>>>> 8a2bf5b9e97e5d44e654e03244bd12b6261289d3
             <StaticMap
               address={page?.acf?.lieu_de_levenement?.address}
               latitude={
@@ -165,15 +137,8 @@ export default async function Page() {
               width="100%"
             />
           </div>
-<<<<<<< HEAD
-          </div>
-
-      </section>
-       
-=======
         </div>
       </section>
->>>>>>> 8a2bf5b9e97e5d44e654e03244bd12b6261289d3
       <section className="mb-8 grid gap-12 grid-cols-3">
         <div className="flex flex-col col-span-4 h-full w-full justify-between rounded-lg border bg-card shadow-lg overflow-hidden">
           <div className="flex md:flex-row flex-col justify-between gap-8 p-6">

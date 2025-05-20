@@ -64,7 +64,7 @@ export default async function Page () {
 
       
       <section className="w-full h-max mb-12 flex flex-col gap-12 md:grid md:grid-cols-6 md:gap-12">                     
-        <div className="h-max col-span-6 flex flex-col overflow-hidden rounded-lg border bg-card shadow-lg p-6">
+        <div className="h-max col-span-6 flex flex-col overflow-hidden  p-6">
             <div className="items-end  overflow-hidden mb-8">
               <KitTabs kits={page?.acf?.kit ?? []} />
 
