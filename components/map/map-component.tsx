@@ -67,7 +67,7 @@ const defaultCenter = { lat: 46.603354, lng: 2.3522 };
 const defaultZoom = 6;
 
 // Clé API Google Maps
-const googleMapsApiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEYS || process.env.GOOGLE_MAPS_API_KEY;
+const googleMapsApiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || process.env.GOOGLE_MAPS_API_KEY;
 const WORDPRESS_API_URL = process.env.WORDPRESS_API_URL || "https://wp-starter.io/wp-json/wp/v2";
 
 export default function MapComponent() {
@@ -83,7 +83,7 @@ export default function MapComponent() {
   if (!googleMapsApiKey) {
   return (
     <div className="p-4 text-red-500">
-      Clé API Google Maps manquante. Veuillez configurer NEXT_PUBLIC_GOOGLE_MAPS_API_KEYS.
+      Clé API Google Maps manquante. Veuillez configurer NEXT_PUBLIC_GOOGLE_MAPS_API_KEY.
     </div>
   );
 }
