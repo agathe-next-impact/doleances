@@ -4,11 +4,20 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 import { fetchAttachmentById } from "@/lib/api";
+import { Mail } from "lucide-react";
+import YoutubeEmbed from "./ui/video";
 
 type Kit = {
   titre: string;
   presentation_du_kit?: string;
   fichiers_du_kit?: { fichier: number; titre?: string; date?: string }[];
+  contact?: {
+    nom_de_la_personne: string;
+    email_de_la_personne: string;
+    mini_biographie: string;
+    photo_de_la_personne: number;
+  };
+  video: string;
 };
 
 export default function KitTabs({ kits }: { kits: Kit[] }) {
@@ -61,25 +70,27 @@ export default function KitTabs({ kits }: { kits: Kit[] }) {
             </TabsTrigger>
           ))}
         </TabsList>
-        <div className="relative flex-grow overflow-hidden h-[600px]">
+        <div className="relative overflow-hidden h-[1000px]">
           {kitsWithFiles.map((kit, index) => (
-            <TabsContent key={index} value={`kit-${index}`} className="absolute inset-0 mt-8 mx-auto w-fit flex justify-between">
+            <TabsContent key={index} value={`kit-${index}`} className="absolute inset-0 mt-8 mx-auto w-full">
               <motion.div
                 key={kit.titre}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
                 transition={{ duration: 0.25, ease: "easeInOut" }}
-                className="p-4 border rounded-lg bg-card shadow-lg p-8"
+                className="p-4"
               >
-                <h3 className="text-xl font-semibold">{kit.titre}</h3>
-                <div className="grid grid-cols-2 gap-4 p-4">
+                <h3 className="my-8 text-xl font-semibold">{kit.titre}</h3>
+                <div className="grid grid-cols-4 gap-8">
+                  <div className="text-sm col-span-3">
                   {kit.presentation_du_kit && (
-                    <div className="mt-4 text-sm">
-                      <div className="py-4 px-8" dangerouslySetInnerHTML={{ __html: kit.presentation_du_kit }} />
-                    </div>
-                  )}
-                  <div className="w-max h-max flex flex-col gap-8 justify-self-end border rounded-lg bg-card shadow-lg p-8">
+                      <div className="py-8 px-12 border rounded-lg bg-card shadow-lg" dangerouslySetInnerHTML={{ __html: kit.presentation_du_kit }} />
+                      )}     
+         
+                  </div>
+                  
+                  <div className="col-span-1 w-full h-max flex flex-col gap-8 justify-self-end border rounded-lg bg-card shadow-lg p-8">
                     {kit.fichiers_du_kit && kit.fichiers_du_kit.length > 0 && (
                       <>
                         {kit.fichiers_du_kit.map((file, fileIndex) => (
@@ -100,6 +111,33 @@ export default function KitTabs({ kits }: { kits: Kit[] }) {
                           </div>
                         ))}
                       </>
+                    )}
+                    <div>
+                      {kit?.contact?.email_de_la_personne && (
+                        <div className="w-full flex justify-center
+                         items-center">
+                          <div className="bg-primary/10 p-2 rounded-full">
+                            <Mail className="h-5 w-5" />
+                          </div>
+                          <a href={`mailto:${kit?.contact.email_de_la_personne}`} className="text-primary">
+                            {kit?.contact.email_de_la_personne}
+                          </a>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  {kit.video && (
+                    <div className="col-span-2 flex flex-col gap-4 h-max rounded-lg border bg-card shadow-lg overflow-hidden">
+                      <YoutubeEmbed videoLink={kit.video}/>
+                      </div>
+                  )}     
+                  <div className="col-span-2 flex flex-col gap-4 rounded-lg border bg-card shadow-lg overflow-hidden p-8">
+                    <h4 className="w-full mb-4 pb-3 text-xl font-serif font-light uppercase border-b-[1px]">Créateur</h4>
+                    {kit.contact?.nom_de_la_personne && (
+                      <p className="text-sm font-semibold">{kit.contact.nom_de_la_personne}</p>
+                    )}
+                    {kit.contact?.mini_biographie && (
+                      <p className="text-sm">{kit.contact.mini_biographie}</p>
                     )}
                   </div>
                 </div>

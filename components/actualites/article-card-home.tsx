@@ -51,7 +51,7 @@ export function ArticleCardHome({ article }: ArticleCardProps) {
         </CardTitle>
       </CardHeader>
       <CardContent className="flex-grow pl-0">
-        <span className="line-clamp-3" dangerouslySetInnerHTML={{ __html: article?.excerpt || "" }} />
+        <span dangerouslySetInnerHTML={{ __html: article?.excerpt || "" }} />
       </CardContent>
       <CardFooter className="flex flex-col items-start gap-2 pl-0">
         <div className="flex flex-wrap gap-2">

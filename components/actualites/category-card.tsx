@@ -78,7 +78,7 @@ export default function CategoryCard({ category }: CategoryCardProps) {
                     <div className="font-semibold" dangerouslySetInnerHTML={{ __html: post.title.rendered }} />
                     {!post.acf?.date_de_levenement && (
                       <div 
-                        className="text-muted-foreground line-clamp-6 mb-4"
+                        className="text-muted-foreground mb-4"
                         dangerouslySetInnerHTML={{ __html: post.excerpt.rendered }} 
                       /> 
                     )} 
