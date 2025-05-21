@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import { GoogleMap, useJsApiLoader, Marker, MarkerClusterer } from "@react-google-maps/api";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/actualites/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import LocationSidebar from "./location-sidebar";
 import { AlertCircle } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -67,7 +67,7 @@ const defaultCenter = { lat: 46.603354, lng: 2.3522 };
 const defaultZoom = 6;
 
 // Clé API Google Maps
-const googleMapsApiKey = "AIzaSyA1lJXqXBc0-w5WUVO1KhvggK05FCbi7Yg"; // Remplacez par votre clé API
+const googleMapsApiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || process.env.GOOGLE_MAPS_API_KEY;
 const WORDPRESS_API_URL = process.env.WORDPRESS_API_URL || "https://wp-starter.io/wp-json/wp/v2";
 
 export default function MapComponent() {
@@ -80,10 +80,18 @@ export default function MapComponent() {
   const [viewingAllFrance, setViewingAllFrance] = useState<boolean>(true);
 
   // Utiliser useJsApiLoader au lieu de LoadScript pour une meilleure gestion des erreurs
-  const { isLoaded, loadError } = useJsApiLoader({
-    googleMapsApiKey,
-    preventGoogleFontsLoading: true,
-  });
+  if (!googleMapsApiKey) {
+  return (
+    <div className="p-4 text-red-500">
+      Clé API Google Maps manquante. Veuillez configurer NEXT_PUBLIC_GOOGLE_MAPS_API_KEY.
+    </div>
+  );
+}
+
+const { isLoaded, loadError } = useJsApiLoader({
+  googleMapsApiKey,
+  preventGoogleFontsLoading: true,
+});
 
   // Récupérer les données des groupes locaux depuis l'API WordPress
   useEffect(() => {
@@ -291,7 +299,7 @@ export default function MapComponent() {
 
   return (
     <div className="flex flex-col h-full">
-      <div className="py-4 bg-white">
+      <div className="py-4">
         <Select
           value={selectedDepartement || ""}
           onValueChange={(value) => {
@@ -318,34 +326,32 @@ export default function MapComponent() {
 
       <div className="flex flex-col md:flex-row flex-1 h-full">
         <div className="w-full md:w-2/3 h-[500px] h-auto">
-            <GoogleMap
-              mapContainerStyle={containerStyle}
-              center={currentGroup?.center || defaultCenter}
-              zoom={currentGroup?.zoom || defaultZoom}
-              onLoad={onMapLoad}
-              options={{
+          <GoogleMap
+            mapContainerStyle={containerStyle}
+            center={currentGroup?.center || defaultCenter}
+            zoom={currentGroup?.zoom || defaultZoom}
+            onLoad={onMapLoad}
+            options={{
               mapTypeControl: true,
-              streetViewControl: false,
+              streetViewControl: true,
               fullscreenControl: true,
-              zoomControl: true, // Ajoute les boutons de zoom/dézoom
-              scrollwheel: true, // Active le zoom avec la molette de la souris
-              }}
-            >
+            }}
+          >
             <MarkerClusterer>
               {(clusterer) => (
-              <>
-                {locations.map((location) => (
-                <Marker
-                  key={location.id}
-                  position={location.position}
-                  onClick={() => handleMarkerClick(location)}
-                  clusterer={clusterer}
-                />
-                ))}
-              </>
+                <>
+                  {locations.map((location) => (
+                    <Marker
+                      key={location.id}
+                      position={location.position}
+                      onClick={() => handleMarkerClick(location)}
+                      clusterer={clusterer}
+                    />
+                  ))}
+                </>
               )}
             </MarkerClusterer>
-            </GoogleMap>
+          </GoogleMap>
         </div>
 
         <LocationSidebar

@@ -36,6 +36,7 @@ export default async function DraggableCardDemo() {
   // Adapter les données pour correspondre à l'interface attendue par CardMap
   const mapLocations = locations.map((location) => ({
     id: String(location.id),
+    slug: location.slug,
     position: {
       lat: parseFloat(location.acf?.localisation.lat),
       lng: parseFloat(location.acf?.localisation.lng),
@@ -44,7 +45,12 @@ export default async function DraggableCardDemo() {
 
 
   return (
-     <div className="container mx-auto px-4 py-8">
+    <>
+    <div className="absolute inset-0 -z-10">
+      <div className="absolute top-[100px] left-0 h-[500px] w-[50vw] rounded-full bg-gradient-to-r from-pink-200 to-blue-200 opacity-20 blur-3xl"></div>
+      <div className="absolute top-[500px] right-0 h-[400px] w-[40vw] rounded-full bg-gradient-to-r from-blue-200 to-pink-200 opacity-20 blur-3xl"></div>
+    </div>
+     <div className="container mx-auto md:p-8 p-4">
           <div className="mb-12 text-center">
             <h1 className="mb-4 text-43xl font-light tracking-tight">A propos de la démarche</h1> 
             <p className="mx-auto mb-6 max-w-2xl text-lg text-muted-foreground">
@@ -86,6 +92,10 @@ export default async function DraggableCardDemo() {
           </div>
           </section> 
 
+    <div className="absolute inset-0 -z-10">
+      <div className="absolute top-[800px] left-0 h-[1000px] w-[50vw] rounded-full bg-gradient-to-r from-pink-200 to-blue-200 opacity-20 blur-3xl"></div>
+      <div className="absolute top-[1500px] right-0 h-[900px] w-[40vw] rounded-full bg-gradient-to-r from-blue-200 to-pink-200 opacity-20 blur-3xl"></div>
+    </div>
           <section className="h-max mb-12 grid gap-12 grid-cols-6 place-items-end">
           <div className="h-full w-full flex flex-col md:col-span-2 col-span-6 rounded-lg border bg-card shadow-lg overflow-hidden">
             <div className="flex flex-col flex-grow justify-between content-stretch p-6">
@@ -125,6 +135,10 @@ export default async function DraggableCardDemo() {
               </div>
           </section>
 
+    <div className="absolute inset-0 -z-10">
+      <div className="absolute top-[2000px] left-0 h-[1000px] w-[50vw] rounded-full bg-gradient-to-r from-pink-200 to-blue-200 opacity-20 blur-3xl"></div>
+      <div className="absolute top-[2400px] right-0 h-[900px] w-[40vw] rounded-full bg-gradient-to-r from-blue-200 to-pink-200 opacity-20 blur-3xl"></div>
+    </div>
           <section className="w-full h-max my-24 flex flex-col gap-12 md:grid md:grid-cols-6 md:gap-12">  
             
             <DraggableCardContainer className="relative md:col-span-6 flex min-h-screen w-full items-center justify-center">
@@ -146,5 +160,6 @@ export default async function DraggableCardDemo() {
             </DraggableCardContainer>
           </section>
     </div>
+    </>
   );
 }

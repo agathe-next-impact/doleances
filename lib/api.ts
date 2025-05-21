@@ -26,6 +26,7 @@ export interface Post {
   excerpt: {
     rendered: string
   }
+  author: number
   slug: string
   link: string
   categories?: number[]
@@ -129,6 +130,7 @@ export interface GroupeLocalPost {
 export interface GroupeLocal {
   id: number
   name: string
+  slug: string
 }
 
 export interface Media {
@@ -985,7 +987,6 @@ export async function fetchRandomVerbatim(): Promise<Verbatim | null> {
   
   try {
     const response = await fetch(`${API_BASE_URL}/verbatim`, {
-      cache: "no-store",
       headers: {
         Accept: "application/json",
       },

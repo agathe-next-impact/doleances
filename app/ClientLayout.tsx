@@ -61,17 +61,17 @@ export default function ClientLayout({
       <body className={`${inter.className} overflow-x-hidden`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           <div className="flex min-h-screen flex-col">
-            <header className="sticky top-0 z-10 border-b bg-background">
+            <header className="sticky top-0 z-10 border-b bg-white/90 backdrop-blur-md transition-colors duration-300 dark:bg-slate-900">
               <div className="container mx-auto flex h-16 items-center justify-between px-4">
                 <div className="flex items-center gap-4">
                   <Sheet>
                     <SheetTrigger asChild>
-                      <Button variant="ghost" size="icon" className="mr-2">
-                        <Menu className="h-5 w-5" />
+                      <Button size="icon" className="mr-2" variant="link">
+                        <Menu className="h-5 w-5"/>
                         <span className="sr-only">Toggle menu</span>
                       </Button>
                     </SheetTrigger>
-                    <SheetContent side="left" className="w-[250px] w-[100%]">
+                    <SheetContent side="left" className="w-[250px] w-[100%] left-sheet">
                       <SheetHeader>
                         <Link href="/"
                           onClick={(e) => {
@@ -89,7 +89,7 @@ export default function ClientLayout({
                         </Link>
                       </SheetHeader>
                       <nav className="mt-6">
-                        <ul className="space-y-4">
+                        <ul className="space-y-4 left-sheet">
                           <li>
                             <Link
                               href="/cartographie"

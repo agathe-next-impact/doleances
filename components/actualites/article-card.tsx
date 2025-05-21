@@ -135,17 +135,10 @@ export default function ArticleCard({ post }: ArticleCardProps) {
           className="object-cover rounded-t-lg"
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
         />
-        {isEvent && (
-          <div className="absolute top-2 right-2">
-            <Badge variant="secondary" className="bg-primary text-primary-foreground">
-              Événement
-            </Badge>
-          </div>
-        )}
       </div>
       <CardHeader className="pb-2">
         <CardTitle className="text-lg">
-          <Link href={`/article/${post.slug}`} className="hover:underline">
+          <Link href={`/article/${post.slug}`} className="hover:text-primary">
             <span dangerouslySetInnerHTML={{ __html: post.title.rendered }} />
           </Link>
         </CardTitle>
@@ -191,62 +184,15 @@ export default function ArticleCard({ post }: ArticleCardProps) {
           </div>
         )}
 
+        {!isEvent && (
         <div
-          className="text-sm text-muted-foreground line-clamp-3 mb-4"
-          dangerouslySetInnerHTML={{ __html: post.acf?.descriptif || post.excerpt.rendered }}
+          className="text-muted-foreground mb-4"
+          dangerouslySetInnerHTML={{ __html: post.excerpt.rendered || "" }}
         />
+        )}
 
-        {acfFields.length > 0 &&
-          !isEvent && ( // N'affiche pas les autres champs ACF si c'est un événement (déjà affiché au-dessus)
-            <div className="mt-2 space-y-2">
-              {acfFields
-                .filter(
-                  ([key]) =>
-                    ![
-                      "date_de_levenement",
-                      'descriptif',
-                      "heure_evenement",
-                      "adresse_evenement",
-                      "adress",
-                      "adresse",
-                      "latitude",
-                      "longitude",
-                      "lieu_de_levenement", // Exclure le champ imbriqué
-                    ].includes(key),
-                )
-                .slice(0, 3) // Limite à 3 champs pour ne pas surcharger la carte
-                .map(([key, value]) => {
-                  // Vérifier si la valeur est un objet (comme lieu_de_levenement)
-                  if (typeof value === "object" && value !== null) {
-                    return null // Ne pas afficher les objets complexes
-                  }
 
-                  return (
-                    <div key={key} className="text-xs">
-                      <span className="font-regular uppercase text-muted-foreground">{key.replace(/_/g, " ")}: </span>
-                      <span >
-                        {typeof value === "string" && value.startsWith("http") ? (
-                          <a
-                          href={value}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-primary hover:underline"
-                          >
-                          Voir en ligne
-                          </a>
-                        ) : (
-                          String(value)
-                          .replace(/<\/?[^>]+(>|$)/g, "") // Remove HTML tags
-                          .substring(0, 50) + (String(value).length > 50 ? "..." : "")
-                        )}
-                      </span>
-                    </div>
-                  )
-                })
-                .filter(Boolean)}{" "}
-              {/* Filtrer les valeurs null */}
-            </div>
-          )}
+
       </CardContent>
       {/* Affichage du footer si la carte n'est pas un événement */}
       {!isEvent && (

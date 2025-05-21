@@ -18,14 +18,14 @@ interface StaticMapProps {
 }
 
 const defaultCenter = { lat: 46.603354, lng: 2.3522 };
-const defaultZoom = 6;
 const containerStyle = {
   width: "100%",
   height: "400px",
 };
 
 
-const googleMapsApiKey = "AIzaSyA1lJXqXBc0-w5WUVO1KhvggK05FCbi7Yg"; // Remplacez par votre clé API
+
+const googleMapsApiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || process.env.GOOGLE_MAPS_API_KEY;
 
 export default function CardMap({
   locations,
@@ -36,8 +36,7 @@ export default function CardMap({
 }: StaticMapProps) {
   const mapRef = useRef<google.maps.Map | null>(null);
   
-  console.log("locations", locations);
-
+  console.log(locations);
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey,
     preventGoogleFontsLoading: true,
@@ -51,10 +50,6 @@ export default function CardMap({
     );
   }
 
-  const handleMarkerLink = (slug: string) => {
-    window.location.href = `/groupe-local/${slug}`;
-  };
-
   return (
     <div style={{ height, width }} className="rounded-lg overflow-hidden">
       <GoogleMap
@@ -63,12 +58,16 @@ export default function CardMap({
         zoom={zoom}
         options={{
           draggable: false,
+          zoomControl: false,
+          scrollwheel: false,
           disableDoubleClickZoom: true,
           streetViewControl: false,
-          mapTypeControl: false,
-          fullscreenControl: false,
+          mapTypeControl: true,
+          fullscreenControl: false,          
+          zoomControl: true, // Ajoute les boutons de zoom/dézoom
+          scrollwheel: true, // Active le zoom avec la molette de la souris
         }}
-        onLoad={(map) => (mapRef.current = map)}
+        onLoad={(map) => { mapRef.current = map; }}
       >
         <MarkerClusterer>
           {(clusterer) => (
@@ -78,8 +77,10 @@ export default function CardMap({
                   key={location.id}
                   position={location.position}
                   clusterer={clusterer}
-                  onClick={() => handleMarkerLink(location.slug)}
                   clickable={true}
+                  onClick={() => {
+                    window.location.href = `/groupe-local/${location.slug}`;
+                  }}
                 />
               ))}
             </>

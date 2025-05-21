@@ -122,7 +122,12 @@ export default async function CategoryPage({ params }: { params: { slug: string 
     const groupesLocauxCPT = await extractGroupesLocauxCPTFromCategory(category?.id)
 
     return (
-      <div className="container mx-auto px-4 md:py-8 pt-2">
+    <>
+    <div className="absolute inset-0 -z-10">
+      <div className="absolute top-[100px] left-0 h-[500px] w-[50vw] rounded-full bg-gradient-to-r from-pink-200 to-blue-200 opacity-20 blur-3xl"></div>
+      <div className="absolute top-[500px] right-0 h-[400px] w-[40vw] rounded-full bg-gradient-to-r from-blue-200 to-pink-200 opacity-20 blur-3xl"></div>
+    </div>
+      <div className="container mx-auto md:p-8 p-4">
         <CategoryHero category={category?.name} description={category?.description } />
         <div className="mb-8">
           <Suspense fallback={<div>Chargement des filtres...</div>}>
@@ -136,17 +141,24 @@ export default async function CategoryPage({ params }: { params: { slug: string 
         </div>
         <ArticleList initialPosts={posts} categoryId={category?.id} isEventCategory={isEventCategory} />
       </div>
+      </>
     )
   } catch (error) {
     console.error("Error in CategoryPage:", error)
     return (
-      <div className="container mx-auto px-4 py-8 text-center">
+    <>
+    <div className="absolute inset-0 -z-10">
+      <div className="absolute top-[100px] left-0 h-[500px] w-[50vw] rounded-full bg-gradient-to-r from-pink-200 to-blue-200 opacity-20 blur-3xl"></div>
+      <div className="absolute top-[500px] right-0 h-[400px] w-[40vw] rounded-full bg-gradient-to-r from-blue-200 to-pink-200 opacity-20 blur-3xl"></div>
+    </div>
+      <div className="container mx-auto md:p-8 p-4">
         <h1 className="text-2xl font-bold mb-4">Erreur de chargement</h1>
         <p>Impossible de charger les données de la catégorie. Veuillez réessayer ultérieurement.</p>
         <p className="text-sm text-muted-foreground mt-2">
           Détail: {error instanceof Error ? error.message : String(error)}
         </p>
       </div>
+      </>
     )
   }
 }

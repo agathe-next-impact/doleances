@@ -46,7 +46,7 @@ export default function CategoryCard({ category }: CategoryCardProps) {
   }, [category.slug])
 
   return (
-    <Card className="md:col-span-3 col-span-6 h-full flex flex-col overflow-hidden border shadow-lg">
+    <Card className="md:col-span-3 col-span-6 h-full flex flex-col overflow-hidden border shadow-lg cards">
       <CardHeader className="pb-2">
         <CardTitle className="w-full mb-4 pb-3 text-2xl font-serif font-light uppercase border-b-[1px]">
           <Link href={`/category/${category.slug}`}>
@@ -55,7 +55,7 @@ export default function CategoryCard({ category }: CategoryCardProps) {
         </CardTitle>
         <CardDescription dangerouslySetInnerHTML={{ __html: category.description }} className="line-clamp-2" />
       </CardHeader>
-      <CardContent className="flex-grow pt-4">
+      <CardContent className="flex-grow pt-4 cards">
         {loading ? (
           <p>Chargement des articles...</p>
         ) : error ? (
@@ -70,18 +70,18 @@ export default function CategoryCard({ category }: CategoryCardProps) {
                       src={post._embedded?.["wp:featuredmedia"]?.[0]?.source_url ?? "/img/doleance_couv.png"}
                       alt={post.title.rendered}
                       fill
-                      className="object-cover rounded"
+                      className="object-cover rounded border shadow-sm"
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     />
                   </div>
-                  <div className="flex flex-col w-2/3">
-                    <div dangerouslySetInnerHTML={{ __html: post.title.rendered }} />
+                  <div className="flex flex-col w-2/3 text-lg">
+                    <div className="font-semibold" dangerouslySetInnerHTML={{ __html: post.title.rendered }} />
                     {!post.acf?.date_de_levenement && (
-                    <div 
-                      className="text-sm text-muted-foreground line-clamp-2 mb-4">
-                      {post.acf?.descriptif.replace(/<\/?[^>]+(>|$)/g, "")}
-                    </div>
-                    )}  
+                      <div 
+                        className="text-muted-foreground mb-4"
+                        dangerouslySetInnerHTML={{ __html: post.excerpt.rendered }} 
+                      /> 
+                    )} 
                     <div className="text-xs text-muted-foreground">
                     {post.acf?.date_de_levenement && (
                       <div className="flex items-center gap-1.5">
@@ -114,8 +114,8 @@ export default function CategoryCard({ category }: CategoryCardProps) {
         )}
       </CardContent>
       <CardFooter>
-        <Link href={`/category/${category.slug}`} className="text-sm text-muted-foreground hover:underline">
-          {category.name} : Voir tout
+        <Link href={`/category/${category.slug}`} className="text-sm text-primary uppercase mx-auto text-base font-medium underline-offset-4 underline hover:opacity-80">
+          Voir tout
         </Link>
       </CardFooter>
     </Card>

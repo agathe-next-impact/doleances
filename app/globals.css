@@ -1,7 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&family=Cormorant+Garamond&family=Crimson+Pro:ital,wght@0,200..900;1,200..900&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Varela+Round&display=swap&family=Caveat:wght@400..700&family=Cormorant+Garamond&family=Crimson+Pro:ital,wght@0,200..900;1,200..900&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
 
 @layer base {
   :root {
@@ -11,42 +11,21 @@
     --card-foreground: 222.2 84% 4.9%;
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
-    --primary: #0f6466;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --primary: 208, 89%, 45%;
+    --primary-foreground: 208, 89%, 45%, 0.1;
+    --secondary: 156.52, 25.84%, 34.9%;
+    --secondary-foreground: 156.52, 25.84%, 34.9%, 0.3;
     --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --muted-foreground: 215.3,25%,26.7%;
+    --accent: 135.65, 35.03%, 61.37%;
+    --accent-foreground: 208, 87%, 62%;
+    --destructive: 208, 87%, 62%, 0.3;
+    --destructive-foreground: 208, 87%, 62%, 0.1;
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 221.2 83.2% 53.3%;
+    --ring: 135.65, 35.03%, 61.37%;
     --radius: 0.5rem;
-  }
-
-  .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%; 
-    --primary: 217.2 91.2% 59.8%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 224.3 76.3% 48%;
+    --links: 208.21, 83.43%, 35.49%;
   }
 }
 
@@ -66,77 +45,51 @@
   h2 {
     @apply text-3xl;
   }
-  button {
-    @apply font-sans text-sm font-semibold text-foreground;
+  p {
+    @apply py-2 font-sansserif text-base leading-normal;
+  }
+  li {
+    @apply ml-4 pl-4 py-2 list-disc;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground font-sansserif;
+  }
+  h1, h2 {
+    @apply font-serif leading-tight tracking-tight text-foreground;
+  }
+  h1 {
+    @apply text-4xl;
+  }
+  h2 {
+    @apply text-3xl;
   }
   p {
-    @apply font-sans text-base leading-normal text-foreground;
+    @apply py-2 font-sansserif leading-normal;
+  }
+  li {
+    @apply ml-4 pl-4 py-2 list-disc;
   }
 }
 
-/* Gutenberg wrapper styles */
-.gutenberg-wrapper {
-  width: 100%;
-  max-width: 100%;
+.\[\&_svg\]\:size-4 svg {
+  width: 1.6rem !important;
+  height: 1.6rem !important;
+  color: black !important;
 }
 
-/* Override prose styles for Gutenberg content */
-.gutenberg-wrapper .prose {
-  max-width: none;
+.left-sheet li, .cards li, footer li {
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
-/* Make images responsive */
-.gutenberg-wrapper img {
-  max-width: 100%;
-  height: auto;
+button:focus {
+  --tw-ring-offset-width: 0 !important;
 }
 
-/* Support for alignments */
-.gutenberg-wrapper .alignleft {
-  float: left;
-  margin-right: 1.5em;
-  margin-bottom: 1em;
-}
-
-.gutenberg-wrapper .alignright {
-  float: right;
-  margin-left: 1.5em;
-  margin-bottom: 1em;
-}
-
-.gutenberg-wrapper .aligncenter {
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-/* Clear floats */
-.gutenberg-wrapper .clear::after {
-  content: "";
-  display: table;
-  clear: both;
-}
-
-/* Support for WordPress classic editor styles */
-.gutenberg-wrapper .wp-caption {
-  margin-bottom: 1.5em;
-  max-width: 100%;
-}
-
-.gutenberg-wrapper .wp-caption img {
-  display: block;
-  margin: 0 auto;
-}
-
-.gutenberg-wrapper .wp-caption-text {
-  margin: 0.8075em 0;
-  text-align: center;
-  font-size: 0.875rem;
-  color: #666;
-}
-
-p {
-  font-size: 1rem;
-  line-height: 1.5rem;
-  color: var(--muted-foreground);
-}

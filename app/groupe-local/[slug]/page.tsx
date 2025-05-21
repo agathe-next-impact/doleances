@@ -33,7 +33,6 @@ export default async function GroupeLocalPage({ params }: { params: { slug: stri
 
     // Récupérer les articles liés à ce groupe local via le champ tax_groupe_local
     const relatedPosts = await fetchPostsByGroupeLocalTax(groupeLocal.id)
-    console.log(`Nombre d'articles associés au groupe local ${params.slug}: ${relatedPosts.length}`)
 
     // Récupérer l'image du groupe local si disponible
     const featuredImage = (() => {
@@ -128,7 +127,17 @@ export default async function GroupeLocalPage({ params }: { params: { slug: stri
 
       // Vérifier si les catégories sont disponibles dans _embedded
       if (post._embedded?.["wp:term"]?.[0]) {
-        postCategories.push(...post._embedded["wp:term"][0])
+        postCategories.push(
+          ...post._embedded["wp:term"][0].map((term: any) => ({
+            id: term.id,
+            name: term.name,
+            slug: term.slug,
+            taxonomy: term.taxonomy,
+            description: term.description ?? "",
+            count: term.count ?? 0,
+            link: term.link ?? "",
+          }))
+        )
       }
       // Sinon, utiliser les IDs de catégorie pour récupérer les détails
       else if (post.categories && Array.isArray(post.categories)) {
@@ -155,7 +164,7 @@ export default async function GroupeLocalPage({ params }: { params: { slug: stri
         const uncategorizedId = 1 // ID standard pour "Non classé" dans WordPress
         if (!categoriesMap.has(uncategorizedId)) {
           categoriesMap.set(uncategorizedId, {
-            category: { id: uncategorizedId, name: "Non classé", description: "", count: 0, link: "" },
+            category: { id: uncategorizedId, slug: "non-classe", name: "Non classé", description: "", count: 0, link: "" },
             posts: [],
           })
         }
@@ -172,7 +181,12 @@ export default async function GroupeLocalPage({ params }: { params: { slug: stri
     postsByCategory.sort((a, b) => b.posts.length - a.posts.length)
 
     return (
-      <div className="container mx-auto px-4 py-8">
+    <>
+    <div className="absolute inset-0 -z-10">
+      <div className="absolute top-0 left-0 h-[500px] w-[40vw] rounded-full bg-gradient-to-r from-pink-200 to-blue-200 opacity-20 blur-3xl"></div>
+      <div className="absolute bottom-0 right-0 h-[400px] w-[40vw] rounded-full bg-gradient-to-r from-blue-200 to-pink-200 opacity-20 blur-3xl"></div>
+    </div>
+      <div className="container mx-auto md:p-8 p-4">
         <div className="px-4 py-8 mx-auto">
           {/* En-tête du groupe local avec image de fond et overlay */}
           <div className="flex relative rounded-lg overflow-hidden mb-8">
@@ -182,12 +196,8 @@ export default async function GroupeLocalPage({ params }: { params: { slug: stri
               <Badge variant="outline" className="mb-8 w-max py-2 px-4 self-end">
                 <Link href="/cartographie">Tous les groupes locaux</Link>
               </Badge>
-              
-              <div className="uppercase font-regular text-muted-foreground mb-2">
-                Groupe local
-              </div>
               <h1
-                className="text-3xl md:text-4xl mb-2"
+                className="text-3xl md:text-4xl mb-2 py-2"
                 dangerouslySetInnerHTML={{ __html: groupeLocal.title?.rendered || `Groupe Local ${params.slug}` }}
               />
               {groupeLocal.acf?.departement && (
@@ -199,17 +209,17 @@ export default async function GroupeLocalPage({ params }: { params: { slug: stri
           {/* Informations de contact et localisation */}
           <div className="grid md:grid-cols-2 gap-6 mb-8">
             {/* Colonne de gauche: Informations de contact */}
-            <div className="bg-muted/30 rounded-lg p-6">
-              <h2 className="text-xl font-semibold mb-4">Informations de contact</h2>
+            <div className="bg-white border shadow rounded-lg p-6">
+              <p className="text-xl font-semibold mb-4">Informations de contact</p>
               
               <div className="space-y-4">
 
                 {contact.personne && (
                   <div className="flex items-center gap-3">
                     <div className="bg-primary/10 p-2 rounded-full">
-                      <User className="h-5 w-5 text-primary" />
+                      <User className="h-5 w-5" />
                     </div>
-                    <a href={`mailto:${contact.personne}`} className="text-primary hover:underline">
+                    <a href={`mailto:${contact.personne}`} className="text-primary">
                       {contact.personne}
                     </a>
                   </div>
@@ -218,9 +228,9 @@ export default async function GroupeLocalPage({ params }: { params: { slug: stri
                 {contact.email && (
                   <div className="flex items-center gap-3">
                     <div className="bg-primary/10 p-2 rounded-full">
-                      <Mail className="h-5 w-5 text-primary" />
+                      <Mail className="h-5 w-5" />
                     </div>
-                    <a href={`mailto:${contact.email}`} className="text-primary hover:underline">
+                    <a href={`mailto:${contact.email}`} className="text-primary">
                       {contact.email}
                     </a>
                   </div>
@@ -229,9 +239,9 @@ export default async function GroupeLocalPage({ params }: { params: { slug: stri
                 {contact.telephone && (
                   <div className="flex items-center gap-3">
                     <div className="bg-primary/10 p-2 rounded-full">
-                      <Phone className="h-5 w-5 text-primary" />
+                      <Phone className="h-5 w-5" />
                     </div>
-                    <a href={`tel:${contact.telephone}`} className="text-primary hover:underline">
+                    <a href={`tel:${contact.telephone}`} className="text-primary">
                       {contact.telephone}
                     </a>
                   </div>
@@ -240,13 +250,13 @@ export default async function GroupeLocalPage({ params }: { params: { slug: stri
                 {contact.site_web && (
                   <div className="flex items-center gap-3">
                     <div className="bg-primary/10 p-2 rounded-full">
-                      <Globe className="h-5 w-5 text-primary" />
+                      <Globe className="h-5 w-5" />
                     </div>
                     <a
                       href={contact.site_web.startsWith("http") ? contact.site_web : `https://${contact.site_web}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-primary hover:underline"
+                      className="text-primary"
                     >
                       {contact.site_web}
                     </a>
@@ -256,7 +266,7 @@ export default async function GroupeLocalPage({ params }: { params: { slug: stri
                 {address && (
                   <div className="flex items-center gap-3">
                     <div className="bg-primary/10 p-2 rounded-full mt-1">
-                      <MapPin className="h-5 w-5 text-primary" />
+                      <MapPin className="h-5 w-5" />
                     </div>
                     <span className="whitespace-pre-line">{address}</span>
                   </div>
@@ -266,7 +276,7 @@ export default async function GroupeLocalPage({ params }: { params: { slug: stri
 
             {/* Colonne de droite: Carte */}
             {(coordinates || address) && (
-              <div className="rounded-lg overflow-hidden">
+              <div className="border shadow rounded-lg overflow-hidden">
                 <StaticMap
                   address={address}
                   latitude={coordinates?.lat}
@@ -361,7 +371,7 @@ export default async function GroupeLocalPage({ params }: { params: { slug: stri
                         />
                       </CardContent>
                       <CardFooter className="text-xs text-muted-foreground">
-                        <Link href={`/article/${post.slug}`} className="text-primary hover:underline">
+                        <Link href={`/article/${post.slug}`} className="text-primary">
                           Voir les détails
                         </Link>
                       </CardFooter>
@@ -412,7 +422,7 @@ export default async function GroupeLocalPage({ params }: { params: { slug: stri
                         <CardFooter className="text-xs text-muted-foreground">
                           <div className="flex justify-between w-full">
                             <span>{formatDate(post.date)}</span>
-                            <Link href={`/article/${post.slug}`} className="text-primary hover:underline">
+                            <Link href={`/article/${post.slug}`} className="text-primary">
                               Lire l'article
                             </Link>
                           </div>
@@ -424,7 +434,7 @@ export default async function GroupeLocalPage({ params }: { params: { slug: stri
                   <div className="mt-4 text-center">
                     <Link
                       href={`/category/${categoryGroup.category.slug}?groupe_local_cpt=${groupeLocal.id}`}
-                      className="text-primary hover:underline inline-flex items-center gap-1"
+                      className="text-primary inline-flex items-center gap-1"
                     >
                       Voir tous les articles de cette catégorie
                     </Link>
@@ -441,6 +451,7 @@ export default async function GroupeLocalPage({ params }: { params: { slug: stri
           )}
         </div>
       </div>
+      </>
     )
   } catch (error) {
     console.error("Error in GroupeLocalPage:", error)

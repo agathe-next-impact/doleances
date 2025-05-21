@@ -11,13 +11,17 @@ import Verbatim from "@/components/verbatim"
 
 export default async function Home() {
   const categories = await fetchCategories()
-  // order by count
   categories.sort((a, b) => b.count - a.count)
   const articles = await fetchLastThreePosts()
   const stickyArticle = articles[0]
 
   return (
-    <main className="container mx-auto px-4 py-8">
+    <>
+    <div className="absolute inset-0 -z-10">
+      <div className="absolute top-[100px] left-0 h-[500px] w-[50vw] rounded-full bg-gradient-to-r from-pink-200 to-blue-200 opacity-20 blur-3xl"></div>
+      <div className="absolute top-[500px] right-0 h-[400px] w-[40vw] rounded-full bg-gradient-to-r from-blue-200 to-pink-200 opacity-20 blur-3xl"></div>
+    </div>
+    <main className="container mx-auto md:p-8 p-4">
         <div className="py-8 text-center">
           <h1 className="">L'actualité des doléances</h1> 
           <p className="mx-auto mb-6 max-w-2xl text-lg text-muted-foreground">
@@ -31,18 +35,18 @@ export default async function Home() {
         <div className="grid grid-cols-3 gap-6 mb-8">
             <div className="md:col-span-2 col-span-3 flex row-span-2 rounded-lg border bg-card shadow-lg overflow-hidden">
               {stickyArticle && (
-                <div className="relative h-full w-1/3">
+                <div className="relative h-full basis-[30%]">
                   <Image
                     src={stickyArticle.featuredImage || "/img/doleance_couv.png"}
                     alt={stickyArticle.title}
                     fill
-                    className="object-cover object-center"
+                    className="object-cover object-center "
                   />
                 </div>
               )}
               
-              <div className="flex flex-col flex-grow p-6">
-                <h2 className="w-full mb-4 pb-3 text-2xl font-serif font-light uppercase border-b-[1px]">à la une</h2>
+              <div className="flex flex-col basis-[70%] p-6">
+                <h2 className="mb-4 pb-3 text-2xl font-serif font-light uppercase border-b-[1px]">à la une</h2>
                 {stickyArticle && (
                   <>
                     <h3 className="mb-2 font-medium">
@@ -55,7 +59,7 @@ export default async function Home() {
                     />
                         <div className="flex flex-wrap gap-2 pt-2">
                         {stickyArticle.categories.map((category, index) => (
-                          <Badge key={`cat-${index}`} variant="secondary">            
+                          <Badge key={`cat-${index}`} variant="secondary" className="mx-0">            
                             <Link href={`/category/${stickyArticle.categoriesSlug[index]}`}>
                             {category}
                             </Link>
@@ -72,9 +76,6 @@ export default async function Home() {
                           <span>{formatDate(stickyArticle.date)}</span>
                         </div>
                       </div>
-                    <Button variant="outline" asChild>
-                      <Link href={`/article/${stickyArticle.slug}`}>Lire plus</Link>
-                    </Button>
                   </>
                 )}
               </div>
@@ -84,15 +85,21 @@ export default async function Home() {
             </div>
 
 
-
+    <div className="absolute inset-0 -z-10">
+      <div className="absolute top-[700px] left-0 h-[800px] w-[50vw] rounded-full bg-gradient-to-r from-pink-200 to-blue-200 opacity-20 blur-3xl"></div>
+      <div className="absolute top-[1200px] right-0 h-[800px] w-[40vw] rounded-full bg-gradient-to-r from-blue-200 to-pink-200 opacity-20 blur-3xl"></div>
+    </div>
         <div className="col-span-3 grid grid-cols-6 gap-6">
           {categories.map((category) => (
+            category.count > 0 && (
             <CategoryCard key={category.id} category={category}/>
+            )
           ))}
         </div>
 
         </div>
       )}
     </main>
+    </>
   )
 }

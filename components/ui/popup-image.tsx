@@ -45,10 +45,10 @@ export default function PopupImage({ image }: PopupImageProps) {
 
   return (
     <>
-      <div className="pb-6 px-6">
+      <div className="w-min pb-6 px-6 mx-auto">
         <Button
           variant="outline"
-          className="w-full"
+          className="w-min"
           onClick={() => setShowProgramme(true)}
         >
           Programme
@@ -68,7 +68,7 @@ export default function PopupImage({ image }: PopupImageProps) {
             className="bg-white p-8 rounded-lg max-w-2xl w-max relative shadow-lg"
           >
             <button
-              className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
+              className="absolute top-2 right-2 text-gray-500 hover:text-gray-700 "
               onClick={() => {
                 setShowProgramme(false);
               }}

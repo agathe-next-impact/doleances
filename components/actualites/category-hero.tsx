@@ -17,8 +17,7 @@ export default function CategoryHero({ category }: CategoryHeroProps) {
               Toutes les actualités
           </Link>
         </Badge>
-        <div className="h-1 w-16 rounded-full" />
-      </div>
+        </div>
       <h1 className="text-3xl md:text-4xl mb-4">{category}</h1>
       {category.description && (
         <div
