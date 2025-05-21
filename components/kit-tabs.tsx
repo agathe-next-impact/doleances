@@ -137,7 +137,7 @@ export default function KitTabs({ kits }: { kits: Kit[] }) {
                       <p className="text-sm font-semibold">{kit.contact.nom_de_la_personne}</p>
                     )}
                     {kit.contact?.mini_biographie && (
-                      <p className="text-sm">{kit.contact.mini_biographie}</p>
+                      <p className="text-sm" dangerouslySetInnerHTML={{__html:kit.contact.mini_biographie}} />
                     )}
                   </div>
                 </div>
