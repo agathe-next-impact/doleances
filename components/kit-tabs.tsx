@@ -65,7 +65,7 @@ export default function KitTabs({ kits }: { kits: Kit[] }) {
         </div>
         <TabsList className="flex flex-wrap gap-2 p-4 bg-white">
           {kitsWithFiles.map((kit, index) => (
-            <TabsTrigger key={index} value={`kit-${index}`}>
+            <TabsTrigger key={index} value={`kit-${index}`} className="text-lg">
               {kit.titre}
             </TabsTrigger>
           ))}
