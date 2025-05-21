@@ -17,6 +17,11 @@ export default async function Home() {
   const stickyArticle = articles[0]
 
   return (
+    <>
+    <div className="absolute inset-0 -z-10">
+      <div className="absolute top-[100px] left-0 h-[500px] w-[50vw] rounded-full bg-gradient-to-r from-pink-200 to-blue-200 opacity-20 blur-3xl"></div>
+      <div className="absolute top-[500px] right-0 h-[400px] w-[40vw] rounded-full bg-gradient-to-r from-blue-200 to-pink-200 opacity-20 blur-3xl"></div>
+    </div>
     <main className="container mx-auto md:p-8 p-4">
         <div className="py-8 text-center">
           <h1 className="">L'actualité des doléances</h1> 
@@ -81,7 +86,10 @@ export default async function Home() {
             </div>
 
 
-
+    <div className="absolute inset-0 -z-10">
+      <div className="absolute top-[700px] left-0 h-[800px] w-[50vw] rounded-full bg-gradient-to-r from-pink-200 to-blue-200 opacity-20 blur-3xl"></div>
+      <div className="absolute top-[1200px] right-0 h-[800px] w-[40vw] rounded-full bg-gradient-to-r from-blue-200 to-pink-200 opacity-20 blur-3xl"></div>
+    </div>
         <div className="col-span-3 grid grid-cols-6 gap-6">
           {categories.map((category) => (
             <CategoryCard key={category.id} category={category}/>
@@ -91,5 +99,6 @@ export default async function Home() {
         </div>
       )}
     </main>
+    </>
   )
 }

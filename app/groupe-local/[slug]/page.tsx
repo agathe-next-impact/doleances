@@ -181,6 +181,11 @@ export default async function GroupeLocalPage({ params }: { params: { slug: stri
     postsByCategory.sort((a, b) => b.posts.length - a.posts.length)
 
     return (
+    <>
+    <div className="absolute inset-0 -z-10">
+      <div className="absolute top-0 left-0 h-[500px] w-[40vw] rounded-full bg-gradient-to-r from-pink-200 to-blue-200 opacity-20 blur-3xl"></div>
+      <div className="absolute bottom-0 right-0 h-[400px] w-[40vw] rounded-full bg-gradient-to-r from-blue-200 to-pink-200 opacity-20 blur-3xl"></div>
+    </div>
       <div className="container mx-auto md:p-8 p-4">
         <div className="px-4 py-8 mx-auto">
           {/* En-tête du groupe local avec image de fond et overlay */}
@@ -204,8 +209,8 @@ export default async function GroupeLocalPage({ params }: { params: { slug: stri
           {/* Informations de contact et localisation */}
           <div className="grid md:grid-cols-2 gap-6 mb-8">
             {/* Colonne de gauche: Informations de contact */}
-            <div className="bg-muted/30 rounded-lg p-6">
-              <h2 className="text-xl font-semibold mb-4">Informations de contact</h2>
+            <div className="bg-white border shadow rounded-lg p-6">
+              <p className="text-xl font-semibold mb-4">Informations de contact</p>
               
               <div className="space-y-4">
 
@@ -271,7 +276,7 @@ export default async function GroupeLocalPage({ params }: { params: { slug: stri
 
             {/* Colonne de droite: Carte */}
             {(coordinates || address) && (
-              <div className="rounded-lg overflow-hidden">
+              <div className="border shadow rounded-lg overflow-hidden">
                 <StaticMap
                   address={address}
                   latitude={coordinates?.lat}
@@ -446,6 +451,7 @@ export default async function GroupeLocalPage({ params }: { params: { slug: stri
           )}
         </div>
       </div>
+      </>
     )
   } catch (error) {
     console.error("Error in GroupeLocalPage:", error)

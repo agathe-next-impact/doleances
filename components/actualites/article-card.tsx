@@ -135,13 +135,6 @@ export default function ArticleCard({ post }: ArticleCardProps) {
           className="object-cover rounded-t-lg"
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
         />
-        {isEvent && (
-          <div className="absolute top-2 right-2">
-            <Badge variant="secondary" className="bg-primary text-primary-foreground">
-              Événement
-            </Badge>
-          </div>
-        )}
       </div>
       <CardHeader className="pb-2">
         <CardTitle className="text-lg">

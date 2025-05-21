@@ -14,9 +14,14 @@ export default async function Page() {
     bd.map((image) => fetchAttachmentById(image))
   );
   const imageDeUne = await fetchAttachmentById(page?.acf?.image_de_une);
-  console.log("imageDeUne", imageDeUne.source_url);
 
   return (
+    <>
+    <div className="absolute inset-0 -z-10">
+      <div className="absolute top-0 left-0 h-[500px] w-[40vw] rounded-full bg-gradient-to-r from-pink-200 to-blue-200 opacity-20 blur-3xl"></div>
+      <div className="absolute bottom-0 right-0 h-[400px] w-[40vw] rounded-full bg-gradient-to-r from-blue-200 to-pink-200 opacity-20 blur-3xl"></div>
+    </div>
+    
     <div className="container mx-auto md:p-8 p-4">
       <div className="mb-12 text-center">
         <h1 className="mb-4 text-43xl font-light tracking-tight">
@@ -34,7 +39,7 @@ export default async function Page() {
         <div className="h-max flex flex-col col-span-2 gap-6 overflow-hidden">
           {page?.acf?.image_de_une && (
             <>
-              <div className="h-full w-full flex flex-col flex-grow justify-between">
+              <div className="h-full w-full flex flex-col flex-grow justify-between p-6 border rounded-lg bg-card shadow-lg">
                 <h2 className="w-full mb-4 pb-3 text-2xl font-serif font-light uppercase border-b-[1px]">
                   La cagnotte
                 </h2>
@@ -81,7 +86,7 @@ export default async function Page() {
             </div>
           </div>
         </div>
-        <div className="h-full flex flex-col col-span-4 flex-grow p-6 justify-between rounded-lg border bg-card shadow-lg">
+        <div className="h-max flex flex-col col-span-4 flex-grow p-6 justify-between rounded-lg border bg-card shadow-lg">
           <div>
             <p className="font-serif text-2xl">
               {page?.acf?.date_de_debut && (
@@ -102,7 +107,7 @@ export default async function Page() {
             {page?.acf?.lieu_de_levenement?.city}
           </div>
 
-          <p className="text-lg">
+          <p className="text-lg mt-8">
             {page?.acf?.intro && (
               <span
                 className="mb-4 text-base"
@@ -139,6 +144,11 @@ export default async function Page() {
           </div>
         </div>
       </section>
+
+    <div className="absolute inset-0 -z-10">
+      <div className="absolute top-[1000px] left-0 h-[500px] w-[50vw] rounded-full bg-gradient-to-r from-pink-200 to-blue-200 opacity-20 blur-3xl"></div>
+      <div className="absolute top-[1500px] right-0 h-[400px] w-[40vw] rounded-full bg-gradient-to-r from-blue-200 to-pink-200 opacity-20 blur-3xl"></div>
+    </div>
       <section className="mb-8 grid gap-12 grid-cols-3">
         <div className="flex flex-col col-span-4 h-full w-full justify-between rounded-lg border bg-card shadow-lg overflow-hidden">
           <div className="flex md:flex-row flex-col justify-between gap-8 p-6">
@@ -173,6 +183,10 @@ export default async function Page() {
         </div>
       </section>
 
+    <div className="absolute inset-0 -z-10">
+      <div className="absolute top-[2400px] left-0 h-[500px] w-[50vw] rounded-full bg-gradient-to-r from-pink-200 to-blue-200 opacity-20 blur-3xl"></div>
+      <div className="absolute top-[1800px] right-0 h-[400px] w-[40vw] rounded-full bg-gradient-to-r from-blue-200 to-pink-200 opacity-20 blur-3xl"></div>
+    </div>
       <section className="w-full h-max mb-12 flex flex-col gap-12 md:grid md:grid-cols-6 md:gap-12">
         {imagesBd.map((image) => (
           <div
@@ -190,5 +204,6 @@ export default async function Page() {
         ))}
       </section>
     </div>
+    </>
   );
 }

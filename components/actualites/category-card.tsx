@@ -76,11 +76,10 @@ export default function CategoryCard({ category }: CategoryCardProps) {
                   </div>
                   <div className="flex flex-col w-2/3">
                     <div dangerouslySetInnerHTML={{ __html: post.title.rendered }} />
-                    {!post.acf?.date_de_levenement && (
+                    {!post.acf?.descriptif && (
                     <div 
-                      className="text-sm text-muted-foreground line-clamp-2 mb-4">
-                      {post.acf?.descriptif.replace(/<\/?[^>]+(>|$)/g, "")}
-                    </div>
+                      className="text-sm text-muted-foreground line-clamp-2 mb-4"
+                      dangerouslySetInnerHTML={{ __html: post.acf?.descriptif }} /> 
                     )}  
                     <div className="text-xs text-muted-foreground">
                     {post.acf?.date_de_levenement && (

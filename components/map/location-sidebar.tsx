@@ -63,7 +63,7 @@ export default function LocationSidebar({
 
   
   return (
-    <div className="w-full md:w-1/3 md:mt-0 bg-white border-l border-gray-200">
+    <div className="w-full md:w-1/3 md:mt-0 border-l border-gray-200">
       {location ? (
         <div className="px-4 h-full flex flex-col">
           <div className="flex justify-between items-center">
@@ -146,7 +146,7 @@ export default function LocationSidebar({
                     {departementLocations.map((loc) => (
                       <div
                         key={loc.id}
-                        className="p-3 border border-gray-200 rounded-md hover:bg-gray-50 cursor-pointer"
+                        className="p-3 bg-white border border-gray-200 rounded-md hover:bg-gray-50 cursor-pointer"
                         onClick={() => onLocationSelect(loc)}
                       >
                         <div className="flex items-center gap-2">

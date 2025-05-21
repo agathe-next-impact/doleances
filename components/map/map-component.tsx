@@ -299,7 +299,7 @@ const { isLoaded, loadError } = useJsApiLoader({
 
   return (
     <div className="flex flex-col h-full">
-      <div className="py-4 bg-white">
+      <div className="py-4">
         <Select
           value={selectedDepartement || ""}
           onValueChange={(value) => {
