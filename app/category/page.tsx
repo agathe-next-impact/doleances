@@ -11,7 +11,6 @@ import Verbatim from "@/components/verbatim"
 
 export default async function Home() {
   const categories = await fetchCategories()
-  // order by count
   categories.sort((a, b) => b.count - a.count)
   const articles = await fetchLastThreePosts()
   const stickyArticle = articles[0]
@@ -36,18 +35,18 @@ export default async function Home() {
         <div className="grid grid-cols-3 gap-6 mb-8">
             <div className="md:col-span-2 col-span-3 flex row-span-2 rounded-lg border bg-card shadow-lg overflow-hidden">
               {stickyArticle && (
-                <div className="relative h-full w-1/3">
+                <div className="relative h-full basis-[30%]">
                   <Image
                     src={stickyArticle.featuredImage || "/img/doleance_couv.png"}
                     alt={stickyArticle.title}
                     fill
-                    className="object-cover object-center"
+                    className="object-cover object-center "
                   />
                 </div>
               )}
               
-              <div className="flex flex-col flex-grow p-6">
-                <h2 className="w-full mb-4 pb-3 text-2xl font-serif font-light uppercase border-b-[1px]">à la une</h2>
+              <div className="flex flex-col basis-[70%] p-6">
+                <h2 className="mb-4 pb-3 text-2xl font-serif font-light uppercase border-b-[1px]">à la une</h2>
                 {stickyArticle && (
                   <>
                     <h3 className="mb-2 font-medium">
@@ -92,7 +91,9 @@ export default async function Home() {
     </div>
         <div className="col-span-3 grid grid-cols-6 gap-6">
           {categories.map((category) => (
+            category.count > 0 && (
             <CategoryCard key={category.id} category={category}/>
+            )
           ))}
         </div>
 

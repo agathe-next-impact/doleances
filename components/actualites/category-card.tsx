@@ -70,17 +70,18 @@ export default function CategoryCard({ category }: CategoryCardProps) {
                       src={post._embedded?.["wp:featuredmedia"]?.[0]?.source_url ?? "/img/doleance_couv.png"}
                       alt={post.title.rendered}
                       fill
-                      className="object-cover rounded"
+                      className="object-cover rounded border shadow-sm"
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     />
                   </div>
-                  <div className="flex flex-col w-2/3">
-                    <div dangerouslySetInnerHTML={{ __html: post.title.rendered }} />
-                    {!post.acf?.descriptif && (
-                    <div 
-                      className="text-sm text-muted-foreground line-clamp-2 mb-4"
-                      dangerouslySetInnerHTML={{ __html: post.acf?.descriptif }} /> 
-                    )}  
+                  <div className="flex flex-col w-2/3 text-lg">
+                    <div className="font-semibold" dangerouslySetInnerHTML={{ __html: post.title.rendered }} />
+                    {!post.acf?.date_de_levenement && (
+                      <div 
+                        className="text-muted-foreground line-clamp-6 mb-4"
+                        dangerouslySetInnerHTML={{ __html: post.excerpt.rendered }} 
+                      /> 
+                    )} 
                     <div className="text-xs text-muted-foreground">
                     {post.acf?.date_de_levenement && (
                       <div className="flex items-center gap-1.5">

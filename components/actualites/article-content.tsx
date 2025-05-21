@@ -349,7 +349,7 @@ console.log("ACF Fields:", acfFields)
                   ["auteur", "lien_de_la_publication", "date_de_la_publication", "auteur_et_media", "lien_vers_larticle"].includes(key)
                   ) && (
                   <>
-                  <div className="ml-8 px-8 py-4 bg-muted/30 rounded-lg">
+                  <div className="ml-2 rounded-lg">
                   <dl className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <>
                       <div className="space-y-1">
@@ -362,7 +362,7 @@ console.log("ACF Fields:", acfFields)
                               href={attachedFile}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="text-primary hover:underline ml-2"
+                              className="text-primary hover:underline"
                             >
                               Télécharger
                             </a>
@@ -374,7 +374,7 @@ console.log("ACF Fields:", acfFields)
                           <>
                             <dt className="text-sm font-medium text-muted-foreground capitalize">Auteur</dt>
                             <dd className="text-sm">
-                              <div className="text-primary hover:underline ml-2">
+                              <div className="text-primary hover:underline">
                                 {post.acf.auteur}
                               </div>
                             </dd>
@@ -388,7 +388,7 @@ console.log("ACF Fields:", acfFields)
                                 href={post.acf.lien_de_la_publication}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="text-primary hover:underline ml-2"
+                                className="text-primary hover:underline"
                               >
                                 {post.acf.lien_de_la_publication}
                               </a>
@@ -399,7 +399,7 @@ console.log("ACF Fields:", acfFields)
                           <>
                             <dt className="text-sm font-medium text-muted-foreground capitalize">Date de la publication</dt>
                             <dd className="text-sm">
-                              <div className="text-primary hover:underline ml-2">
+                              <div className="text-primary hover:underline">
                                 <DateFormat dateStr={post.acf.date_de_la_publication} />
                               </div>
                             </dd>
@@ -409,7 +409,7 @@ console.log("ACF Fields:", acfFields)
                           <>
                             <dt className="text-sm font-medium text-muted-foreground capitalize">Média</dt>
                             <dd className="text-sm">
-                              <div className="text-primary hover:underline ml-2">
+                              <div>
                                 {post.acf.auteur_et_media}
                               </div>
                             </dd>
@@ -423,7 +423,7 @@ console.log("ACF Fields:", acfFields)
                                 href={post.acf.lien_vers_larticle}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="text-primary hover:underline ml-2"
+                                className="text-primary hover:underline"
                               >
                                 {post.acf.lien_vers_larticle}
                               </a>
@@ -445,16 +445,27 @@ console.log("ACF Fields:", acfFields)
       {/* Affichage du contenu principal de l'article */}
 
           {post.acf?.descriptif && (
-            <div className="flex items-center gap-2 px-8 py-4">
+            <div className="gap-2 py-4">
               <div className="text-sm text-muted-foreground">
                 <div dangerouslySetInnerHTML={{ __html: post.acf.descriptif }} />
               </div>
             </div>
         )}
 
+        {post?.content.rendered && (
+            <article className="gap-2 mt-4">
+              <div
+                dangerouslySetInnerHTML={{
+                  __html:
+                    post?.content.rendered ??
+                    "",
+                }}
+              />
+            </article>
+        )}  
 
           {post.acf?.contenu_de_larticle && (
-            <article className="flex items-center gap-2 p-8 mt-4 bg-white border shadow-sm rounded-lg">
+            <article className="gap-2 mt-4">
               <div
                 dangerouslySetInnerHTML={{
                   __html:
@@ -465,20 +476,18 @@ console.log("ACF Fields:", acfFields)
             </article>
         )}  
           {post.acf?.contenu_de_la_publication && (
-            <article className="flex items-center gap-2 p-8 mt-8 bg-white border shadow-sm rounded-lg">
+            <article className="gap-2 mt-8">
               <div
-                dangerouslySetInnerHTML={{
-                  __html:
-                    post.acf?.contenu_de_la_publication ??
-                    "",
-                }}
+              dangerouslySetInnerHTML={{
+                __html: post.acf?.contenu_de_la_publication ?? "",
+              }}
               />
             </article>
         )}  
 
       {isEvent && (post.acf?.lieu_de_levenement || eventAddress) && (
-        <div className="mb-8">
-          <h2 className="text-xl font-semibold mb-4">Localisation</h2>
+        <div className="my-8">
+          <h2 className="text-xl font-sansserif font-semibold mb-4">Localisation</h2>
           <StaticMap
             address={eventAddress}
             latitude={

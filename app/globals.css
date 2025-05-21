@@ -70,7 +70,7 @@
     @apply text-3xl;
   }
   p {
-    @apply py-2 font-sansserif text-base leading-normal;
+    @apply py-2 font-sansserif leading-normal;
   }
   li {
     @apply ml-4 pl-4 py-2 list-disc;
@@ -92,3 +92,4 @@
 button:focus {
   --tw-ring-offset-width: 0 !important;
 }
+

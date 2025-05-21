@@ -11,11 +11,11 @@ interface Article {
   id: number
   slug: string
   title: string
-  excerpt: string
   descriptif?: string
   date_de_levenement?: string
   heure_de_levenement?: string
   lieu_de_levenement?: string
+  excerpt: string
   date: string
   author: string
   categories: string[]
@@ -46,12 +46,12 @@ export function ArticleCardHome({ article }: ArticleCardProps) {
       <CardHeader className="pl-0">
         <CardTitle className="line-clamp-2">
           <Link href={`/article/${article.slug}`} className="hover:underline">
-            {article.title}
+            <span dangerouslySetInnerHTML={{ __html: article.title}} />
           </Link>
         </CardTitle>
       </CardHeader>
       <CardContent className="flex-grow pl-0">
-        <span dangerouslySetInnerHTML={{ __html: article?.descriptif || "" }} />
+        <span className="line-clamp-3" dangerouslySetInnerHTML={{ __html: article?.excerpt || "" }} />
       </CardContent>
       <CardFooter className="flex flex-col items-start gap-2 pl-0">
         <div className="flex flex-wrap gap-2">
