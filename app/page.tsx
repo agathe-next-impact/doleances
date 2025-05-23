@@ -190,7 +190,7 @@ export default async function Home() {
       </section>  
 
       <div className="absolute inset-0 -z-10">
-        <div className="absolute top-[32300px] left-0 h-full w-[50vw] rounded-full bg-gradient-to-r from-pink-200 to-blue-200 opacity-20 blur-3xl"></div>
+        <div className="absolute top-[3200px] left-0 h-full w-[50vw] rounded-full bg-gradient-to-r from-pink-200 to-blue-200 opacity-20 blur-3xl"></div>
         <div className="absolute top-[3400px] right-0 h-[400px] w-[50vw] rounded-full bg-gradient-to-r from-blue-200 to-pink-200 opacity-20 blur-3xl"></div>
       </div>
       <section className="mb-24 ">
