@@ -119,7 +119,7 @@ export default async function Home() {
       <div className="absolute top-[1400px] right-0 h-[400px] w-[50vw] rounded-full bg-gradient-to-r from-blue-200 to-pink-200 opacity-20 blur-3xl"></div>
     </div>
       <section className="mb-8 grid gap-12 md:grid-cols-4">
-        <div className="h-max flex flex-col md:col-span-2 shrink rounded-lg border bg-card shadow-lg overflow-hidden">
+        <div className="h-max flex flex-col md:col-span-2 md:row-span-1 shrink rounded-lg border bg-card shadow-lg overflow-hidden">
           <div className="flex flex-col flex-grow justify-between p-6">
               <div>
               <h2 className="w-full mb-4 pb-3 text-2xl font-serif font-light uppercase border-b-[1px]">Les Etats généraux communaux</h2>
@@ -135,7 +135,7 @@ export default async function Home() {
                 </Button>
         </div>
         </div> 
-        <div className="h-max flex flex-col md:col-span-2 col-span-1 rounded-lg border bg-card shadow-lg overflow-hidden">
+        <div className="h-max flex flex-col md:col-span-2 col-span-1 md:row-span-2 rounded-lg border bg-card shadow-lg overflow-hidden">
         <div className="flex flex-col flex-grow justify-between p-6">
               <h2 className="w-full pb-3 text-2xl font-serif font-light uppercase border-b-[1px]">Les groupes locaux</h2>
                 <div
@@ -152,7 +152,7 @@ export default async function Home() {
               </Button>
           </div>
           </div> 
-        <div className="flex flex-col md:col-span-2 col-span-1 rounded-lg border bg-card shadow-lg overflow-hidden">
+        <div className="h-max flex flex-col md:col-span-2 col-span-1 md:row-span-1 rounded-lg border bg-card shadow-lg overflow-hidden">
           <div className="flex flex-col flex-grow justify-between p-6">
                   <div>
                   <h2 className="w-full mb-4 pb-3 text-2xl font-serif font-light uppercase border-b-[1px]">Participer</h2>
