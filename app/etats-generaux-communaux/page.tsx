@@ -42,13 +42,13 @@ export default async function Page () {
                 }}
                 />
                 <Button variant="outline" className="w-full mt-4">
-                  <Link href="/#kits" target="_blank" rel="noopener noreferrer">
+                  <Link href="/etats-generaux-communaux/#kits" rel="noopener noreferrer">
                     Accéder aux kits
                   </Link>
                 </Button>
             </div>            
               )}
-            <div className="h-full flex flex-col col-span-4 flex-grow p-6 ">
+            <div className="h-full flex flex-col col-span-4 flex-grow p-6 mt-8">
             <Verbatim />
             </div>
           </div>
@@ -68,8 +68,8 @@ export default async function Page () {
       </section>
 
       
-      <section className="w-full h-max mb-12 flex flex-col gap-12 md:grid md:grid-cols-6 md:gap-12">                     
-        <div className="h-max col-span-6 flex flex-col overflow-hidden  p-6">
+      <section id="kits" className="w-full h-max mb-12 flex flex-col gap-12 md:grid md:grid-cols-6 md:gap-12">                     
+        <div className="h-max col-span-6 flex flex-col overflow-hidden">
             <div className="items-end overflow-hidden mb-8">
               <KitTabs kits={page?.acf?.kit ?? []} />
 

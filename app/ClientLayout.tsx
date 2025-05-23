@@ -45,7 +45,7 @@ export default function ClientLayout({
   }, [])
 
   return (
-    <html lang="fr" suppressHydrationWarning>
+    <html lang="fr" suppressHydrationWarning className="scroll-smooth">
       <head>
         {/* Ajouter les styles pour Leaflet */}
         <style>{`

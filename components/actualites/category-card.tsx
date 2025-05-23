@@ -64,8 +64,8 @@ export default function CategoryCard({ category }: CategoryCardProps) {
           <ul className="space-y-10">
             {recentPosts.slice(0, 2).map((post) => (
               <li key={post.id} className="text-sm">
-                <Link href={`/article/${post.slug}`} className="flex gap-8">
-                  <div className="relative h-28 w-1/3 mb-2">
+                <Link href={`/article/${post.slug}`} className="flex md:gap-8 gap-2 md:flex-row flex-col">
+                  <div className="relative h-28 md:w-1/3 w-full mb-2">
                     <Image
                       src={post._embedded?.["wp:featuredmedia"]?.[0]?.source_url ?? "/img/doleance_couv.png"}
                       alt={post.title.rendered}
@@ -74,7 +74,7 @@ export default function CategoryCard({ category }: CategoryCardProps) {
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     />
                   </div>
-                  <div className="flex flex-col w-2/3 text-lg">
+                  <div className="flex flex-col md:w-2/3 w-full text-lg">
                     <div className="font-semibold" dangerouslySetInnerHTML={{ __html: post.title.rendered }} />
                     {!post.acf?.date_de_levenement && (
                       <div 

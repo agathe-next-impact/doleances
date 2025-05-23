@@ -33,35 +33,53 @@ export default async function Home() {
               </div>
       ) : (
         <div className="grid grid-cols-3 gap-6 mb-8">
-            <div className="md:col-span-2 col-span-3 flex row-span-2 rounded-lg border bg-card shadow-lg overflow-hidden">
               {stickyArticle && (
-                <div className="relative h-full basis-[30%]">
-                  <Image
-                    src={stickyArticle.featuredImage || "/img/doleance_couv.png"}
-                    alt={stickyArticle.title}
-                    fill
-                    className="object-cover object-center "
-                  />
-                </div>
-              )}
-              
-              <div className="flex flex-col basis-[70%] p-6">
-                <h2 className="mb-4 pb-3 text-2xl font-serif font-light uppercase border-b-[1px]">à la une</h2>
-                {stickyArticle && (
-                  <>
-                    <h3 className="mb-2 font-medium">
-                      <Link href={`/article/${stickyArticle.slug}`}>
-                        {stickyArticle.title}
-                      </Link></h3>
-                    <div
-                      className="mb-4 flex-grow line-clamp-3 text-sm text-muted-foreground"
-                      dangerouslySetInnerHTML={{ __html: stickyArticle.descriptif }}
+                <div className="md:col-span-2 col-span-3 flex row-span-2 rounded-lg border bg-card shadow-lg overflow-hidden">
+                  {stickyArticle.featuredImage && (
+                  <div className="relative h-full basis-[30%]">
+                    <Image
+                      src={
+                        typeof stickyArticle.featuredImage === "string"
+                          ? stickyArticle.featuredImage
+                          : "/img/doleance_couv.png"
+                      }
+                      alt={
+                        typeof stickyArticle.title === "string"
+                          ? stickyArticle.title
+                          : stickyArticle.title?.rendered || ""
+                      }
+                      fill
+                      className="object-cover object-center "
                     />
-                        <div className="flex flex-wrap gap-2 pt-2">
-                        {stickyArticle.categories.map((category, index) => (
-                          <Badge key={`cat-${index}`} variant="secondary" className="mx-0">            
-                            <Link href={`/category/${stickyArticle.categoriesSlug[index]}`}>
-                            {category}
+                  </div>
+                  )}
+
+                  <div className="flex flex-col md:basis-[70%] basis-full p-6">
+                    <h2 className="mb-4 pb-3 text-2xl font-serif font-light uppercase border-b-[1px]">à la une</h2>
+                    <>
+                      <h3 className="mb-2 font-medium">
+                        <Link href={`/article/${typeof stickyArticle.slug === "string" ? stickyArticle.slug : stickyArticle.slug?.rendered || ""}`}>
+                          {typeof stickyArticle.title === "string"
+                            ? stickyArticle.title
+                            : stickyArticle.title?.rendered || ""}
+                        </Link>
+                      </h3>
+                      <div
+                        className="mb-4 flex-grow text-sm text-muted-foreground"
+                        dangerouslySetInnerHTML={{
+                          __html:
+                            typeof stickyArticle.excerpt === "string"
+                              ? stickyArticle.excerpt
+                              : stickyArticle.excerpt?.rendered || "",
+                        }}
+                      />
+                      <div className="flex flex-wrap gap-2 pt-2">
+                        {(stickyArticle.categories ?? []).map((category: any, index: number) => (
+                          <Badge key={`cat-${index}`} variant="secondary" className="mx-0">
+                            <Link href={`/category/${category.slug || category.id || ""}`}>
+                              {typeof category === "string"
+                                ? category
+                                : category.name || ""}
                             </Link>
                           </Badge>
                         ))}
@@ -76,11 +94,11 @@ export default async function Home() {
                           <span>{formatDate(stickyArticle.date)}</span>
                         </div>
                       </div>
-                  </>
-                )}
-              </div>
-            </div>
-            <div className="md:col-span-1 col-span-3 flex flex-col gap-6">
+                    </>
+                  </div>
+                </div>
+              )}
+            <div className="md:col-span-1 col-span-3 flex flex-col my-8 gap-6">
               <Verbatim />
             </div>
 

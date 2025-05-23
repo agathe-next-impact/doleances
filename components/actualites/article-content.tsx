@@ -182,7 +182,7 @@ console.log("ACF Fields:", acfFields)
   })()
 
   return (
-    <div className="px-4 py-8 mx-auto">
+    <div className="md:py-8 py-0 mx-auto">
       {/* Nouvelle mise en page pour les événements avec image à gauche (50%) et détails à droite (50%) */}
       {isEvent ? (
         <div className="mb-8">
@@ -294,7 +294,7 @@ console.log("ACF Fields:", acfFields)
         </div>
       ) : (
         // Affichage standard pour les articles non-événements
-        <div className="flex">
+        <div className="flex md:flex-row flex-col gap-8">
           {/* Colonne de gauche: Image (33%) */}
           <div className="hidden md:block w-1/3 py-4 mx-auto">
 
@@ -309,8 +309,8 @@ console.log("ACF Fields:", acfFields)
                 </div>
           </div>
           {/* Colonne de droite: Détails de l'article (67%) */}
-          <div className="w-2/3 md:w-2/3 px-4 py-8">
-                <div className="w-max px-8 pt-8 mb-8 bg-white border shadow-sm rounded-lg">
+          <div className="md:w-2/3 w-full md:px-4 md:py-8 p-0">
+                <div className="md:w-max w-full px-8 pt-8 md:mb-8 mb-0 bg-white border shadow-sm rounded-lg">
                   <Badge variant="secondary" className="mb-4">
                   <Link href={`/category/${categorySlug}`}>
                       {categoryName}
@@ -349,7 +349,7 @@ console.log("ACF Fields:", acfFields)
                   ["auteur", "lien_de_la_publication", "date_de_la_publication", "auteur_et_media", "lien_vers_larticle"].includes(key)
                   ) && (
                   <>
-                  <div className="ml-2 rounded-lg">
+                  <div className="md:ml-2 ml-0 md:mt-0 mt-8">
                   <dl className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <>
                       <div className="space-y-1">
