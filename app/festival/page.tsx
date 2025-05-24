@@ -6,6 +6,13 @@ import PopupImage from "@/components/ui/popup-image";
 import Verbatim from "@/components/verbatim";
 import StaticMap from "@/components/map/static-map";
 import DateFormat from "@/components/date-format";
+import type { Metadata } from "next"
+
+export const metadata: Metadata = {
+  title: "Le Festival de mai 2025 - Les Doléances",
+  description: "Le Festival des doléances, un événement citoyen et artistique",
+}
+
 
 export default async function Page() {
   const page = await fetchPageBySlug("festival-mai-2025");
@@ -23,7 +30,7 @@ export default async function Page() {
     </div>
     
     <div className="container mx-auto md:p-8 p-4">
-      <div className="mb-12 text-center">
+      <div className="py-4 text-center">
         <h1 className="mb-4 text-43xl font-light tracking-tight">
           Festival des doléances
         </h1>

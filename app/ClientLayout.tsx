@@ -223,12 +223,12 @@ export default function ClientLayout({
                         </Link>
                       </li>
                       <li>
-                        <Link href="/cateogory/etats-generaux-communaux" className="text-muted-foreground hover:underline">
+                        <Link href="/etats-generaux-communaux" className="text-muted-foreground hover:underline">
                           Etats Généraux communaux
                         </Link>
                       </li>
                       <li>
-                        <Link href="/pages/a-propos" className="text-muted-foreground hover:underline">
+                        <Link href="/a-propos" className="text-muted-foreground hover:underline">
                           A propos
                         </Link>
                       </li>

@@ -4,6 +4,12 @@ import ArticleList from "@/components/actualites/article-list"
 import CategoryHero from "@/components/actualites/category-hero"
 import SearchFilter from "@/components/actualites/search-filter"
 import { Suspense } from "react"
+import type { Metadata } from "next"
+
+export const metadata: Metadata = {
+  title: "Actualités - Les Doléances",
+  description: "L'actualité des doléances",
+}
 
 
 

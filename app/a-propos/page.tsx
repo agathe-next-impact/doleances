@@ -10,7 +10,12 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import CardMap from "@/components/map/map-card";
+import type { Metadata } from "next"
 
+export const metadata: Metadata = {
+  title: "A propos de nous - Les Doléances",
+  description: "Présentation de la démarche et des groupes locaux",
+}
 
 export default async function DraggableCardDemo() {
   const images = await fetchRandomVerbatimImage()
@@ -51,7 +56,7 @@ export default async function DraggableCardDemo() {
       <div className="absolute top-[500px] right-0 h-[400px] w-[40vw] rounded-full bg-gradient-to-r from-blue-200 to-pink-200 opacity-20 blur-3xl"></div>
     </div>
      <div className="container mx-auto md:p-8 p-4">
-          <div className="mb-12 text-center">
+          <div className="py-4 text-center">
             <h1 className="mb-4 text-43xl font-light tracking-tight">A propos de la démarche</h1> 
             <p className="mx-auto mb-6 max-w-2xl text-lg text-muted-foreground">
             Collectif citoyen et populaire

@@ -7,6 +7,12 @@ import Link from "next/link"
 import Image from "next/image"
 import { formatDate } from "@/lib/utils"
 import Verbatim from "@/components/verbatim"
+import type { Metadata } from "next"
+
+export const metadata: Metadata = {
+  title: "Actualités - Les Doléances",
+  description: "L'actualité des doléances",
+}
 
 
 export default async function Home() {
@@ -22,7 +28,7 @@ export default async function Home() {
       <div className="absolute top-[500px] right-0 h-[400px] w-[40vw] rounded-full bg-gradient-to-r from-blue-200 to-pink-200 opacity-20 blur-3xl"></div>
     </div>
     <main className="container mx-auto md:p-8 p-4">
-        <div className="py-8 text-center">
+        <div className="py-4 text-center">
           <h1 className="">L'actualité des doléances</h1> 
           <p className="mx-auto mb-6 max-w-2xl text-lg text-muted-foreground">
           Wiki du corpus des doléances de 2018/2019</p>

@@ -1038,5 +1038,3 @@ export async function fetchRandomVerbatimImage(): Promise<VerbatimImage[] | null
     return null;
   }
 }
-
-

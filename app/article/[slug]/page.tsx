@@ -1,6 +1,15 @@
 import { fetchPostBySlug } from "@/lib/api"
 import { notFound } from "next/navigation"
 import ArticleContent from "@/components/actualites/article-content" 
+import type { Metadata } from "next"
+
+export const metadata: Metadata = {
+  title: "Actualités - Les Doléances",
+  description: "L'actualité des doléances",
+}
+
+
+
 export default async function ArticlePage({ params }: { params: { slug: string } }) {
   try {
     console.log(`Récupération de l'article avec l'ID ${params.slug}`)

@@ -1,5 +1,12 @@
 import ContactForm from "@/components/contact-form"
 import { getContactData } from "@/app/actions/contact-actions"
+import type { Metadata } from "next"
+
+export const metadata: Metadata = {
+  title: "Contribuer - Les Doléances",
+  description: "Participer ou Nous contacter pour faire avancer le projet",
+}
+
 
 export default async function ContactPage() {
   try {
@@ -30,8 +37,8 @@ export default async function ContactPage() {
       <div className="absolute top-0 left-0 h-[500px] w-[50vw] rounded-full bg-gradient-to-r from-pink-200 to-blue-200 opacity-20 blur-3xl"></div>
       <div className="absolute top-[500px] right-0 h-[400px] w-[40vw] rounded-full bg-gradient-to-r from-blue-200 to-pink-200 opacity-20 blur-3xl"></div>
     </div>
-      <main className="container mx-auto py-10 px-4">
-        <h1 className="mb-4 text-4xl font-light tracking-tight text-center">Contactez-nous</h1>
+      <main className="container mx-auto py-12 px-4">
+        <h1 className="mb-4 text-4xl pb-8 font-light tracking-tight text-center">Contactez-nous</h1>
         <ContactForm subjects={finalSubjects} />
       </main>
       </>

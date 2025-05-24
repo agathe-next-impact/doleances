@@ -1,6 +1,5 @@
 import Link from "next/link"
 import Image from "next/image"
-import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { ArticleCardHome } from "@/components/actualites/article-card-home"
 import { fetchLastThreePosts, fetchPageBySlug, fetchRandomVerbatimImage, fetchAttachmentById, fetchGroupesLocaux } from "@/lib/api"
@@ -13,6 +12,7 @@ import {
   DraggableCardContainer,
 } from "@/components/ui/draggable-card";
 import CardMap from "@/components/map/map-card";
+
 
 export default async function Home() {
   const articles = await fetchLastThreePosts()

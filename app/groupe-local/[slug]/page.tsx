@@ -7,6 +7,13 @@ import { MapPin, Mail, Phone, Globe, Calendar, Clock, Bookmark, User } from "luc
 import StaticMap from "@/components/map/static-map"
 import { Badge } from "@/components/ui/badge"
 import type { Post, Category } from "@/lib/api"
+import type { Metadata } from "next"
+
+export const metadata: Metadata = {
+  title: "Les groupes locaux - Les Doléances",
+  description: "Les groupes locaux des Doléances",
+}
+
 
 // Interface pour les articles regroupés par catégorie
 interface PostsByCategory {

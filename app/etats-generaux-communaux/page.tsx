@@ -4,7 +4,14 @@ import YoutubeEmbed from "@/components/ui/video";
 import Verbatim from "@/components/verbatim";
 import Link from "next/link";
 import dynamic from "next/dynamic";
-import { fetchAttachmentById, fetchPageBySlug } from "@/lib/api";
+import { fetchPageBySlug } from "@/lib/api";
+import type { Metadata } from "next"
+
+export const metadata: Metadata = {
+  title: "Etats Généraux Communaux - Les Doléances",
+  description: "Les Etats Généraux communaux des doléances",
+}
+
 
 const KitTabs = dynamic(() => import("@/components/kit-tabs"), { ssr: true });
 
@@ -20,7 +27,7 @@ export default async function Page () {
       <div className="absolute top-[500px] right-0 h-[400px] w-[40vw] rounded-full bg-gradient-to-r from-blue-200 to-pink-200 opacity-20 blur-3xl"></div>
     </div>
     <div className="container mx-auto md:p-8 p-4">
-      <div className="mb-12 text-center">
+      <div className="py-4 text-center">
         <h1 className="mb-4 text-43xl font-light tracking-tight">Etats Généraux communaux</h1> 
         <p className="mx-auto mb-6 max-w-2xl text-lg text-muted-foreground">
         Wiki du corpus des doléances de 2018/2019
