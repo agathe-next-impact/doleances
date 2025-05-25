@@ -14,6 +14,7 @@ export default async function Home() {
   categories.sort((a, b) => b.count - a.count)
   const articles = await fetchLastThreePosts()
   const stickyArticle = articles[0]
+  console.log("Sticky Article:", stickyArticle)
 
   return (
     <>
@@ -34,9 +35,9 @@ export default async function Home() {
       ) : (
         <div className="grid grid-cols-3 gap-6 mb-8">
               {stickyArticle && (
-                <div className="md:col-span-2 col-span-3 flex row-span-2 rounded-lg border bg-card shadow-lg overflow-hidden">
+                <div className="lg:col-span-2 col-span-3 flex row-span-2 rounded-lg border bg-card shadow-lg overflow-hidden">
                   {stickyArticle.featuredImage && (
-                  <div className="relative h-full basis-[30%]">
+                  <div className="relative md:block h-full lg:basis-[30%] hidden">
                     <Image
                       src={
                         typeof stickyArticle.featuredImage === "string"
@@ -54,7 +55,7 @@ export default async function Home() {
                   </div>
                   )}
 
-                  <div className="flex flex-col md:basis-[70%] basis-full p-6">
+                  <div className="flex flex-col lg:basis-[70%] basis-full p-6">
                     <h2 className="mb-4 pb-3 text-2xl font-serif font-light uppercase border-b-[1px]">à la une</h2>
                     <>
                       <h3 className="mb-2 font-medium">
@@ -74,15 +75,13 @@ export default async function Home() {
                         }}
                       />
                       <div className="flex flex-wrap gap-2 pt-2">
-                        {(stickyArticle.categories ?? []).map((category: any, index: number) => (
-                          <Badge key={`cat-${index}`} variant="secondary" className="mx-0">
-                            <Link href={`/category/${category.slug || category.id || ""}`}>
-                              {typeof category === "string"
-                                ? category
-                                : category.name || ""}
+                        {stickyArticle.categories && stickyArticle.categories[0] && (
+                          <Badge variant="secondary" className="mx-0">
+                            <Link href={`/category/${stickyArticle.categoriesSlug[0]}`}>
+                              {stickyArticle.categories[0]}
                             </Link>
                           </Badge>
-                        ))}
+                        )}
                       </div>
                       <div className="flex w-full items-center justify-between p-2 text-xs text-muted-foreground">
                         <div className="flex items-center gap-1">
@@ -98,7 +97,7 @@ export default async function Home() {
                   </div>
                 </div>
               )}
-            <div className="md:col-span-1 col-span-3 flex flex-col my-8 gap-6">
+            <div className="md:col-span-1 col-span-3 lg:flex flex-col hidden my-8 gap-6">
               <Verbatim />
             </div>
 

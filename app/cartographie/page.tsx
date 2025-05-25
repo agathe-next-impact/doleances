@@ -33,7 +33,7 @@ export default async function CartographiePage() {
         <h1 className="mb-4 text-3xl text-center md:text-4xl">Cartographie des groupes locaux</h1>
         <div className="md:w-[60%] w-[90%] mx-auto mb-6">
                 <div
-                className="mb-4 text-muted-foreground"
+                className="mb-4 text-center text-muted-foreground"
                 dangerouslySetInnerHTML={{
                   __html: page.acf?.texte_dintro,
                 }}

@@ -182,7 +182,7 @@ console.log("ACF Fields:", acfFields)
   })()
 
   return (
-    <div className="md:py-8 py-0 mx-auto">
+    <div className="lg:py-8 py-0 mx-auto">
       {/* Nouvelle mise en page pour les événements avec image à gauche (50%) et détails à droite (50%) */}
       {isEvent ? (
         <div className="mb-8">
@@ -294,11 +294,11 @@ console.log("ACF Fields:", acfFields)
         </div>
       ) : (
         // Affichage standard pour les articles non-événements
-        <div className="flex md:flex-row flex-col gap-8">
+        <div className="flex lg:flex-row flex-col lg:gap-8">
           {/* Colonne de gauche: Image (33%) */}
-          <div className="hidden md:block w-1/3 py-4 mx-auto">
+          <div className="w-full lg:w-1/3 py-4 mx-auto">
 
-                <div className="relative h-64 md:h-96 mb-8">
+                <div className="relative lg:h-64 md:h-48 h-36 mb-8">
                   <Image
                     src={featuredImage || "/img/placeholder.png"}
                     alt=""
@@ -309,8 +309,8 @@ console.log("ACF Fields:", acfFields)
                 </div>
           </div>
           {/* Colonne de droite: Détails de l'article (67%) */}
-          <div className="md:w-2/3 w-full md:px-4 md:py-8 p-0">
-                <div className="md:w-max w-full px-8 pt-8 md:mb-8 mb-0 bg-white border shadow-sm rounded-lg">
+          <div className="lg:w-2/3 w-full md:px-4 lg:py-8 p-à">
+                <div className="px-8 lg:pt-8 pt-4 md:mb-8 mb-0 bg-white border shadow-sm rounded-lg">
                   <Badge variant="secondary" className="mb-4">
                   <Link href={`/category/${categorySlug}`}>
                       {categoryName}

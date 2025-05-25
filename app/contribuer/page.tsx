@@ -31,7 +31,7 @@ export default async function ContactPage() {
       <div className="absolute top-[500px] right-0 h-[400px] w-[40vw] rounded-full bg-gradient-to-r from-blue-200 to-pink-200 opacity-20 blur-3xl"></div>
     </div>
       <main className="container mx-auto py-10 px-4">
-        <h1 className="mb-4 text-4xl font-light tracking-tight text-center">Contactez-nous</h1>
+        <h1 className="mb-12 text-4xl font-light tracking-tight text-center">Contactez-nous</h1>
         <ContactForm subjects={finalSubjects} />
       </main>
       </>

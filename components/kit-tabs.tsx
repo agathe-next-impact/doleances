@@ -70,7 +70,7 @@ export default function KitTabs({ kits }: { kits: Kit[] }) {
         </TabsTrigger>
         ))}
       </TabsList>
-      <div className="relative overflow-hidden min-h-[1600px] md:min-h-[1000px] mt-8">
+      <div className="relative overflow-hidden min-h-[1600px] sm:min-h-[1600px] lg:min-h-[1000px] mt-8">
         {kitsWithFiles.map((kit, index) => (
         <TabsContent key={index} value={`kit-${index}`} className="absolute inset-0 mt-8 mx-auto w-full">
           <motion.div
@@ -83,12 +83,12 @@ export default function KitTabs({ kits }: { kits: Kit[] }) {
           >
           <h3 className="my-8 text-xl font-semibold">{kit.titre}</h3>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div className="text-sm md:col-span-3 col-span-1">
+            <div className="text-sm lg:col-span-2 col-span-4">
             {kit.presentation_du_kit && (
               <div className="py-8 px-4 md:px-12 border rounded-lg bg-card shadow-lg" dangerouslySetInnerHTML={{ __html: kit.presentation_du_kit }} />
             )}
             </div>
-            <div className="col-span-1 w-full h-max flex flex-col gap-8 justify-self-end border rounded-lg bg-card shadow-lg p-4 md:p-8">
+            <div className="lg:col-span-2 col-span-4 w-full h-max flex flex-col gap-8 justify-self-end border rounded-lg bg-card shadow-lg p-4 md:p-8">
             {kit.fichiers_du_kit && kit.fichiers_du_kit.length > 0 && (
               <>
               {kit.fichiers_du_kit.map((file, fileIndex) => (
@@ -124,11 +124,11 @@ export default function KitTabs({ kits }: { kits: Kit[] }) {
             </div>
             </div>
             {kit.video && (
-            <div className="md:col-span-2 col-span-1 flex flex-col gap-4 h-max rounded-lg border bg-card shadow-lg overflow-hidden">
+            <div className="lg:col-span-2 col-span-4 flex flex-col gap-4 h-max rounded-lg border bg-card shadow-lg overflow-hidden">
               <YoutubeEmbed videoLink={kit.video}/>
             </div>
             )}
-            <div className="md:col-span-2 col-span-1 flex flex-col gap-4 rounded-lg border bg-card shadow-lg overflow-hidden p-4 md:p-8">
+            <div className="lg:col-span-2 col-span-4 flex flex-col gap-4 rounded-lg border bg-card shadow-lg overflow-hidden p-4 md:p-8">
             <h4 className="w-full mb-4 pb-3 text-xl font-serif font-light uppercase border-b-[1px]">Créateur</h4>
             {kit.contact?.nom_de_la_personne && (
               <p className="text-sm font-semibold">{kit.contact.nom_de_la_personne}</p>
