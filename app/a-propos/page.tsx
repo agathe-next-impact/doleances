@@ -15,6 +15,16 @@ import type { Metadata } from "next"
 export const metadata: Metadata = {
   title: "A propos de nous - Les Doléances",
   description: "Présentation de la démarche et des groupes locaux",
+  openGraph: {
+    title: "A propos de nous - Les Doléances",
+    description: "Présentation de la démarche et des groupes locaux",
+    images: [
+      {
+        url: "/img/logo.svg",
+        alt: "A propos de nous - Les Doléances",
+      },
+    ],
+  },
 }
 
 export default async function DraggableCardDemo() {

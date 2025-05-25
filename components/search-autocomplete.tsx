@@ -131,7 +131,7 @@ export function SearchAutocomplete({
                 {articles.map((article) => (
                   <button
                     key={article.id}
-                    className="flex w-full items-center px-4 py-2 ml-4 text-left text-sm hover:bg-accent"
+                    className="flex w-full items-center px-4 py-2 ml-4 text-left text-sm hover:text-primary"
                     onClick={() => handleSuggestionSelect(article.slug)}
                   >
                     {article.title
