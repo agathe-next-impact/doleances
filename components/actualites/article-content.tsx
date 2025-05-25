@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge"
 import { MapPin, Calendar, Users } from "lucide-react"
 import StaticMap from "@/components/map/static-map"
 import DateFormat, { TimeFormat } from "@/components/date-format"
+import ShareSocial from "@/components/ui/share-social"
 
 interface ArticleContentProps {
   post: Post
@@ -309,7 +310,7 @@ console.log("ACF Fields:", acfFields)
                 </div>
           </div>
           {/* Colonne de droite: Détails de l'article (67%) */}
-          <div className="lg:w-2/3 w-full md:px-4 lg:py-8 p-à">
+          <div className="lg:w-2/3 w-full md:px-4 lg:py-8 p-4">
                 <div className="px-8 lg:pt-8 pt-4 md:mb-8 mb-0 bg-white border shadow-sm rounded-lg">
                   <Badge variant="secondary" className="mb-4">
                   <Link href={`/category/${categorySlug}`}>
@@ -342,6 +343,7 @@ console.log("ACF Fields:", acfFields)
                         </Link>
                       </div>
                     )}
+                    
                   </div>
                 </div>
                 {acfFields.length > 0 && !isEvent && (
@@ -443,6 +445,12 @@ console.log("ACF Fields:", acfFields)
       )}
 
       {/* Affichage du contenu principal de l'article */}
+
+      
+            <ShareSocial
+            title={post.title.rendered}
+            url={`https://www.doleances.fr/article/${post.slug}`}
+          />
 
           {post.acf?.descriptif && (
             <div className="gap-2 py-4">
