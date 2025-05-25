@@ -17,6 +17,9 @@ import CardMap from "@/components/map/map-card";
 export default async function Home() {
   const articles = await fetchLastThreePosts()
   const accueil = await fetchPageBySlug("accueil")
+  const contribuer = await fetchPageBySlug("contribuer")
+  const etatsGeneraux = await fetchPageBySlug("etats-generaux-communaux")
+  const cartographie = await fetchPageBySlug("cartographie")
 
   const images = await fetchRandomVerbatimImage()
   const imagesObjects = await Promise.all(
@@ -47,7 +50,6 @@ export default async function Home() {
     },
   }));
 
-  const contribuer = await fetchPageBySlug("contribuer")
   
 
 
@@ -58,16 +60,17 @@ export default async function Home() {
       <div className="absolute bottom-0 right-0 h-[400px] w-[40vw] rounded-full bg-gradient-to-r from-blue-200 to-pink-200 opacity-20 blur-3xl"></div>
     </div>
     <div className="container mx-auto md:p-8 p-4">
-      <div className="mt-8 mb-12 md:mt-4 md:mt-8 text-center">
+      <div className="mt-8 mb-12 md:mt-8 text-center">
         <h1 className="mb-4 text-4xl font-light tracking-tight md:text-5xl">Les doléances</h1> 
         <p className="mx-auto mb-6 max-w-2xl text-lg text-muted-foreground">
         Wiki du corpus des doléances de 2018/2019
         </p>
       </div>
 
+{/* Hero section */}
       <section className="h-max mb-12 grid gap-12 grid-cols-6 place-items-start">
         {accueil && (
-        <div className="flex flex-col md:col-span-4 col-span-6 h-full justify-between rounded-lg border bg-card shadow-lg overflow-hidden">
+        <div className="flex flex-col lg:col-span-4 col-span-6 h-full justify-between rounded-lg border bg-card shadow-lg overflow-hidden">
             <div className="flex flex-col p-6">
               <h2 className="w-full mb-4 pb-3 text-2xl font-serif font-light uppercase border-b-[1px]">
                 {accueil?.acf?.carte_de_une?.titre}
@@ -89,48 +92,62 @@ export default async function Home() {
 
         )}
         
-        <div className="h-full flex flex-col md:col-span-2 col-span-6 grow gap-12"> 
-          <div className="flex flex-col row-span-2 overflow-hidden border rounded-lg bg-card shadow-lg">
+        <div className="flex lg:flex-col sm:flex-row flex-col lg:col-span-2 col-span-6 gap-12"> 
+          <div className="h-max flex flex-col overflow-hidden border rounded-lg bg-card shadow-lg">
             <Image 
               src="/img/festival_recto.jpg"
               alt="Image d'illustration"
               width={500}
               height={300}
-              className="object-contain w-full h-full mb-4 "
+              className="object-contain w-full mb-4 "
             />
+            {/*
             <div className="items-end">
             <PopupImage image="/img/festival_verso.jpg"/>
             </div>
+            */}
             
-            <Button variant="outline" asChild className="mb-8">
-              <Link href='/festival'>Découvrir le festival</Link>
+            <Button variant="outline" asChild className="mb-8 max-w-max">
+              <Link href='/festival'>Découvrir</Link>
             </Button>
           </div>           
-          <div className="flex flex-col flex-grow justify-start p-6">
+          <div className="flex flex-col justify-start p-6">
             <Verbatim />
           </div>
         </div>
       </section> 
 
+{/* Section des cartes d'introduction */}
     <div className="absolute inset-0 -z-10">
       <div className="absolute top-[900px] left-0 h-full w-[50vw] rounded-full bg-gradient-to-r from-pink-200 to-blue-200 opacity-20 blur-3xl"></div>
       <div className="absolute top-[1400px] right-0 h-[400px] w-[50vw] rounded-full bg-gradient-to-r from-blue-200 to-pink-200 opacity-20 blur-3xl"></div>
     </div>
-      <section className="mb-8 grid gap-12 md:grid-cols-3 grid-rows-2">
-        <div className="flex flex-col md:col-span-1 col-span-3 row-span-1 rounded-lg border bg-card shadow-lg overflow-hidden">
+      <section className="mb-8 grid gap-12 lg:grid-cols-4">
+        <div className="h-max flex flex-col lg:col-span-2 md:row-span-1 shrink rounded-lg border bg-card shadow-lg overflow-hidden">
           <div className="flex flex-col flex-grow justify-between p-6">
               <div>
               <h2 className="w-full mb-4 pb-3 text-2xl font-serif font-light uppercase border-b-[1px]">Les Etats généraux communaux</h2>
-              <p className="mb-6 line-clamp-3 text-muted-foreground">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut pellentesque tristique dolor, dictum mollis neque. Morbi nisl nisi, tempor vitae turpis id, posuere venenatis augue. Nam consectetur purus eu mi malesuada, venenatis congue felis interdum. Nullam vehicula est vitae est dictum, vel lobortis nisl fermentum. Donec dapibus sed lorem a convallis. Sed in risus augue. Aliquam a tortor sit amet nisl tincidunt porta rhoncus quis mauris. Quisque in suscipit nibh.</p>
-              </div>  
+                <div
+                className="gap-4 mb-4 text-muted-foreground"
+                dangerouslySetInnerHTML={{
+                  __html: etatsGeneraux?.acf?.carte_de_une,
+                }}
+                />              
+                </div>  
                 <Button variant="outline" asChild>
                   <Link href='/etats-generaux-communaux'>La démarche</Link>
                 </Button>
         </div>
         </div> 
-        <div className="flex flex-col md:col-span-1 col-span-3 row-span-2 rounded-lg border bg-card shadow-lg overflow-hidden">
-        <div className="flex flex-col flex-grow justify-between gap-4 p-6">
-              <h2 className="w-full mb-4 pb-3 text-2xl font-serif font-light uppercase border-b-[1px]">Les groupes locaux</h2>
+        <div className="h-max flex flex-col lg:col-span-2 col-span-1 md:row-span-2 rounded-lg border bg-card shadow-lg overflow-hidden">
+        <div className="flex flex-col flex-grow justify-between p-6">
+              <h2 className="w-full pb-3 text-2xl font-serif font-light uppercase border-b-[1px]">Les groupes locaux</h2>
+                <div
+                className="gap-4 my-4 text-muted-foreground"
+                dangerouslySetInnerHTML={{
+                  __html: cartographie?.acf?.texte_dintro ,
+                }}
+                /> 
               <CardMap
                 locations={mapLocations}
               /> 
@@ -139,7 +156,7 @@ export default async function Home() {
               </Button>
           </div>
           </div> 
-        <div className="flex flex-col md:col-span-1 col-span-3 row-span-1 rounded-lg border bg-card shadow-lg overflow-hidden">
+        <div className="h-max flex flex-col lg:col-span-2 col-span-1 md:row-span-1 rounded-lg border bg-card shadow-lg overflow-hidden">
           <div className="flex flex-col flex-grow justify-between p-6">
                   <div>
                   <h2 className="w-full mb-4 pb-3 text-2xl font-serif font-light uppercase border-b-[1px]">Participer</h2>
@@ -177,7 +194,7 @@ export default async function Home() {
       </section>  
 
       <div className="absolute inset-0 -z-10">
-        <div className="absolute top-[32300px] left-0 h-full w-[50vw] rounded-full bg-gradient-to-r from-pink-200 to-blue-200 opacity-20 blur-3xl"></div>
+        <div className="absolute top-[3200px] left-0 h-full w-[50vw] rounded-full bg-gradient-to-r from-pink-200 to-blue-200 opacity-20 blur-3xl"></div>
         <div className="absolute top-[3400px] right-0 h-[400px] w-[50vw] rounded-full bg-gradient-to-r from-blue-200 to-pink-200 opacity-20 blur-3xl"></div>
       </div>
       <section className="mb-24 ">

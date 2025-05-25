@@ -452,9 +452,7 @@ export default async function GroupeLocalPage({ params }: { params: { slug: stri
           )}
 
           {relatedPosts.length === 0 && (
-            <div className="text-center py-8 bg-muted/20 rounded-lg">
-              <p className="text-muted-foreground">Aucun article associé à ce groupe local pour le moment.</p>
-            </div>
+            ""
           )}
         </div>
       </div>

@@ -83,7 +83,7 @@
   color: black !important;
 }
 
-.left-sheet li, .cards li, footer li {
+.left-sheet li, .cards li, footer li, .search li {
   margin: 0;
   padding: 0;
   list-style: none;
@@ -91,5 +91,9 @@
 
 button:focus {
   --tw-ring-offset-width: 0 !important;
+}
+
+.container {
+  @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
 }
 

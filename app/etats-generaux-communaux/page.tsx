@@ -35,7 +35,7 @@ export default async function Page () {
       </div>
 
         <section className="w-full h-max mb-12 flex flex-col gap-12 md:grid md:grid-cols-6 md:gap-12">                     
-          <div className="h-max flex flex-col col-span-2 gap-4 overflow-hidden">            
+          <div className="h-max flex flex-col lg:col-span-2 col-span-6 gap-4 overflow-hidden">            
             <div className="items-end border rounded-lg bg-card shadow-lg overflow-hidden mb-8"> 
               <YoutubeEmbed videoLink={page.acf?.video || "https://www.youtube.com/embed/8bof5Anluk4?si=H5M7BGGsvWFUODBM"} />
             </div>
@@ -49,17 +49,17 @@ export default async function Page () {
                 }}
                 />
                 <Button variant="outline" className="w-full mt-4">
-                  <Link href="/#kits" target="_blank" rel="noopener noreferrer">
+                  <Link href="/etats-generaux-communaux/#kits" rel="noopener noreferrer">
                     Accéder aux kits
                   </Link>
                 </Button>
             </div>            
               )}
-            <div className="h-full flex flex-col col-span-4 flex-grow p-6 ">
+            <div className="h-full flex flex-col col-span-4 flex-grow p-6 mt-8">
             <Verbatim />
             </div>
           </div>
-          <div className="h-full flex flex-col col-span-4 flex-grow p-6 justify-between rounded-lg border bg-card shadow-lg">
+          <div className="h-full flex flex-col lg:col-span-4 col-span-6 flex-grow p-6 justify-between rounded-lg border bg-card shadow-lg">
             <h2 className="w-full mb-4 pb-3 text-2xl font-serif font-light uppercase border-b-[1px]">Plaidoyer</h2>       
             {page?.acf?.plaidoyer && (
               <div
@@ -75,8 +75,8 @@ export default async function Page () {
       </section>
 
       
-      <section className="w-full h-max mb-12 flex flex-col gap-12 md:grid md:grid-cols-6 md:gap-12">                     
-        <div className="h-max col-span-6 flex flex-col overflow-hidden  p-6">
+      <section id="kits" className="w-full h-max mb-12 flex flex-col gap-12 md:grid md:grid-cols-6 md:gap-12">                     
+        <div className="h-max col-span-6 flex flex-col overflow-hidden">
             <div className="items-end overflow-hidden mb-8">
               <KitTabs kits={page?.acf?.kit ?? []} />
 

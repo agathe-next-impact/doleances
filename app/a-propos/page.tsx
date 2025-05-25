@@ -65,7 +65,7 @@ export default async function DraggableCardDemo() {
 
           <section className="h-max mb-12 grid gap-12 grid-cols-6 place-items-end">
             {accueil && (
-            <div className="flex flex-col md:col-span-4 col-span-6 h-full justify-between rounded-lg border bg-card shadow-lg overflow-hidden">
+            <div className="flex flex-col lg:col-span-4 col-span-6 h-full justify-between rounded-lg border bg-card shadow-lg overflow-hidden">
                 <div className="flex flex-col p-6">
                   <h2 className="w-full mb-4 pb-3 text-2xl font-serif font-light uppercase border-b-[1px]">
                     Notre démarche
@@ -81,8 +81,8 @@ export default async function DraggableCardDemo() {
 
             )}
           
-          <div className="h-max flex flex-col md:col-span-2 col-span-6 gap-12">       
-            <div className="flex flex-col col-span-2 overflow-hidden border rounded-lg bg-card shadow-lg overflow-hidden">
+          <div className="h-max flex flex-col lg:col-span-2 col-span-6 gap-12">       
+            <div className="flex flex-col col-span-2 border rounded-lg bg-card shadow-lg overflow-hidden">
               <Image 
                 src={imageALaUne.source_url}
                 alt="Image d'illustration"
@@ -102,7 +102,7 @@ export default async function DraggableCardDemo() {
       <div className="absolute top-[1500px] right-0 h-[900px] w-[40vw] rounded-full bg-gradient-to-r from-blue-200 to-pink-200 opacity-20 blur-3xl"></div>
     </div>
           <section className="h-max mb-12 grid gap-12 grid-cols-6 place-items-end">
-          <div className="h-full w-full flex flex-col md:col-span-2 col-span-6 rounded-lg border bg-card shadow-lg overflow-hidden">
+          <div className="h-full w-full flex flex-col lg:col-span-2 col-span-6 rounded-lg border bg-card shadow-lg overflow-hidden">
             <div className="flex flex-col flex-grow justify-between content-stretch p-6">
                 <h2 className="w-full mb-4 pb-3 text-2xl font-serif font-light uppercase border-b-[1px]">
                   Les groupes locaux
@@ -115,7 +115,7 @@ export default async function DraggableCardDemo() {
                   </Button>
               </div>  
           </div>
-          <div className="flex flex-col md:col-span-4 col-span-6 h-full justify-betweenrounded-lg border bg-card shadow-lg overflow-hidden">
+          <div className="flex flex-col lg:col-span-4 col-span-6 h-full justify-betweenrounded-lg border bg-card shadow-lg overflow-hidden">
             <div className="w-full h-full flex flex-col p-6">
               <h2 className="w-full mb-4 pb-3 text-2xl font-serif font-light uppercase border-b-[1px]">
                 Le documentaire sur les doléances

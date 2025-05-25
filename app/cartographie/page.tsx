@@ -13,6 +13,15 @@ export default async function CartographiePage() {
 
   const page = await fetchPageBySlug("cartographie")
 
+  if (!page) {
+    return (
+      <div className="container mx-auto md:p-8 p-4">
+        <h1 className="mb-4 text-3xl text-center md:text-4xl">Cartographie des groupes locaux</h1>
+        <p className="text-center text-muted-foreground">Impossible de charger la page.</p>
+      </div>
+    );
+  }
+
   return (
     <>
     <div className="absolute inset-0 -z-10">
@@ -23,11 +32,20 @@ export default async function CartographiePage() {
       <div className="py-4">
         <h1 className="mb-4 text-3xl text-center md:text-4xl">Cartographie des groupes locaux</h1>
         <div className="md:w-[60%] w-[90%] mx-auto mb-6">
+<<<<<<< HEAD
           <p className="md:text-lg text-sm text-muted-foreground text-center">
           {page && page.acf?.texte_dintro ? (
             <span dangerouslySetInnerHTML={{ __html: page.acf?.texte_dintro }}></span>            
           ) : "Tous les groupes locaux de la France à rencontrer"}
           </p>
+=======
+                <div
+                className="mb-4 text-center text-muted-foreground"
+                dangerouslySetInnerHTML={{
+                  __html: page.acf?.texte_dintro,
+                }}
+                /> 
+>>>>>>> 95211440d33607b8d75b3a108839bf9b2068a9f9
         </div>
         <MapComponent />
       </div>
