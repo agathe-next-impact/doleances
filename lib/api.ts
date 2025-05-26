@@ -29,6 +29,7 @@ export interface Post {
   author: number
   slug: string
   link: string
+  featured_media?: number
   categories?: number[]
   acf?: {
     groupe_local?: string

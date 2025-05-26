@@ -161,14 +161,14 @@ export default async function DraggableCardDemo() {
                 Cahier de la colère et de l'espoir
               </p>
               {items.map((item) => (
-                <DraggableCardBody className={item.className}>
+                <DraggableCardBody key={item.image} className={item.className}>
                   <img
-                    src={item.image}
-                    alt={item.title}
-                    className="pointer-events-none relative z-10 w-[40rem] object-contain"
+                  src={item.image}
+                  alt={item.title}
+                  className="pointer-events-none relative z-10 w-[40rem] object-contain"
                   />
                   <h3 className="mt-4 text-center text-2xl font-bold text-neutral-700 dark:text-neutral-300">
-                    {item.title}
+                  {item.title}
                   </h3>
                 </DraggableCardBody>
               ))}
