@@ -10,16 +10,32 @@ import type React from "react"
 
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
   const post = await fetchPostBySlug(params.slug)
+  if (!post) {
+    return {
+      title: "Actualités - Les Doléances",
+      description: "L'actualité des doléances",
+      openGraph: {
+        title: "Actualités - Les Doléances",
+        description: "L'actualité des doléances",
+        images: [
+          {
+            url: "/img/logo.svg",
+            alt: "Actualités - Les Doléances",
+          },
+        ],
+      },
+    }
+  }
   return {
-    title: post?.title?.rendered || "Actualités - Les Doléances",
-    description: post?.excerpt?.rendered?.replace(/<[^>]+>/g, "") || "L'actualité des doléances",
+    title: post.title?.rendered || "Actualités - Les Doléances",
+    description: post.excerpt?.rendered?.replace(/<[^>]+>/g, "") || "L'actualité des doléances",
     openGraph: {
-      title: post?.title?.rendered || "Actualités - Les Doléances",
-      description: post?.excerpt?.rendered?.replace(/<[^>]+>/g, "") || "L'actualité des doléances",
+      title: post.title?.rendered || "Actualités - Les Doléances",
+      description: post.excerpt?.rendered?.replace(/<[^>]+>/g, "") || "L'actualité des doléances",
       images: [
         {
           url: "/img/logo.svg",
-          alt: post?.title?.rendered || "Actualités - Les Doléances",
+          alt: post.title?.rendered || "Actualités - Les Doléances",
         },
       ],
     },
@@ -31,7 +47,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
 export default async function ArticlePage({ params }: { params: { slug: string } }): Promise<React.JSX.Element> {
   try {
     const post = await fetchPostBySlug(params.slug)
-    const postMedia = post?.featured_media ? await fetchAttachmentById(post.featured_media) : null
+    const postMedia = post?.featured_media ? await fetchAttachmentById(post.featured_media) : {}
 
     // OpenGraph data fallback
     const ogTitle = post?.acf?.opengraph_title || post?.title?.rendered || ""
@@ -40,7 +56,7 @@ export default async function ArticlePage({ params }: { params: { slug: string }
       "/img/logo.svg"
 
     
-    const url = `${process.env.NEXT_PUBLIC_SITE_URL || "https://les-doleances.fr"}/article/${params.slug} || "https://les-doleances.fr"`
+    const url = `${process.env.NEXT_PUBLIC_SITE_URL || "https://les-doleances.fr"}/article/${params.slug}`
 
 
     return (

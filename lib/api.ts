@@ -435,7 +435,6 @@ export async function fetchPostsByCategory(categoryId: number): Promise<Post[]> 
 export async function fetchPostBySlug(slug: string): Promise<Post | null> {
   try {
     const response = await fetch(`${API_BASE_URL}/posts?slug=${slug}&_embed`, {
-      cache: "no-store",
       headers: {
         Accept: "application/json",
       },
