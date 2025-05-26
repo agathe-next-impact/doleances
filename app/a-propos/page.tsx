@@ -10,7 +10,8 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import CardMap from "@/components/map/map-card";
-import type { Metadata } from "next"
+import type { Metadata } from "next";
+import { forEach } from "lodash";
 
 export const metadata: Metadata = {
   title: "A propos de nous - Les Doléances",
@@ -44,9 +45,9 @@ export default async function DraggableCardDemo() {
     className: `absolute`,
   }));
 
-  const accueil = await fetchPageBySlug("a-propos");
-  const imageALaUne = await fetchAttachmentById(accueil?.featured_media);
-  const dossierDePresse = await fetchAttachmentById(accueil?.acf?.infos_documentaire?.dossier_de_presse);
+  const apropos = await fetchPageBySlug("a-propos");
+  const imageALaUne = await fetchAttachmentById(apropos?.featured_media);
+  const dossierDePresse = await fetchAttachmentById(apropos?.acf?.infos_documentaire?.dossier_de_presse);
   const locations = await fetchGroupesLocaux()
   // Adapter les données pour correspondre à l'interface attendue par CardMap
   const mapLocations = locations.map((location) => ({
@@ -57,6 +58,22 @@ export default async function DraggableCardDemo() {
       lng: parseFloat(location.acf?.localisation.lng),
     },
   }));
+  let vignettes = apropos?.acf?.infos_documentaire?.vignettes || [];
+
+  vignettes = await Promise.all(
+    vignettes.map(async (value: any, key: number) => {
+      if (value ) {
+        const imageUrl = await fetchAttachmentById(value.image);
+        return {
+          image: imageUrl?.source_url,
+          titre: value.titre || `Vignette ${key + 1}`,
+          lien: value.lien_darticle,
+          legende: value.legende || "Voir l'article",
+        };
+      }
+      return value; 
+    })
+  );
 
 
   return (
@@ -73,82 +90,120 @@ export default async function DraggableCardDemo() {
             </p>
           </div>
 
-          <section className="h-max mb-12 grid gap-12 grid-cols-6 place-items-end">
-            {accueil && (
-            <div className="flex flex-col lg:col-span-4 col-span-6 h-full justify-between rounded-lg border bg-card shadow-lg overflow-hidden">
-                <div className="flex flex-col p-6">
-                  <h2 className="w-full mb-4 pb-3 text-2xl font-serif font-light uppercase border-b-[1px]">
-                    Notre démarche
-                  </h2>
-                    <div
-                    className="flex flex-col gap-4 mb-4 flex-grow text-sm text-muted-foreground"
-                    dangerouslySetInnerHTML={{
-                      __html: accueil?.acf?.presentation_de_la_demarche || "",
-                    }}
-                    />              
-                </div>
-            </div>
-
-            )}
-          
-          <div className="h-max flex flex-col lg:col-span-2 col-span-6 gap-12">       
-            <div className="flex flex-col col-span-2 border rounded-lg bg-card shadow-lg overflow-hidden">
-              <Image 
-                src={imageALaUne.source_url}
-                alt="Image d'illustration"
-                width={500}
-                height={300}
-                className="object-cover w-full h-full"
-              />
-            </div>
-            <div className="flex flex-col flex-grow justify-center p-6">
-              <Verbatim />
-            </div>
+    <section className="h-max mb-12 grid gap-12 grid-cols-6 place-items-end">
+      {apropos && (
+      <div className="flex flex-col lg:col-span-4 col-span-6 h-full justify-between rounded-lg border bg-card shadow-lg overflow-hidden">
+          <div className="flex flex-col p-6">
+            <h2 className="w-full mb-4 pb-3 text-2xl font-serif font-light uppercase border-b-[1px]">
+              Notre démarche
+            </h2>
+              <div
+              className="mb-4 text-sm text-muted-foreground"
+              dangerouslySetInnerHTML={{
+                __html: apropos?.acf?.presentation_de_la_demarche || "",
+              }}
+              />              
           </div>
-          </section> 
+      </div>
+
+      )}
+    
+    <div className="h-max flex flex-col lg:col-span-2 col-span-6 gap-12">       
+      <div className="flex flex-col col-span-2 border rounded-lg bg-card shadow-lg overflow-hidden">
+        <Image 
+          src={imageALaUne.source_url}
+          alt="Image d'illustration"
+          width={500}
+          height={300}
+          className="object-cover w-full h-full"
+        />
+      </div>
+      <div className="flex flex-col flex-grow justify-center p-6">
+        <Verbatim />
+      </div>
+    </div>
+    </section> 
 
     <div className="absolute inset-0 -z-10">
       <div className="absolute top-[800px] left-0 h-[1000px] w-[50vw] rounded-full bg-gradient-to-r from-pink-200 to-blue-200 opacity-20 blur-3xl"></div>
       <div className="absolute top-[1500px] right-0 h-[900px] w-[40vw] rounded-full bg-gradient-to-r from-blue-200 to-pink-200 opacity-20 blur-3xl"></div>
     </div>
-          <section className="h-max mb-12 grid gap-12 grid-cols-6 place-items-end">
-          <div className="h-full w-full flex flex-col lg:col-span-2 col-span-6 rounded-lg border bg-card shadow-lg overflow-hidden">
-            <div className="flex flex-col flex-grow justify-between content-stretch p-6">
-                <h2 className="w-full mb-4 pb-3 text-2xl font-serif font-light uppercase border-b-[1px]">
-                  Les groupes locaux
-                 </h2>
-                    <CardMap
-                      locations={mapLocations}
-                    />
-                  <Button variant="outline" asChild className="mt-4"> 
-                    <Link href='/cartographie'>Voir les groupes</Link>
-                  </Button>
-              </div>  
-          </div>
-          <div className="flex flex-col lg:col-span-4 col-span-6 h-full justify-betweenrounded-lg border bg-card shadow-lg overflow-hidden">
-            <div className="w-full h-full flex flex-col p-6">
-              <h2 className="w-full mb-4 pb-3 text-2xl font-serif font-light uppercase border-b-[1px]">
-                Le documentaire sur les doléances
-              </h2>
-                <div
-                className="flex flex-col gap-4 mb-4 flex-grow text-sm text-muted-foreground"
-                dangerouslySetInnerHTML={{
-                  __html: accueil?.acf?.infos_documentaire.presentation_du_docu || "",
-                }}
-                />  
-              <Button variant="outline" asChild>
-                <Link href={dossierDePresse.source_url} target="_blank" rel="noopener noreferrer">
-                  Dossier de presse
-                </Link>
-              </Button>            
-            </div>
-          </div>
-              <div className="h-max w-full flex flex-col md:col-span-6 col-span-6 gap-12">  
-                <div className="relative h-full w-full overflow-hidden rounded-lg border bg-card shadow-lg">
-                  <YouTubeEmbed videoLink={accueil?.acf.infos_documentaire?.video} />        
-                </div>    
+
+
+
+    <section className="h-max mb-12 grid gap-12 grid-cols-6 place-items-end">
+      <div className="flex flex-col col-span-6 h-full justify-between rounded-lg border bg-card shadow-lg overflow-hidden">
+        <div className="w-full h-full flex flex-col p-6">
+        <h2 className="w-full mb-4 pb-3 text-2xl font-serif font-light uppercase border-b-[1px]">
+          Making of
+        </h2>
+          <div
+          className="flex flex-col gap-4 mb-8 flex-grow text-muted-foreground"
+          dangerouslySetInnerHTML={{
+            __html: apropos?.acf?.infos_documentaire.intro_making_of || "",
+          }}
+          />    
+          <div className="flex gap-20 mb-4">
+            {vignettes.map((vignette, index) => (
+              <div key={index} className="flex flex-col w-[20%]">
+                <Image
+                  src={vignette.image}
+                  alt={vignette.titre}
+                  width={500}
+                  height={300}
+                  className="object-cover w-full h-full rounded-lg"
+                />
+                <h3 className="mt-2 mx-auto text-md font-semibold">{vignette.titre}</h3>
+                <Button variant="outline" asChild>
+                  <Link href={vignette.lien} target="_blank" rel="noopener noreferrer" className="text-sm">
+                    {vignette.legende}
+                  </Link>
+                </Button>
               </div>
-          </section>
+            ))}
+        </div>
+      </div>
+    </div>
+    </section>
+
+    <section className="h-max mb-12 grid gap-12 grid-cols-6 place-items-end">
+    <div className="h-full w-full flex flex-col lg:col-span-2 col-span-6 rounded-lg border bg-card shadow-lg overflow-hidden">
+      <div className="flex flex-col flex-grow justify-between content-stretch p-6">
+          <h2 className="w-full mb-4 pb-3 text-2xl font-serif font-light uppercase border-b-[1px]">
+            Les groupes locaux
+            </h2>
+              <CardMap
+                locations={mapLocations}
+              />
+            <Button variant="outline" asChild className="mt-4"> 
+              <Link href='/cartographie'>Voir les groupes</Link>
+            </Button>
+        </div>  
+    </div>
+    <div className="flex flex-col lg:col-span-4 col-span-6 h-full justify-between rounded-lg border bg-card shadow-lg overflow-hidden">
+      <div className="w-full h-full flex flex-col p-6">
+        <h2 className="w-full mb-4 pb-3 text-2xl font-serif font-light uppercase border-b-[1px]">
+          Le documentaire sur les doléances
+        </h2>
+          <div
+          className="flex flex-col gap-4 mb-4 flex-grow text-sm text-muted-foreground"
+          dangerouslySetInnerHTML={{
+            __html: apropos?.acf?.infos_documentaire.presentation_du_docu || "",
+          }}
+          />  
+        <Button variant="outline" asChild>
+          <Link href={dossierDePresse.source_url} target="_blank" rel="noopener noreferrer">
+            Dossier de presse
+          </Link>
+        </Button>            
+      </div>
+    </div>
+        <div className="h-max w-full flex flex-col md:col-span-6 col-span-6 gap-12">  
+          <div className="relative h-full w-full overflow-hidden rounded-lg border bg-card shadow-lg">
+            <YouTubeEmbed videoLink={apropos?.acf.infos_documentaire?.video} />        
+          </div>    
+        </div>
+    </section>
 
     <div className="absolute inset-0 -z-10">
       <div className="absolute top-[2000px] left-0 h-[1000px] w-[50vw] rounded-full bg-gradient-to-r from-pink-200 to-blue-200 opacity-20 blur-3xl"></div>
