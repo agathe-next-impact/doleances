@@ -143,9 +143,9 @@ export default async function DraggableCardDemo() {
             __html: apropos?.acf?.infos_documentaire.intro_making_of || "",
           }}
           />    
-          <div className="flex gap-20 mb-4">
+          <div className="flex sm:flex-row flex-col flex-wrap sm:justify-around justify-between mb-4">
             {vignettes.map((vignette, index) => (
-              <div key={index} className="flex flex-col w-[20%]">
+              <div key={index} className="flex flex-col lg:w-[20%] sm:w-[40%] w-full lg:mb-0 mb-8 items-center">  
                 <Image
                   src={vignette.image}
                   alt={vignette.titre}
