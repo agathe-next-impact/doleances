@@ -450,6 +450,8 @@ console.log("ACF Fields:", acfFields)
             <ShareSocial
             title={post.title.rendered}
             url={`https://www.doleances.fr/article/${post.slug}`}
+            text={post.excerpt?.rendered?.replace(/<[^>]+>/g, "") || "L'actualité des doléances"}
+            image={featuredImage || "/img/logo.svg"}
           />
 
           {post.acf?.descriptif && (

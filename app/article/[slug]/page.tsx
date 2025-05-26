@@ -3,6 +3,10 @@ import { notFound } from "next/navigation"
 import ArticleContent from "@/components/actualites/article-content" 
 import type { Metadata } from "next"
 import ShareSocial from "@/components/ui/share-social"
+import type React from "react"
+
+
+
 
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
   const post = await fetchPostBySlug(params.slug)
@@ -24,7 +28,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
 
 
 
-export default async function ArticlePage({ params }: { params: { slug: string } }) {
+export default async function ArticlePage({ params }: { params: { slug: string } }): Promise<React.JSX.Element> {
   try {
     const post = await fetchPostBySlug(params.slug)
     const postMedia = post?.featured_media ? await fetchAttachmentById(post.featured_media) : null
@@ -32,17 +36,11 @@ export default async function ArticlePage({ params }: { params: { slug: string }
     // OpenGraph data fallback
     const ogTitle = post?.acf?.opengraph_title || post?.title?.rendered || ""
     const ogDescription = post?.acf?.opengraph_description || post?.excerpt?.rendered?.replace(/<[^>]+>/g, "") || ""
-    const ogImage = postMedia ||
+    const ogImage = postMedia.source_url ||
       "/img/logo.svg"
 
-    // Vérifier si l'article a un groupe local associé
-    if (post.acf?.groupe_local_tax) {
-      console.log(`Cet article est associé au groupe local avec l'ID ${post.acf.groupe_local_tax}`)
-    } else {
-      console.log("Cet article n'a pas de groupe local associé dans les champs ACF")
-    }
     
-    const url = `${process.env.NEXT_PUBLIC_SITE_URL || "https://les-doleances.fr"}/article/${params.slug}`
+    const url = `${process.env.NEXT_PUBLIC_SITE_URL || "https://les-doleances.fr"}/article/${params.slug} || "https://les-doleances.fr"`
 
 
     return (
@@ -58,7 +56,7 @@ export default async function ArticlePage({ params }: { params: { slug: string }
             text={ogDescription}
             image={ogImage}
           />
-        <ArticleContent post={post} />
+        {post && <ArticleContent post={post} />}
       </div>
       </>
     )
@@ -67,3 +65,4 @@ export default async function ArticlePage({ params }: { params: { slug: string }
     notFound()
   }
 }
+ 

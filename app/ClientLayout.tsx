@@ -243,7 +243,7 @@ export default function ClientLayout({
                         </Link>
                       </li>
                       <li>
-                        <Link href="/terms" className="text-muted-foreground hover:underline">
+                        <Link href="/rgpd/mentions-legales" className="text-muted-foreground hover:underline">
                           Mentions légales
                         </Link>
                       </li>
