@@ -5,6 +5,7 @@ import "@/app/globals.css"
 import { Inter } from "next/font/google"
 import Link from "next/link"
 import { Suspense, useEffect } from "react"
+import { resetCookieConsent } from "@/lib/cookies";
 
 import { ThemeProvider } from "@/components/theme-provider"
 import { Button } from "@/components/ui/button"
@@ -238,15 +239,19 @@ export default function ClientLayout({
                     <h3 className="mb-3 text-lg font-semibold">RGPD</h3>
                     <ul className="space-y-2 text-sm">
                       <li>
-                        <Link href="/privacy" className="text-muted-foreground hover:underline">
-                          Politique de confidentialité
-                        </Link>
-                      </li>
-                      <li>
                         <Link href="/rgpd/mentions-legales" className="text-muted-foreground hover:underline">
                           Mentions légales
                         </Link>
                       </li>
+                      <li>
+                        <button
+                          type="button"
+                          className="text-muted-foreground hover:underline bg-transparent border-0 p-0"
+                          onClick={() => resetCookieConsent()}
+                        >
+                          Gérer les cookies
+                        </button>
+                    </li>
                     </ul>
                   </div>
                 </div>

@@ -446,13 +446,6 @@ console.log("ACF Fields:", acfFields)
 
       {/* Affichage du contenu principal de l'article */}
 
-      
-            <ShareSocial
-            title={post.title.rendered}
-            url={`https://www.doleances.fr/article/${post.slug}`}
-            text={post.excerpt?.rendered?.replace(/<[^>]+>/g, "") || "L'actualité des doléances"}
-            image={featuredImage || "/img/logo.svg"}
-          />
 
           {post.acf?.descriptif && (
             <div className="gap-2 py-4">
