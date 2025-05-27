@@ -24,7 +24,7 @@ const socialPlatforms = [
     url: (u: string, _t?: string) => {
       const replacedUrl = u.replace(/wp-starter\.io/g, "lesdoleances.fr").replace(/([^:]\/)\/+/g, "$1");
       return `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(replacedUrl)}${
-        _t ? `&quote=${encodeURIComponent(_t.replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&rsquo;/g, "'"))}` : ""
+        _t ? `&quote=${encodeURIComponent(_t.replace(/<[^>]*>/g, "").replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&rsquo;/g, "'"))}` : ""
       }`
     },
   },
@@ -34,7 +34,7 @@ const socialPlatforms = [
     url: (u: string, _t?: string) => {
       const replacedUrl = u.replace(/wp-starter\.io/g, "lesdoleances.fr").replace(/([^:]\/)\/+/g, "$1");
       return `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(replacedUrl)}${
-        _t ? `&title=${encodeURIComponent(_t.replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&rsquo;/g, "'"))}` : ""
+        _t ? `&title=${encodeURIComponent(_t.replace(/<[^>]*>/g, "").replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&rsquo;/g, "'"))}` : ""
       }`
     },
   },
@@ -45,7 +45,12 @@ const socialPlatforms = [
       const replacedUrl = u.replace(/wp-starter\.io/g, "lesdoleances.fr").replace(/([^:]\/)\/+/g, "$1");
       const message =
         (t
-          ? t.replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&rsquo;/g, "'").replace(/&#8211;/g, "") + " "
+          ? t
+          .replace(/<[^>]*>/g, "") // Supprime les balises HTML
+          .replace(/&amp;/g, "&")
+          .replace(/&quot;/g, '"')
+          .replace(/&rsquo;/g, "'")
+          .replace(/&#8211;/g, "") + " "
           : "") + replacedUrl
       return `https://wa.me/?text=${encodeURIComponent(message)}`
     },
@@ -56,7 +61,7 @@ const socialPlatforms = [
     url: (u: string, t?: string) => {
       const replacedUrl = u.replace(/wp-starter\.io/g, "lesdoleances.fr").replace(/([^:]\/)\/+/g, "$1");
       const subject = t
-        ? t.replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&rsquo;/g, "'")
+        ? t.replace(/<[^>]*>/g, "").replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&rsquo;/g, "'")
         : "À découvrir"
       return `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(replacedUrl)}`
     },
