@@ -11,6 +11,16 @@ import type { Metadata } from "next"
 export const metadata: Metadata = {
   title: "Le Festival de mai 2025 - Les Doléances",
   description: "Le Festival des doléances, un événement citoyen et artistique",
+  openGraph: {
+    title: "Le Festival de mai 2025 - Les Doléances",
+    description: "Le Festival des doléances, un événement citoyen et artistique",
+    images: [
+      {
+        url: "/img/festival_verso.jpg",
+        alt: "Festival des doléances",
+      },
+    ],
+  },
 }
 
 

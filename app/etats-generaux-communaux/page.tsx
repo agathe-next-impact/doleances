@@ -10,6 +10,16 @@ import type { Metadata } from "next"
 export const metadata: Metadata = {
   title: "Etats Généraux Communaux - Les Doléances",
   description: "Les Etats Généraux communaux des doléances",
+  openGraph: {
+    title: "Etats Généraux Communaux - Les Doléances",
+    description: "Les Etats Généraux communaux des doléances",
+    images: [
+      {
+        url: "/img/doleances_couv.png",
+        alt: "Etats Généraux Communaux",
+      },
+    ],
+  },
 }
 
 
@@ -48,11 +58,13 @@ export default async function Page () {
                   __html: page?.acf?.carte_de_une,
                 }}
                 />
+                {/*
                 <Button variant="outline" className="w-full mt-4">
                   <Link href="/etats-generaux-communaux/#kits" rel="noopener noreferrer">
                     Accéder aux kits
                   </Link>
                 </Button>
+                */}
             </div>            
               )}
             <div className="h-full flex flex-col col-span-4 flex-grow p-6 mt-8">
@@ -74,7 +86,7 @@ export default async function Page () {
           </div>
       </section>
 
-      
+     {/* 
       <section id="kits" className="w-full h-max mb-12 flex flex-col gap-12 md:grid md:grid-cols-6 md:gap-12">                     
         <div className="h-max col-span-6 flex flex-col overflow-hidden">
             <div className="items-end overflow-hidden mb-8">
@@ -83,6 +95,8 @@ export default async function Page () {
             </div>   
         </div>
       </section>
+*/}
+
   </div>
   </>
   );

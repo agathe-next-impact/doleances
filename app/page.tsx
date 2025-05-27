@@ -11,6 +11,22 @@ import {
   DraggableCardContainer,
 } from "@/components/ui/draggable-card";
 import CardMap from "@/components/map/map-card";
+import type { Metadata } from "next"
+
+const metadata: Metadata = {
+  title: "Accueil - Les Doléances",
+  description: "Wiki du corpus des doléances de 2018/2019",
+  openGraph: {
+    title: "Accueil - Les Doléances",
+    description: "Wiki du corpus des doléances de 2018/2019",
+    images: [
+      {
+        url: "/img/doleances_couv.png",
+        alt: "Accueil - Les Doléances",
+      },
+    ],
+  },
+}
 
 
 export default async function Home() {
@@ -199,16 +215,16 @@ export default async function Home() {
       <section className="mb-24 ">
             <DraggableCardContainer className="relative flex md:min-h-screen min-h-[50rem] w-full md:items-center items-start justify-center">
               <p className="absolute top-1/2 mx-auto max-w-sm -translate-y-3/4 text-center text-2xl font-serif md:text-4xl dark:text-neutral-800">
-                Cahier de la colère et de l'espoir
+              Cahier de la colère et de l'espoir
               </p>
-              {verbatimImages.map((item) => (
-                <DraggableCardBody className={item.className}>
-                  <img
-                    src={item.image}
-                    alt={item.title}
-                    className="pointer-events-none relative z-10 w-[40rem] object-contain"
-                  />
-                </DraggableCardBody>
+              {verbatimImages.map((item, idx) => (
+              <DraggableCardBody key={item.image ?? idx} className={item.className}>
+                <img
+                src={item.image}
+                alt={item.title}
+                className="pointer-events-none relative z-10 w-[40rem] object-contain"
+                />
+              </DraggableCardBody>
               ))}
             </DraggableCardContainer>
       </section>

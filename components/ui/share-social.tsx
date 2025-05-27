@@ -1,3 +1,5 @@
+"use client"
+
 import React from "react"
 import {
   FaFacebookF,
@@ -11,6 +13,7 @@ type ShareSocialProps = {
   url: string
   title?: string
   text?: string
+  image?: string
   className?: string
 }
 
@@ -18,12 +21,16 @@ const socialPlatforms = [
   {
     name: "Facebook",
     icon: FaFacebookF,
-    url: (u: string, _t?: string) => `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(u)}`,
+    url: (u: string, _t?: string, img?: string) =>
+      `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(u)}${
+        img ? `&picture=${encodeURIComponent(img)}` : ""
+      }`,
   },
   {
     name: "LinkedIn",
     icon: FaLinkedinIn,
-    url: (u: string, _t?: string) => `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(u)}`,
+    url: (u: string, _t?: string) =>
+      `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(u)}`,
   },
   {
     name: "WhatsApp",
@@ -43,32 +50,23 @@ export const ShareSocial: React.FC<ShareSocialProps> = ({
   url,
   title,
   text,
+  image,
   className = "",
 }) => {
   return (
     <div className={`flex gap-2 ${className}`}>
-      {socialPlatforms.map((platform) =>
-        platform.disabled ? (
-          <span
-            key={platform.name}
-            title={`${platform.name} (non supporté)`}
-            className="cursor-not-allowed"
-          >
-            <platform.icon size={22} />
-          </span>
-        ) : (
-          <a
-            key={platform.name}
-            href={platform.url(url, text || title)}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label={`Partager sur ${platform.name}`}
-            className="text-primary bg-primary-foreground hover:bg-white rounded-full p-2 transition-colors"
-          >
-            <platform.icon size={16} />
-          </a>
-        )
-      )}
+      {socialPlatforms.map((platform) => (
+        <a
+          key={platform.name}
+          href={platform.url(url, text || title, image)}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label={`Partager sur ${platform.name}`}
+          className="text-primary bg-primary-foreground hover:bg-white rounded-full p-2 transition-colors"
+        >
+          <platform.icon size={16} />
+        </a>
+      ))}
       <button
         type="button"
         aria-label="Copier le lien"

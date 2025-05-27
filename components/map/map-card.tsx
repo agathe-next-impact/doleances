@@ -36,7 +36,6 @@ export default function CardMap({
 }: StaticMapProps) {
   const mapRef = useRef<google.maps.Map | null>(null);
   
-  console.log(locations);
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey,
     preventGoogleFontsLoading: true,

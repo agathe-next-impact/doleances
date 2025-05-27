@@ -5,6 +5,16 @@ import type { Metadata } from "next"
 export const metadata: Metadata = {
   title: "Contribuer - Les Doléances",
   description: "Participer ou Nous contacter pour faire avancer le projet",
+  openGraph: {
+    title: "Contribuer - Les Doléances",
+    description: "Participer ou Nous contacter pour faire avancer le projet",
+    images: [
+      {
+        url: "/img/doleances_couv.png",
+        alt: "Contribuer - Les Doléances",
+      },
+    ],
+  },
 }
 
 

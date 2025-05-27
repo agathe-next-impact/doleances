@@ -1,6 +1,5 @@
-import { fetchCategories, fetchLastThreePosts } from "@/lib/api"
+import { fetchCategories, fetchLastThreePosts, fetchCategoryBySlug } from "@/lib/api"
 import CategoryCard from "@/components/actualites/category-card"
-import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { CalendarIcon, User2 } from "lucide-react"
 import Link from "next/link"
@@ -9,9 +8,20 @@ import { formatDate } from "@/lib/utils"
 import Verbatim from "@/components/verbatim"
 import type { Metadata } from "next"
 
+
 export const metadata: Metadata = {
   title: "Actualités - Les Doléances",
   description: "L'actualité des doléances",
+  openGraph: {
+    title: "Actualités - Les Doléances",
+    description: "L'actualité des doléances",
+    images: [
+      {
+        url: "/img/doleances_couv.png",
+        alt: "Actualités - Les Doléances",
+      },
+    ],
+  },
 }
 
 
@@ -20,7 +30,6 @@ export default async function Home() {
   categories.sort((a, b) => b.count - a.count)
   const articles = await fetchLastThreePosts()
   const stickyArticle = articles[0]
-  console.log("Sticky Article:", stickyArticle)
 
   return (
     <>
@@ -66,9 +75,11 @@ export default async function Home() {
                     <>
                       <h3 className="mb-2 font-medium">
                         <Link href={`/article/${typeof stickyArticle.slug === "string" ? stickyArticle.slug : stickyArticle.slug?.rendered || ""}`}>
-                          {typeof stickyArticle.title === "string"
-                            ? stickyArticle.title
-                            : stickyArticle.title?.rendered || ""}
+                          {stickyArticle.title
+                                .replace(/&amp;/g, "&")
+                                .replace(/&quot;/g, '"')
+                                .replace(/&rsquo;/g, "'")
+                                .replace(/<[^>]+>/g, "")}
                         </Link>
                       </h3>
                       <div

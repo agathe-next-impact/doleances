@@ -6,9 +6,42 @@ import SearchFilter from "@/components/actualites/search-filter"
 import { Suspense } from "react"
 import type { Metadata } from "next"
 
-export const metadata: Metadata = {
-  title: "Actualités - Les Doléances",
-  description: "L'actualité des doléances",
+export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+  const category = await fetchCategoryBySlug(params.slug)
+  if (!category) {
+    const title = "Actualités - Les Doléances"
+    const description = "L'actualité des doléances"
+    return {
+      title,
+      description,
+      openGraph: {
+        title,
+        description,
+        images: [
+          {
+            url: "/img/doleances_couv.png",
+            alt: title,
+          },
+        ],
+      },
+    }
+  }
+  const title = category.title?.rendered || "Actualités - Les Doléances"
+  const description = category.excerpt?.rendered || "L'actualité des doléances"
+  return {
+    title: title.replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&rsquo;/g, "'"),
+    description: description.replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&rsquo;/g, "'") || "L'actualité des doléances",
+    openGraph: {
+      title: title.replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&rsquo;/g, "'"),
+      description: description.replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&rsquo;/g, "'") || "L'actualité des doléances",
+      images: [
+        {
+          url: "/img/logo.svg",
+          alt: title.replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&rsquo;/g, "'"),
+        },
+      ],
+    },
+  }
 }
 
 

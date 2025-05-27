@@ -6,6 +6,16 @@ import MapComponent from "@/components/map/map-component"
 export const metadata: Metadata = {
   title: "Cartographie - Les Doléances",
   description: "Cartographie des groupes locaux",
+  openGraph: {
+    title: "Cartographie - Les Doléances",
+    description: "Cartographie des groupes locaux",
+    images: [
+      {
+        url: "/img/doleances_couv.png",
+        alt: "Cartographie des groupes locaux",
+      },
+    ],
+  },
 }
 
 

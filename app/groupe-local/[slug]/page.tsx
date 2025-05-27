@@ -12,6 +12,16 @@ import type { Metadata } from "next"
 export const metadata: Metadata = {
   title: "Les groupes locaux - Les Doléances",
   description: "Les groupes locaux des Doléances",
+  openGraph: {
+    title: "Les groupes locaux - Les Doléances",
+    description: "Découvrez les groupes locaux des Doléances, leurs activités et comment les rejoindre.",
+    images: [
+      {
+        url: "/img/doleances_couv.png",
+        alt: "Les groupes locaux - Les Doléances",
+      },
+    ],
+  },
 }
 
 
@@ -26,7 +36,6 @@ export default async function GroupeLocalPage({ params }: { params: { slug: stri
     const groupeLocal = await fetchGroupeLocalBySlug(params.slug)
 
     if (!groupeLocal) {
-      console.log(`Groupe local avec l'ID ${params.slug} non trouvé`)
       notFound()
     }
 
@@ -36,7 +45,6 @@ export default async function GroupeLocalPage({ params }: { params: { slug: stri
       groupeLocal.title = { rendered: `Groupe Local ${params.slug}` }
     }
 
-    console.log("Groupe local récupéré:", groupeLocal)
 
     // Récupérer les articles liés à ce groupe local via le champ tax_groupe_local
     const relatedPosts = await fetchPostsByGroupeLocalTax(groupeLocal.id)

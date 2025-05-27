@@ -10,6 +10,7 @@ import { MapPin, Calendar, Users } from "lucide-react"
 import StaticMap from "@/components/map/static-map"
 import DateFormat, { TimeFormat } from "@/components/date-format"
 import ShareSocial from "@/components/ui/share-social"
+import { GutenbergContent } from "@/components/gutenberg-content"
 
 interface ArticleContentProps {
   post: Post
@@ -89,7 +90,6 @@ export default function ArticleContent({ post }: ArticleContentProps) {
     console.error("Error extracting ACF fields:", error)
   }
 
-console.log("ACF Fields:", acfFields)
 
   // Récupérer l'ID du groupe local depuis les champs ACF (utiliser tax_groupe_local ou groupe_local_tax)
   const groupeLocalId = post.acf?.tax_groupe_local || post.acf?.groupe_local_tax || null
@@ -101,14 +101,7 @@ console.log("ACF Fields:", acfFields)
       if (groupeLocalId) {
         try {
           setIsLoadingGroupe(true)
-          console.log(`Chargement du groupe local avec l'ID ${groupeLocalId} depuis les champs ACF`)
           const groupe = await fetchGroupeLocalById(groupeLocalId)
-          if (groupe) {
-            console.log(`Groupe local trouvé: ${groupe.title.rendered}`)
-            setGroupeLocalPost(groupe)
-          } else {
-            console.log(`Aucun groupe local trouvé avec l'ID ${groupeLocalId}`)
-          }
         } catch (error) {
           console.error("Error loading groupe local post from ACF:", error)
         } finally {
@@ -304,7 +297,7 @@ console.log("ACF Fields:", acfFields)
                     src={featuredImage || "/img/placeholder.png"}
                     alt=""
                     fill
-                    className="object-cover rounded-lg"
+                    className="object-cover object-top rounded-lg"
                     sizes="(max-width: 768px) 40vw, (max-width: 1200px) 768px, 1024px"
                   />
                 </div>
@@ -446,11 +439,6 @@ console.log("ACF Fields:", acfFields)
 
       {/* Affichage du contenu principal de l'article */}
 
-      
-            <ShareSocial
-            title={post.title.rendered}
-            url={`https://www.doleances.fr/article/${post.slug}`}
-          />
 
           {post.acf?.descriptif && (
             <div className="gap-2 py-4">
@@ -461,15 +449,9 @@ console.log("ACF Fields:", acfFields)
         )}
 
         {post?.content.rendered && (
-            <article className="gap-2 mt-4">
-              <div
-                dangerouslySetInnerHTML={{
-                  __html:
-                    post?.content.rendered ??
-                    "",
-                }}
-              />
-            </article>
+            <div className="gutenberg-wrapper">
+              <GutenbergContent content={post.content.rendered} />
+            </div>
         )}  
 
           {post.acf?.contenu_de_larticle && (

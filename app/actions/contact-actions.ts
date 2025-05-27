@@ -120,7 +120,7 @@ export async function sendContactForm(formData: FormData) {
       },
     })
 
-    console.log("Transporteur Nodemailer créé avec succès")
+    
     let emailsList = "";
     recipientEmails.forEach(email => {
       emailsList += email.email_de_destination + ", ";
