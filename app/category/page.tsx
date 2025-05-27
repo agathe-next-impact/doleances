@@ -20,7 +20,6 @@ export default async function Home() {
   categories.sort((a, b) => b.count - a.count)
   const articles = await fetchLastThreePosts()
   const stickyArticle = articles[0]
-  console.log("Sticky Article:", stickyArticle)
 
   return (
     <>
@@ -66,9 +65,11 @@ export default async function Home() {
                     <>
                       <h3 className="mb-2 font-medium">
                         <Link href={`/article/${typeof stickyArticle.slug === "string" ? stickyArticle.slug : stickyArticle.slug?.rendered || ""}`}>
-                          {typeof stickyArticle.title === "string"
-                            ? stickyArticle.title
-                            : stickyArticle.title?.rendered || ""}
+                          {stickyArticle.title
+                                .replace(/&amp;/g, "&")
+                                .replace(/&quot;/g, '"')
+                                .replace(/&rsquo;/g, "'")
+                                .replace(/<[^>]+>/g, "")}
                         </Link>
                       </h3>
                       <div

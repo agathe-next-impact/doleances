@@ -7,7 +7,6 @@ import type React from "react"
 
 
 
-
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
   const post = await fetchPostBySlug(params.slug)
   if (!post) {
@@ -26,16 +25,23 @@ export async function generateMetadata({ params }: { params: { slug: string } })
       },
     }
   }
+
+
+  const title = post.title?.rendered
+    ? post.title.rendered.replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&rsquo;/g, "'")
+    : "Actualités - Les Doléances"
+  const description = post.excerpt?.rendered.replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&rsquo;/g, "'") || "L'actualité des doléances"
+
   return {
-    title: post.title?.rendered || "Actualités - Les Doléances",
-    description: post.excerpt?.rendered?.replace(/<[^>]+>/g, "") || "L'actualité des doléances",
+    title,
+    description,
     openGraph: {
-      title: post.title?.rendered || "Actualités - Les Doléances",
-      description: post.excerpt?.rendered?.replace(/<[^>]+>/g, "") || "L'actualité des doléances",
+      title,
+      description,
       images: [
         {
           url: "/img/logo.svg",
-          alt: post.title?.rendered || "Actualités - Les Doléances",
+          alt: title,
         },
       ],
     },
@@ -73,6 +79,7 @@ export default async function ArticlePage({ params }: { params: { slug: string }
             image={ogImage}
           />
         {post && <ArticleContent post={post} />}
+        
       </div>
       </>
     )

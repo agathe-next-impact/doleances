@@ -26,10 +26,10 @@ export default function ArticleCard({ post }: ArticleCardProps) {
     try {
       return (
         post._embedded?.["wp:featuredmedia"]?.[0]?.source_url ||
-        `/img/doleance_couv.png`
+        `/img/placeholder.png`
       )
     } catch (error) {
-      return `/img/doleance_couv.png`
+      return `/img/placeholder.png`
     }
   })()
 
@@ -48,7 +48,6 @@ export default function ArticleCard({ post }: ArticleCardProps) {
             setGroupeLocalSlug(groupe.slug)
           }
         } catch (error) {
-          console.error(`Erreur lors du chargement du groupe local ${groupeLocalId}:`, error)
         } finally {
           setIsLoadingGroupe(false)
         }
@@ -77,7 +76,6 @@ export default function ArticleCard({ post }: ArticleCardProps) {
       }
     }
   } catch (error) {
-    console.error("Error extracting ACF fields:", error)
   }
 
   // Check if this post is an event
@@ -99,7 +97,6 @@ export default function ArticleCard({ post }: ArticleCardProps) {
       // Fallbacks pour les autres formats possibles
       return post.acf?.adress || post.acf?.adresse || post.acf?.adresse_evenement
     } catch (error) {
-      console.error("Error extracting event address:", error)
       return null
     }
   })()
@@ -120,7 +117,6 @@ export default function ArticleCard({ post }: ArticleCardProps) {
       // Fallback au champ lieu_evenement
       return post.acf?.lieu_evenement || null
     } catch (error) {
-      console.error("Error extracting event location name:", error)
       return null
     }
   })()
@@ -129,10 +125,10 @@ export default function ArticleCard({ post }: ArticleCardProps) {
     <Card className="h-full flex flex-col"> 
       <div className="relative h-48 w-full">
         <Image
-          src={featuredImage || "/img/doleance_couv.png"}
+          src={featuredImage || "/img/placeholder.png"}
           alt=""
           fill
-          className="object-cover rounded-t-lg"
+          className="object-cover object-top rounded-t-lg"
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
         />
       </div>
