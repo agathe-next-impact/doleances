@@ -22,7 +22,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
           description: "L'actualité des doléances",
           images: [
             {
-              url: "/img/logo.svg",
+              url: "https://doleances.fr/img/logo.svg",
               alt: "Actualités - Les Doléances",
             },
           ],
@@ -38,7 +38,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
         description: "L'actualité des doléances",
         images: [
           {
-            url: "/img/logo.svg",
+            url: `https://doleances.fr/${img}`,
             alt: "Actualités - Les Doléances",
           },
         ],

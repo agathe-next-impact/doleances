@@ -11,7 +11,6 @@ const YoutubeEmbed = ({ videoLink }) => {
     return null;
   }
 
-  console.log('videoLink', videoLink);
     return (
       <div style={{ position: 'relative', paddingBottom: '56.25%', height: 0, overflow: 'hidden' }}>
         <iframe

@@ -13,7 +13,7 @@ import {
 import CardMap from "@/components/map/map-card";
 import type { Metadata } from "next"
 
-const metadata: Metadata = {
+export const metadata: Metadata = {
   title: "Accueil - Les Doléances",
   description: "Wiki du corpus des doléances de 2018/2019",
   openGraph: {
@@ -21,7 +21,7 @@ const metadata: Metadata = {
     description: "Wiki du corpus des doléances de 2018/2019",
     images: [
       {
-        url: "/img/doleances_couv.png",
+        url: "https://doleances.fr/img/doleances_couv.png",
         alt: "Accueil - Les Doléances",
       },
     ],
