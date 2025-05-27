@@ -34,7 +34,7 @@ const socialPlatforms = [
     name: "WhatsApp",
     icon: FaWhatsapp,
     url: (u: string, t?: string) =>
-      `https://wa.me/?text=${encodeURIComponent((t ? t.replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&rsquo;/g, "'") + " " : "") + "https://lesdoleances.fr")}`,
+      `https://wa.me/?text=${t ? t.replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&rsquo;/g, "'") + " " : "" + "https://lesdoleances.fr"}`,
   },
   {
     name: "Email",
