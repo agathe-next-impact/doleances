@@ -94,12 +94,12 @@ export default async function ArticlePage({ params }: { params: { slug: string }
       <div className="absolute top-[500px] right-0 h-[400px] w-[40vw] rounded-full bg-gradient-to-r from-blue-200 to-pink-200 opacity-20 blur-3xl"></div>
     </div>
       <div className="container mx-auto md:p-8 p-4">
-          <ShareSocial
+         {/* <ShareSocial
             url={url}
             title={ogTitle}
             text={ogDescription}
             image={ogImage}
-          />
+          />*/}
         {post && <ArticleContent post={post} />}
         
       </div>
