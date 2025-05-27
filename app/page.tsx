@@ -14,15 +14,15 @@ import CardMap from "@/components/map/map-card";
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "Accueil - Les Doléances",
+  title: "Les Doléances",
   description: "Wiki du corpus des doléances de 2018/2019",
   openGraph: {
-    title: "Accueil - Les Doléances",
+    title: "Les Doléances",
     description: "Wiki du corpus des doléances de 2018/2019",
     images: [
       {
         url: "https://doleances.fr/img/doleances_couv.png",
-        alt: "Accueil - Les Doléances",
+        alt: "Les Doléances",
       },
     ],
   },

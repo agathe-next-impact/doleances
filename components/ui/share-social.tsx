@@ -22,7 +22,7 @@ const socialPlatforms = [
     name: "Facebook",
     icon: FaFacebookF,
     url: (u: string, t?: string, img?: string) =>
-      `https://www.facebook.com/sharer/sharer.php?u=https://lesdoleances.fr${img ? `&picture=https://lesdoleances.fr/img/logo.svg` : ""}&quote=${t ? t.replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&rsquo;/g, "'") : ""}`,
+      `https://www.facebook.com/sharer/sharer.php?${u}=https://lesdoleances.fr${img ? `&picture=https://lesdoleances.fr/img/logo.svg` : ""}&quote=${t ? t.replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&rsquo;/g, "'") : ""}`,
   },
   {
     name: "LinkedIn",
