@@ -33,6 +33,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
     return {
       title: title.replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&rsquo;/g, "'"),
       description: description.replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&rsquo;/g, "'") || "L'actualité des doléances",
+      url: `https://doleances.fr/article/${params.slug}`,
       openGraph: {
         title: "Actualités - Les Doléances",
         description: "L'actualité des doléances",
