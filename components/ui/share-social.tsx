@@ -21,26 +21,36 @@ const socialPlatforms = [
   {
     name: "Facebook",
     icon: FaFacebookF,
-    url: (u: string, t?: string, img?: string) =>
-      `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(u)}${img ? `&picture=${encodeURIComponent(img)}` : ""}${t ? `&quote=${encodeURIComponent(t.replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&rsquo;/g, "'"))}` : ""}`,
+    url: (u: string, _t?: string, img?: string) => {
+      const replacedUrl = u.replace(/wp-starter\.io/g, "lesdoleances.fr")
+      return `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(replacedUrl)}${
+        _t ? `&quote=${_t.replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&rsquo;/g, "'")}` : ""
+      }${img ? `&picture=${encodeURIComponent(img)}` : ""}`
+    },
   },
   {
     name: "LinkedIn",
     icon: FaLinkedinIn,
-    url: (u: string, _t?: string) =>
-      `https://www.linkedin.com/sharing/share-offsite/?url=https://lesdoleances.fr&title=${_t ? _t.replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&rsquo;/g, "'") + " " : "À découvrir"}`,
+    url: (u: string, _t?: string) => {
+      const replacedUrl = u.replace(/wp-starter\.io/g, "lesdoleances.fr")
+      return `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(replacedUrl)}${_t ? `&title=${_t.replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&rsquo;/g, "'")}` : ""}`
+    },
   },
   {
     name: "WhatsApp",
     icon: FaWhatsapp,
-    url: (u: string, t?: string) =>
-      `https://wa.me/?text=${t ? t.replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&rsquo;/g, "'") : "" + "https://lesdoleances.fr"}`,
+    url: (u: string, t?: string) => {
+      const replacedUrl = u.replace(/wp-starter\.io/g, "lesdoleances.fr")
+      return `https://wa.me/?text=${$_t.replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&rsquo;/g, "'") + encodeURIComponent(replacedUrl)}`
+    },
   },
   {
     name: "Email",
     icon: FaEnvelope,
-    url: (u: string, t?: string) =>
-      `mailto:?subject=${encodeURIComponent(t.replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&rsquo;/g, "'") || "À découvrir")}&body=https://lesdoleances.fr`,
+    url: (u: string, t?: string) => {
+      const replacedUrl = u.replace(/wp-starter\.io/g, "lesdoleances.fr")
+      return `mailto:?subject=${encodeURIComponent(t.replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&rsquo;/g, "'") || "À découvrir")}&body=${encodeURIComponent(replacedUrl)}`
+    },
   },
 ]
 
