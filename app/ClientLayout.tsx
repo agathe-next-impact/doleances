@@ -47,6 +47,7 @@ export default function ClientLayout({
   return (
     <html lang="fr" suppressHydrationWarning className="scroll-smooth">
       <head>
+        <link rel="icon" href="/img/logo.svg" sizes="any" />
         {/* Ajouter les styles pour Leaflet */}
         <style>{`
           .leaflet-container {

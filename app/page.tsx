@@ -5,7 +5,6 @@ import { ArticleCardHome } from "@/components/actualites/article-card-home"
 import { fetchLastThreePosts, fetchPageBySlug, fetchRandomVerbatimImage, fetchAttachmentById, fetchGroupesLocaux } from "@/lib/api"
 import YouTubeEmbed from "@/components/ui/video"
 import Verbatim from "@/components/verbatim"
-import PopupImage from "@/components/ui/popup-image"
 import React from "react";
 import {
   DraggableCardBody,
