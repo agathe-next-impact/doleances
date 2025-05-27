@@ -23,7 +23,7 @@ const socialPlatforms = [
     icon: FaFacebookF,
     url: (u: string, _t?: string, img?: string) =>
       `https://www.facebook.com/sharer/sharer.php?u=https://lesdoleances.fr${
-        img ? `&picture=${encodeURIComponent(img)}` : ""
+        img ? `&picture=https://lesdoleances.fr/img/logo.svg` : ""
       }`,
   },
   {
