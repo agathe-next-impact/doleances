@@ -22,34 +22,43 @@ const socialPlatforms = [
     name: "Facebook",
     icon: FaFacebookF,
     url: (u: string, _t?: string, img?: string) => {
-      const replacedUrl = u.replace(/wp-starter\.io/g, "lesdoleances.fr")
+      const replacedUrl = u.replace(/wp-starter\.io/g, "lesdoleances.fr").replace(/([^:]\/)\/+/g, "$1");
       return `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(replacedUrl)}${
-        _t ? `&quote=${_t.replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&rsquo;/g, "'")}` : ""
-      }${img ? `&picture=${encodeURIComponent(img)}` : ""}`
+        _t ? `&quote=${encodeURIComponent(_t.replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&rsquo;/g, "'"))}` : ""
+      }`
     },
   },
   {
     name: "LinkedIn",
     icon: FaLinkedinIn,
     url: (u: string, _t?: string) => {
-      const replacedUrl = u.replace(/wp-starter\.io/g, "lesdoleances.fr")
-      return `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(replacedUrl)}${_t ? `&title=${_t.replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&rsquo;/g, "'")}` : ""}`
+      const replacedUrl = u.replace(/wp-starter\.io/g, "lesdoleances.fr").replace(/([^:]\/)\/+/g, "$1");
+      return `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(replacedUrl)}${
+        _t ? `&title=${encodeURIComponent(_t.replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&rsquo;/g, "'"))}` : ""
+      }`
     },
   },
   {
     name: "WhatsApp",
     icon: FaWhatsapp,
     url: (u: string, t?: string) => {
-      const replacedUrl = u.replace(/wp-starter\.io/g, "lesdoleances.fr")
-      return `https://wa.me/?text=${$_t.replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&rsquo;/g, "'") + encodeURIComponent(replacedUrl)}`
+      const replacedUrl = u.replace(/wp-starter\.io/g, "lesdoleances.fr").replace(/([^:]\/)\/+/g, "$1");
+      const message =
+        (t
+          ? t.replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&rsquo;/g, "'") + " "
+          : "") + replacedUrl
+      return `https://wa.me/?text=${encodeURIComponent(message)}`
     },
   },
   {
     name: "Email",
     icon: FaEnvelope,
     url: (u: string, t?: string) => {
-      const replacedUrl = u.replace(/wp-starter\.io/g, "lesdoleances.fr")
-      return `mailto:?subject=${encodeURIComponent(t.replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&rsquo;/g, "'") || "À découvrir")}&body=${encodeURIComponent(replacedUrl)}`
+      const replacedUrl = u.replace(/wp-starter\.io/g, "lesdoleances.fr").replace(/([^:]\/)\/+/g, "$1");
+      const subject = t
+        ? t.replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&rsquo;/g, "'")
+        : "À découvrir"
+      return `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(replacedUrl)}`
     },
   },
 ]
@@ -61,6 +70,7 @@ export const ShareSocial: React.FC<ShareSocialProps> = ({
   image,
   className = "",
 }) => {
+  const replacedUrl = url.replace(/wp-starter\.io/g, "lesdoleances.fr").replace(/([^:]\/)\/+/g, "$1");
   return (
     <div className={`flex gap-2 ${className}`}>
       {socialPlatforms.map((platform) => (
@@ -79,7 +89,9 @@ export const ShareSocial: React.FC<ShareSocialProps> = ({
         type="button"
         aria-label="Copier le lien"
         onClick={() => {
-          navigator.clipboard.writeText(url)
+          if (typeof window !== "undefined" && navigator.clipboard) {
+            navigator.clipboard.writeText(replacedUrl)
+          }
         }}
         className="text-primary bg-primary-foreground hover:bg-white rounded-full p-2 transition-colors"
         title="Copier le lien"
