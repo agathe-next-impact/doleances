@@ -64,7 +64,7 @@ export default function ClientLayout({
       <body className={`${inter.className} overflow-x-hidden`}>
       <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
         <div className="flex min-h-screen flex-col">
-        <header className="sticky top-0 z-10 border-b bg-white/90 backdrop-blur-md transition-colors duration-300 dark:bg-slate-900">
+        <header className="sticky top-0 z-10 border-b bg-white/90 backdrop-blur-md transition-colors duration-">
           <div className="container mx-auto flex h-16 items-center justify-between px-4">
           <div className="flex items-center md:justify-normal justify-start gap-4">
             <Sheet>

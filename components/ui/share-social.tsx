@@ -21,7 +21,7 @@ const socialPlatforms = [
   {
     name: "Facebook",
     icon: FaFacebookF,
-    url: (u: string, _t?: string, img?: string) => {
+    url: (u: string, _t?: string) => {
       const replacedUrl = u.replace(/wp-starter\.io/g, "lesdoleances.fr").replace(/([^:]\/)\/+/g, "$1");
       return `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(replacedUrl)}${
         _t ? `&quote=${encodeURIComponent(_t.replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&rsquo;/g, "'"))}` : ""
@@ -45,7 +45,7 @@ const socialPlatforms = [
       const replacedUrl = u.replace(/wp-starter\.io/g, "lesdoleances.fr").replace(/([^:]\/)\/+/g, "$1");
       const message =
         (t
-          ? t.replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&rsquo;/g, "'") + " "
+          ? t.replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&rsquo;/g, "'").replace(/&#8211;/g, "") + " "
           : "") + replacedUrl
       return `https://wa.me/?text=${encodeURIComponent(message)}`
     },
