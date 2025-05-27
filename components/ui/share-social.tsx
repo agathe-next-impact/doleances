@@ -22,7 +22,7 @@ const socialPlatforms = [
     name: "Facebook",
     icon: FaFacebookF,
     url: (u: string, t?: string, img?: string) =>
-      `https://www.facebook.com/sharer/sharer.php?${u}=https://lesdoleances.fr${img ? `&picture=https://lesdoleances.fr/img/logo.svg` : ""}&quote=${t ? t.replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&rsquo;/g, "'") : ""}`,
+      `https://www.facebook.com/sharer/sharer.php?${u}=https://lesdoleances.fr&picture=${img ? img : ""}&quote=${t ? t.replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&rsquo;/g, "'") : ""}`,
   },
   {
     name: "LinkedIn",
@@ -34,7 +34,7 @@ const socialPlatforms = [
     name: "WhatsApp",
     icon: FaWhatsapp,
     url: (u: string, t?: string) =>
-      `https://wa.me/?text=${t ? t.replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&rsquo;/g, "'") + " " : "" + "https://lesdoleances.fr"}`,
+      `https://wa.me/?text=${t ? t.replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&rsquo;/g, "'") : "" + "https://lesdoleances.fr"}`,
   },
   {
     name: "Email",
