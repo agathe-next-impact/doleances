@@ -98,7 +98,7 @@ export default async function Home() {
                 />
               <div className="h-max flex flex-col rounded-lg border bg-card shadow-lg overflow-hidden">
                 <div className="relative w-full">
-                <YouTubeEmbed videoLink="https://www.youtube.com/embed/8bof5Anluk4?si=H5M7BGGsvWFUODBM" />
+                <YouTubeEmbed videoLink="https://www.youtube.com/embed/b-vrQ-jUxRk?si=ao4g3inJG_-YwGN3" />
                 </div>
               </div>
           
