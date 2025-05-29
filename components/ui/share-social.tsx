@@ -29,7 +29,7 @@ const socialPlatforms = [
         "Replaced URL for Facebook: https://www.facebook.com/sharer/sharer.php?u=" +
           encodeURIComponent(replacedUrl)
       );
-      return `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(replacedUrl)}`;
+      return `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(replacedUrl)}&redirect_uri=${encodeURIComponent(window.location.origin)}`;
     },
   },
   {
