@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { fetchCategories, fetchGroupesLocaux, fetchLastThreePosts } from "@/lib/api";
 
 export async function GET() {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://les-doleances.fr";
+  const baseUrl = "https://les-doleances.fr";
 
   // Récupère les articles et catégories (ajoute d'autres routes si besoin)
   const articles = await fetchLastThreePosts();

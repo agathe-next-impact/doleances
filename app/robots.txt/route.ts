@@ -5,7 +5,7 @@ export async function GET() {
   return new NextResponse(
     `User-agent: *
 Allow: /
-Sitemap: ${baseUrl}/sitemap.xml
+Sitemap: https://lesdoleances.fr/sitemap.xml
 `,
     {
       headers: {
