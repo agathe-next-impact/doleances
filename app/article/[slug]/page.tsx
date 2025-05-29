@@ -25,7 +25,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
           type: "article",
           images: [
             {
-              url: "https://doleances.fr/img/logo.svg",
+              url: "https://doleances.fr/img/doleance_couv.png",
               alt: "Actualités - Les Doléances",
             },
           ],
