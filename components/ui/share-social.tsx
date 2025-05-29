@@ -21,11 +21,15 @@ const socialPlatforms = [
   {
     name: "Facebook",
     icon: FaFacebookF,
-    url: (u: string, _t?: string) => {
-      const replacedUrl = u.replace(/wp-starter\.io/g, "lesdoleances.fr").replace(/palegreen-capybara-652133.hostingersite.com/g, "lesdoleances.fr").replace(/([^:]\/)\/+/g, "$1");
-      return `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(replacedUrl)}${
-        _t ? `&quote=${encodeURIComponent(_t.replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&rsquo;/g, "'"))}` : ""
-      }`
+    url: (u: string) => {
+      const replacedUrl: string = u
+        .replace(/wp-starter\.io/g, "lesdoleances.fr")
+        .replace(/palegreen-capybara-652133.hostingersite.com/g, "lesdoleances.fr");
+      console.log(
+        "Replaced URL for Facebook: https://www.facebook.com/sharer/sharer.php?u=" +
+          encodeURIComponent(replacedUrl)
+      );
+      return `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(replacedUrl)}`;
     },
   },
   {
@@ -85,7 +89,7 @@ export const ShareSocial: React.FC<ShareSocialProps> = ({
       {socialPlatforms.map((platform) => (
         <a
           key={platform.name}
-          href={platform.url(url, text || title, image)}
+          href={platform.url(replacedUrl, text || title, image)}
           target="_blank"
           rel="noopener noreferrer"
           aria-label={`Partager sur ${platform.name}`}
