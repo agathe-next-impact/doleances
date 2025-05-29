@@ -79,7 +79,9 @@ export default async function Home() {
                                 .replace(/&amp;/g, "&")
                                 .replace(/&quot;/g, '"')
                                 .replace(/&rsquo;/g, "'")
-                                .replace(/<[^>]+>/g, "")}
+                                .replace(/<[^>]+>/g, "")
+                                .replace(/&#8211;/g, "-")
+                                .replace(/&#8217;/g, "'")}
                         </Link>
                       </h3>
                       <div
