@@ -146,20 +146,18 @@ export default async function DraggableCardDemo() {
             {vignettes.map((vignette, index) => (
               <div key={index} className="flex flex-col lg:w-[20%] sm:w-[40%] w-full lg:mb-0 mb-8 items-center">  
                 <Image
-                  src={vignette.image}
-                  alt={vignette.titre}
+                  src={vignette?.image}
+                  alt={vignette?.titre}
                   width={500}
                   height={300}
                   className="object-cover w-full h-full rounded-lg"
                 />
-                <h3 className="mt-2 mx-auto text-md font-semibold">{vignette.titre}</h3>
-                {vignette.legende && vignette.lien_darticle && (
+                <h3 className="mt-2 mx-auto text-md font-semibold">{vignette?.titre}</h3>
                 <Button variant="outline" asChild>
-                  <Link href={vignette.lien_darticle} rel="noopener noreferrer" className="text-sm">
-                    {vignette.legende}
+                  <Link href={vignette?.lien_darticle} rel="noopener noreferrer" className="text-sm">
+                    {vignette?.legende}
                   </Link>
                 </Button>
-                )}
               </div>   
             ))}
         </div>
