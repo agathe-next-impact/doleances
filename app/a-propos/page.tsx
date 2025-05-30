@@ -11,7 +11,6 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import CardMap from "@/components/map/map-card";
 import type { Metadata } from "next";
-import { forEach } from "lodash";
 
 export const metadata: Metadata = {
   title: "A propos de nous - Les Doléances",
@@ -155,11 +154,11 @@ export default async function DraggableCardDemo() {
                 />
                 <h3 className="mt-2 mx-auto text-md font-semibold">{vignette.titre}</h3>
                 <Button variant="outline" asChild>
-                  <Link href={vignette.lien} target="_blank" rel="noopener noreferrer" className="text-sm">
+                  <Link href={vignette.lien_darticle} rel="noopener noreferrer" className="text-sm">
                     {vignette.legende}
                   </Link>
                 </Button>
-              </div>
+              </div>   
             ))}
         </div>
       </div>
