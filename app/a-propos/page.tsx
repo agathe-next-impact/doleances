@@ -153,11 +153,13 @@ export default async function DraggableCardDemo() {
                   className="object-cover w-full h-full rounded-lg"
                 />
                 <h3 className="mt-2 mx-auto text-md font-semibold">{vignette.titre}</h3>
+                {vignette.legende && vignette.lien_darticle && (
                 <Button variant="outline" asChild>
                   <Link href={vignette.lien_darticle} rel="noopener noreferrer" className="text-sm">
                     {vignette.legende}
                   </Link>
                 </Button>
+                )}
               </div>   
             ))}
         </div>
