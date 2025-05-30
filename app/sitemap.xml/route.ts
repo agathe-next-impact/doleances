@@ -24,17 +24,17 @@ export async function GET() {
 
   // Ajoute les articles
   urls = urls.concat(
-    articles.map((a) => `article/${typeof a.slug === "string" ? a.slug : a.slug?.rendered || ""}`)
+    articles.map((a) => `/article/${typeof a.slug === "string" ? a.slug : a.slug?.rendered || ""}`)
   );
 
   // Ajoute les catégories
   urls = urls.concat(
-    categories.map((c) => `category/${c.slug}`)
+    categories.map((c) => `/category/${c.slug}`)
   );
 
     // Ajoute les groupes locaux
   urls = urls.concat(
-    groupesLocaux.map((b) => `groupe-local/${b.slug}`)
+    groupesLocaux.map((b) => `/groupe-local/${b.slug}`)
   );
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
