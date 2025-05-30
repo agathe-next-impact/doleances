@@ -154,9 +154,9 @@ console.log("Vignettes:", vignettes);
                   className="object-cover w-full h-full rounded-lg"
                 />
                 <h3 className="mt-2 mx-auto text-md font-semibold">{vignette.titre}</h3>
-                {vignette.lien_darticle && (
+                {vignette.lien && (
                 <Button variant="outline" asChild>
-                  <Link href={vignette.lien_darticle} rel="noopener noreferrer" className="text-sm">
+                  <Link href={vignette.lien} rel="noopener noreferrer" className="text-sm">
                     {vignette.legende ? vignette.legende : ""}
                   </Link>
                 </Button>
