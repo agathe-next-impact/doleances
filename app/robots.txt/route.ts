@@ -1,16 +1,16 @@
-import { NextResponse } from "next/server";
+export const dynamic = 'force-dynamic'; // pour permettre le fetch dynamique
 
 export async function GET() {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://les-doleances.fr";
-  return new NextResponse(
-    `User-agent: *
+  const content = `
+User-agent: *
 Allow: /
+
 Sitemap: https://lesdoleances.fr/sitemap.xml
-`,
-    {
-      headers: {
-        "Content-Type": "text/plain",
-      },
-    }
-  );
+`;
+
+  return new Response(content.trim(), {
+    headers: {
+      'Content-Type': 'text/plain',
+    },
+  });
 }

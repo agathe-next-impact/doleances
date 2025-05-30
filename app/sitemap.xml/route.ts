@@ -1,54 +1,24 @@
-import { NextResponse } from "next/server";
-import { fetchCategories, fetchGroupesLocaux, fetchLastThreePosts } from "@/lib/api";
+export const dynamic = 'force-dynamic'; // 🔥 indispensable
 
 export async function GET() {
-  const baseUrl = "https://les-doleances.fr";
+  const res = await fetch('https://wp-starter.io/wp-json/wp/v2/groupe_local?_embed&per_page=100', {
+    next: { revalidate: 0 }, // ou cache: 'no-store'
+  });
 
-  // Récupère les articles et catégories (ajoute d'autres routes si besoin)
-  const articles = await fetchLastThreePosts();
-  const categories = await fetchCategories();
-  const groupesLocaux = await fetchGroupesLocaux();
+  const groupes = await res.json();
 
-  let urls = [
-    "/",
-    "/category",
-    "/a-propos",
-    "/contact",
-    "/festival",
-    "/rgpd/mentions-legales",
-    "/cartographie",
-    "/contribuer",
-    "/etats-generaux-communaux",
-    // Ajoute ici d'autres routes statiques si besoin
-  ];
+  const sitemap = `<?xml version="1.0" encoding="UTF-8" ?>
+    <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+      ${groupes
+        .map((g: any) => {
+          return `<url><loc>https://lesdoleances.fr/groupes/${g.slug}</loc></url>`;
+        })
+        .join('\n')}
+    </urlset>`;
 
-  // Ajoute les articles
-  urls = urls.concat(
-    articles.map((a) => `/article/${typeof a.slug === "string" ? a.slug : a.slug?.rendered || ""}`)
-  );
-
-  // Ajoute les catégories
-  urls = urls.concat(
-    categories.map((c) => `/category/${c.slug}`)
-  );
-
-    // Ajoute les groupes locaux
-  urls = urls.concat(
-    groupesLocaux.map((b) => `/groupe-local/${b.slug}`)
-  );
-
-  const xml = `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${urls
-  .map(
-    (path) => `<url><loc>${baseUrl}${path}</loc></url>`
-  )
-  .join("\n")}
-</urlset>`;
-
-  return new NextResponse(xml, {
+  return new Response(sitemap, {
     headers: {
-      "Content-Type": "application/xml",
+      'Content-Type': 'application/xml',
     },
   });
 }
