@@ -3,7 +3,7 @@ import {
   DraggableCardBody,
   DraggableCardContainer,
 } from "@/components/ui/draggable-card";
-import { fetchPageBySlug, fetchRandomVerbatimImage, fetchAttachmentById, fetchGroupesLocaux } from "@/lib/api";
+import { fetchPageBySlug, fetchRandomVerbatimImage, fetchAttachmentById, fetchGroupesLocaux, fetchPostById } from "@/lib/api";
 import YouTubeEmbed from "@/components/ui/video";
 import Verbatim from "@/components/verbatim";
 import Image from "next/image";
@@ -62,11 +62,12 @@ export default async function DraggableCardDemo() {
   vignettes = await Promise.all(
     vignettes.map(async (value: any, key: number) => {
       if (value ) {
-        const imageUrl = await fetchAttachmentById(value.image);
+        const imageUrl = await fetchAttachmentById(value.image);        
+        const linkedArticle = value.lien_darticle ? await fetchPostById(value.lien_darticle) : null;
         return {
           image: imageUrl?.source_url,
           titre: value.titre || `Vignette ${key + 1}`,
-          lien: value.lien_darticle,
+          lien: linkedArticle ? `/${linkedArticle.slug}` : null,
           legende: value.legende || "Voir l'article",
         };
       }
@@ -74,7 +75,7 @@ export default async function DraggableCardDemo() {
     })
   );
 
-
+console.log("Vignettes:", vignettes);
   return (
     <>
     <div className="absolute inset-0 -z-10">

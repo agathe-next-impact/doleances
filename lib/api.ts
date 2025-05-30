@@ -431,6 +431,29 @@ export async function fetchPostsByCategory(categoryId: number): Promise<Post[]> 
   }
 }
 
+// Fetch post by ID
+export async function fetchPostById(id: number): Promise<Post | null> {
+  try {
+    const response = await fetch(`${API_BASE_URL}/posts/${id}?_embed`, {
+      headers: {
+        Accept: "application/json",
+      },
+    })
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch post by ID: ${response.status}`)
+    }
+
+    const post = await response.json()
+
+    // Vérifier si le post a été trouvé
+    return post || null
+  } catch (error) {
+    console.error(`Error fetching post by ID ${id}:`, error)
+    return null
+  }
+}
+
 // Fetch a specific post by slug
 export async function fetchPostBySlug(slug: string): Promise<Post | null> {
   try {
