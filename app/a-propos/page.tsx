@@ -67,7 +67,7 @@ export default async function DraggableCardDemo() {
         return {
           image: imageUrl?.source_url,
           titre: value.titre || `Vignette ${key + 1}`,
-          lien: linkedArticle ? `/${linkedArticle.slug}` : null,
+          lien: linkedArticle ? `/article/${linkedArticle.slug}` : null,
           legende: value.legende || "Voir l'article",
         };
       }
