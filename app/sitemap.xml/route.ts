@@ -10,15 +10,15 @@ export async function GET() {
   const groupesLocaux = await fetchGroupesLocaux();
 
   let urls = [
-    "",
-    "category",
-    "a-propos",
-    "contact",
-    "festival",
-    "rgpd/mentions-legales",
-    "cartographie",
-    "contribuer",
-    "etats-generaux-communaux",
+    "/",
+    "/category",
+    "/a-propos",
+    "/contact",
+    "/festival",
+    "/rgpd/mentions-legales",
+    "/cartographie",
+    "/contribuer",
+    "/etats-generaux-communaux",
     // Ajoute ici d'autres routes statiques si besoin
   ];
 
