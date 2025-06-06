@@ -11,7 +11,7 @@ export async function GET() {
     <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
       ${groupes
         .map((g: any) => {
-          return `<url><loc>https://lesdoleances.fr/groupes/${g.slug}</loc></url>`;
+          return `<url><loc>https://lesdoleances.fr/groupe-local/${g.slug}</loc></url>`;
         })
         .join('\n')}
     </urlset>`;
