@@ -68,7 +68,7 @@ export default function LocationSidebar({
         <div className="px-4 h-full flex flex-col">
           <div className="flex justify-between items-center">
             <h2 dangerouslySetInnerHTML={{__html: location.title}}/>
-            <Button size="icon" className="bg-white" onClick={onClose}>
+            <Button size="icon" className="bg-transparent" onClick={onClose}>
               <X className="h-4 w-4 text-black" />
               <span className="sr-only">Fermer</span>
             </Button>
