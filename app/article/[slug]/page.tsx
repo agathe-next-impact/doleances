@@ -18,11 +18,14 @@ export async function generateMetadata({ params }: { params: { slug: string } })
         title: title.replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&rsquo;/g, "'"),
         description: description.replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&rsquo;/g, "'") || "L'actualité des doléances",
         openGraph: {
+          siteName: "Les Doléances",
           title: "Actualités - Les Doléances",
           description: "L'actualité des doléances",
+          url: `https://doleances.fr/article/${params.slug}`,
+          type: "article",
           images: [
             {
-              url: "https://doleances.fr/img/logo.svg",
+              url: "https://doleances.fr/img/doleance_couv.png",
               alt: "Actualités - Les Doléances",
             },
           ],
@@ -33,10 +36,12 @@ export async function generateMetadata({ params }: { params: { slug: string } })
     return {
       title: title.replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&rsquo;/g, "'"),
       description: description.replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&rsquo;/g, "'") || "L'actualité des doléances",
-      url: `https://doleances.fr/article/${params.slug}`,
       openGraph: {
+        siteName: "Les Doléances",
         title: "Actualités - Les Doléances",
         description: "L'actualité des doléances",
+        url: `https://doleances.fr/article/${params.slug}`,
+        type: "article",
         images: [
           {
             url: `https://doleances.fr/${img}`,

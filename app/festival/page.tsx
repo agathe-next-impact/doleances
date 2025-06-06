@@ -53,7 +53,7 @@ export default async function Page() {
       </div>
 
       <section className="w-full h-max mb-12 flex flex-col gap-12 md:grid md:grid-cols-6 md:gap-12">
-        <div className="h-max flex lg:flex-col md:flex-row lg:col-span-2 col-span-6 gap-6 overflow-hidden">
+        <div className="h-max flex lg:flex-col md:flex-row flex-col lg:col-span-2 col-span-6 gap-6 overflow-hidden">
           {page?.acf?.image_de_une && (
             <>
               <div className="h-full w-full flex flex-col flex-grow justify-between p-6 border rounded-lg bg-card shadow-lg">
