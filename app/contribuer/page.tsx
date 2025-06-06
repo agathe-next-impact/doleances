@@ -10,7 +10,7 @@ export const metadata: Metadata = {
     description: "Participer ou Nous contacter pour faire avancer le projet",
     images: [
       {
-        url: "/img/doleances_couv.png",
+        url: "https://doleances.fr/img/doleances_couv.png",
         alt: "Contribuer - Les Doléances",
       },
     ],

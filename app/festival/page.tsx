@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     description: "Le Festival des doléances, un événement citoyen et artistique",
     images: [
       {
-        url: "/img/festival_verso.jpg",
+        url: "https://doleances.fr/img/festival_verso.jpg",
         alt: "Festival des doléances",
       },
     ],

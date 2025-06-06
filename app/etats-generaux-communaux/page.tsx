@@ -15,7 +15,7 @@ export const metadata: Metadata = {
     description: "Les Etats Généraux communaux des doléances",
     images: [
       {
-        url: "/img/doleances_couv.png",
+        url: "https://doleances.fr/img/doleances_couv.png",
         alt: "Etats Généraux Communaux",
       },
     ],

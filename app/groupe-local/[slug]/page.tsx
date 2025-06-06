@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     description: "Découvrez les groupes locaux des Doléances, leurs activités et comment les rejoindre.",
     images: [
       {
-        url: "/img/doleances_couv.png",
+        url: "https://doleances.fr/img/doleances_couv.png",
         alt: "Les groupes locaux - Les Doléances",
       },
     ],
