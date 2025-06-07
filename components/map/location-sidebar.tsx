@@ -120,6 +120,20 @@ export default function LocationSidebar({
               </div>
             )}
 
+            {location.website && (
+              <div className="flex items-center gap-2">
+                <Globe className="h-5 w-5 text-gray-500" />
+                <a
+                  href={location.website}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-primary hover:underline"
+                >
+                  {location.website}
+                </a>
+              </div>
+            )}
+
             {location.slug && (
               <div className="flex items-start gap-2 pt-8">
                 <Button variant="outline" size={"sm"}>
