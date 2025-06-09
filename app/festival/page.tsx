@@ -6,6 +6,23 @@ import PopupImage from "@/components/ui/popup-image";
 import Verbatim from "@/components/verbatim";
 import StaticMap from "@/components/map/static-map";
 import DateFormat from "@/components/date-format";
+import type { Metadata } from "next"
+
+export const metadata: Metadata = {
+  title: "Le Festival de mai 2025 - Les Doléances",
+  description: "Le Festival des doléances, un événement citoyen et artistique",
+  openGraph: {
+    title: "Le Festival de mai 2025 - Les Doléances",
+    description: "Le Festival des doléances, un événement citoyen et artistique",
+    images: [
+      {
+        url: "https://doleances.fr/img/festival_verso.jpg",
+        alt: "Festival des doléances",
+      },
+    ],
+  },
+}
+
 
 export default async function Page() {
   const page = await fetchPageBySlug("festival-mai-2025");
@@ -23,7 +40,7 @@ export default async function Page() {
     </div>
     
     <div className="container mx-auto md:p-8 p-4">
-      <div className="mb-12 text-center">
+      <div className="py-4 text-center">
         <h1 className="mb-4 text-43xl font-light tracking-tight">
           Festival des doléances
         </h1>
@@ -36,7 +53,7 @@ export default async function Page() {
       </div>
 
       <section className="w-full h-max mb-12 flex flex-col gap-12 md:grid md:grid-cols-6 md:gap-12">
-        <div className="h-max flex flex-col col-span-2 gap-6 overflow-hidden">
+        <div className="h-max flex lg:flex-col md:flex-row flex-col lg:col-span-2 col-span-6 gap-6 overflow-hidden">
           {page?.acf?.image_de_une && (
             <>
               <div className="h-full w-full flex flex-col flex-grow justify-between p-6 border rounded-lg bg-card shadow-lg">
@@ -86,7 +103,7 @@ export default async function Page() {
             </div>
           </div>
         </div>
-        <div className="h-max flex flex-col col-span-4 flex-grow p-6 justify-between rounded-lg border bg-card shadow-lg">
+        <div className="h-max flex flex-col lg:col-span-4 col-span-6 flex-grow p-6 justify-between rounded-lg border bg-card shadow-lg">
           <div>
             <p className="font-serif text-2xl">
               {page?.acf?.date_de_debut && (
@@ -151,7 +168,7 @@ export default async function Page() {
     </div>
       <section className="mb-8 grid gap-12 grid-cols-3">
         <div className="flex flex-col col-span-4 h-full w-full justify-between rounded-lg border bg-card shadow-lg overflow-hidden">
-          <div className="flex md:flex-row flex-col justify-between gap-8 p-6">
+          <div className="flex lg:flex-row flex-col justify-between gap-8 p-6">
             {page?.acf?.edito_fabrice && (
               <div className="basis-1/2">
                 <h2 className="w-full mb-4 pb-3 text-2xl font-serif font-light uppercase border-b-[1px]">

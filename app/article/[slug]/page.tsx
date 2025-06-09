@@ -1,19 +1,96 @@
-import { fetchPostBySlug } from "@/lib/api"
+import { fetchAttachmentById, fetchPostBySlug } from "@/lib/api"
 import { notFound } from "next/navigation"
 import ArticleContent from "@/components/actualites/article-content" 
-export default async function ArticlePage({ params }: { params: { slug: string } }) {
-  try {
-    console.log(`Récupération de l'article avec l'ID ${params.slug}`)
-    const post = await fetchPostBySlug(params.slug)
+import type { Metadata } from "next"
+import ShareSocial from "@/components/ui/share-social"
+import type React from "react"
 
-    // Vérifier si l'article a un groupe local associé
-    if (post.acf?.groupe_local_tax) {
-      console.log(`Cet article est associé au groupe local avec l'ID ${post.acf.groupe_local_tax}`)
-    } else {
-      console.log("Cet article n'a pas de groupe local associé dans les champs ACF")
+
+
+export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+  const post = await fetchPostBySlug(params.slug)
+  if (!post) {
+    const title = post?.title?.rendered || "Actualités - Les Doléances"
+    const description = post?.excerpt?.rendered || "L'actualité des doléances"
+    const img = await fetchAttachmentById(post?.featured_media || 0)
+    if (!img) {
+      return {
+        title: title.replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&rsquo;/g, "'"),
+        description: description.replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&rsquo;/g, "'") || "L'actualité des doléances",
+        openGraph: {
+          siteName: "Les Doléances",
+          title: "Actualités - Les Doléances",
+          description: "L'actualité des doléances",
+          url: `https://doleances.fr/article/${params.slug}`,
+          type: "article",
+          images: [
+            {
+              url: "https://doleances.fr/img/doleance_couv.png",
+              alt: "Actualités - Les Doléances",
+            },
+          ],
+        },
+      }
     }
+  else {  
+    return {
+      title: title.replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&rsquo;/g, "'"),
+      description: description.replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&rsquo;/g, "'") || "L'actualité des doléances",
+      openGraph: {
+        siteName: "Les Doléances",
+        title: "Actualités - Les Doléances",
+        description: "L'actualité des doléances",
+        url: `https://doleances.fr/article/${params.slug}`,
+        type: "article",
+        images: [
+          {
+            url: `https://doleances.fr/${img}`,
+            alt: "Actualités - Les Doléances",
+          },
+        ],
+      },
+    }
+  }
+  }
 
-    console.log("Données de l'article:", post)
+
+  const title = post.title?.rendered
+    ? post.title.rendered.replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&rsquo;/g, "'")
+    : "Actualités - Les Doléances"
+  const description = post.excerpt?.rendered.replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&rsquo;/g, "'") || "L'actualité des doléances"
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      images: [
+        {
+          url: "/img/logo.svg",
+          alt: title,
+        },
+      ],
+    },
+  }
+}
+
+
+
+export default async function ArticlePage({ params }: { params: { slug: string } }): Promise<React.JSX.Element> {
+  try {
+    const post = await fetchPostBySlug(params.slug)
+    const postMedia = post?.featured_media ? await fetchAttachmentById(post.featured_media) : {}
+
+    // OpenGraph data fallback
+    const ogTitle = post?.acf?.opengraph_title || post?.title?.rendered || ""
+    const ogDescription = post?.acf?.opengraph_description || post?.excerpt?.rendered?.replace(/<[^>]+>/g, "") || ""
+    const ogImage = postMedia.source_url ||
+      "/img/logo.svg"
+
+    
+    const url = `${process.env.NEXT_PUBLIC_SITE_URL || "https://les-doleances.fr"}/article/${params.slug}`
+
 
     return (
     <>
@@ -22,7 +99,14 @@ export default async function ArticlePage({ params }: { params: { slug: string }
       <div className="absolute top-[500px] right-0 h-[400px] w-[40vw] rounded-full bg-gradient-to-r from-blue-200 to-pink-200 opacity-20 blur-3xl"></div>
     </div>
       <div className="container mx-auto md:p-8 p-4">
-        <ArticleContent post={post} />
+          <ShareSocial
+            url={url}
+            title={ogTitle}
+            text={ogDescription}
+            image={ogImage}
+          />
+        {post && <ArticleContent post={post} />}
+        
       </div>
       </>
     )
@@ -31,3 +115,4 @@ export default async function ArticlePage({ params }: { params: { slug: string }
     notFound()
   }
 }
+ 

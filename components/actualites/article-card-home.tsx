@@ -36,10 +36,10 @@ export function ArticleCardHome({ article }: ArticleCardProps) {
       {article && (
         <div className="relative h-48 w-full">
           <Image
-            src={article.featuredImage || "/img/doleance_couv.png"}
+            src={article.featuredImage || "/img/placeholder.png"}
             alt={article.title}
             fill
-            className="object-cover object-center rounded-lg"
+            className="object-cover object-top rounded-lg"
           />
         </div>
       )}

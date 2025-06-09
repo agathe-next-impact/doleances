@@ -4,6 +4,45 @@ import ArticleList from "@/components/actualites/article-list"
 import CategoryHero from "@/components/actualites/category-hero"
 import SearchFilter from "@/components/actualites/search-filter"
 import { Suspense } from "react"
+import type { Metadata } from "next"
+
+export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+  const category = await fetchCategoryBySlug(params.slug)
+  if (!category) {
+    const title = "Actualités - Les Doléances"
+    const description = "L'actualité des doléances"
+    return {
+      title,
+      description,
+      openGraph: {
+        title,
+        description,
+        images: [
+          {
+            url: "https://doleances.fr/img/doleances_couv.png",
+            alt: title,
+          },
+        ],
+      },
+    }
+  }
+  const title = category.title?.rendered || "Actualités - Les Doléances"
+  const description = category.excerpt?.rendered || "L'actualité des doléances"
+  return {
+    title: title.replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&rsquo;/g, "'"),
+    description: description.replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&rsquo;/g, "'") || "L'actualité des doléances",
+    openGraph: {
+      title: title.replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&rsquo;/g, "'"),
+      description: description.replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&rsquo;/g, "'") || "L'actualité des doléances",
+      images: [
+        {
+          url: "/img/logo.svg",
+          alt: title.replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&rsquo;/g, "'"),
+        },
+      ],
+    },
+  }
+}
 
 
 
@@ -11,7 +50,6 @@ export default async function CategoryPage({ params }: { params: { slug: string 
   try {
 
     const categorySlug = params.slug
-    console.log(`Récupération de la catégorie avec le slug ${categorySlug}`)
 
     // Fetch category data with better error handling
     let category
@@ -50,7 +88,6 @@ export default async function CategoryPage({ params }: { params: { slug: string 
 
     if (isEventCategory) {
       // Pour les catégories d'événements, utiliser la date de l'événement
-      console.log("Catégorie d'événements détectée, extraction des dates d'événements")
 
       // Collecter toutes les dates d'événements et les formater en MM/YYYY (comme pour les publications)
       const eventDates = []
@@ -66,12 +103,8 @@ export default async function CategoryPage({ params }: { params: { slug: string 
               // Ajouter la date au format MM/YYYY pour le filtrage (comme pour les publications)
               const monthYearFormat = `${month}/${year}`
               eventDates.push(monthYearFormat)
-              console.log(`Date d'événement formatée: ${monthYearFormat} pour l'article ${post.id}`)
-            } else {
-              console.log(`Format de date invalide: ${post.acf.date_de_levenement} pour l'article ${post.id}`)
-            }
+            } 
           } catch (error) {
-            console.error(`Erreur lors du traitement de la date pour l'article ${post.id}:`, error)
           }
         }
       }
@@ -90,7 +123,6 @@ export default async function CategoryPage({ params }: { params: { slug: string 
         }
       })
 
-      console.log(`Dates d'événements uniques après tri: ${dates.join(", ")}`)
     } else {
       // Pour les autres catégories, utiliser la date de publication
       dates = [

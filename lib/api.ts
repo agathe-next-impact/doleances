@@ -29,6 +29,7 @@ export interface Post {
   author: number
   slug: string
   link: string
+  featured_media?: number
   categories?: number[]
   acf?: {
     groupe_local?: string
@@ -219,7 +220,7 @@ export async function fetchCategories(): Promise<Category[]> {
 export async function fetchCategoryBySlug(slug: string): Promise<Category | null> {
   try {
     const response = await fetch(`${API_BASE_URL}/categories?slug=${slug}`, {
-      cache: "no-store",
+      
       headers: {
         Accept: "application/json",
       },
@@ -254,7 +255,7 @@ export async function fetchCategory(id: number): Promise<Category> {
     // If not found in cache, try direct API call
     try {
       const response = await fetch(`${API_BASE_URL}/categories/${id}`, {
-        cache: "no-store",
+        
         headers: {
           Accept: "application/json",
         },
@@ -297,7 +298,7 @@ export async function fetchAllPosts(): Promise<Post[]> {
 
     // Récupérer le nombre total de pages
     const countResponse = await fetch(`${API_BASE_URL}/posts?per_page=1`, {
-      cache: "no-store",
+      
       headers: {
         Accept: "application/json",
       },
@@ -322,7 +323,7 @@ export async function fetchAllPosts(): Promise<Post[]> {
       console.log(`Récupération de la page ${page}/${maxPages}`)
 
       const response = await fetch(`${API_BASE_URL}/posts?_embed&per_page=100&page=${page}`, {
-        cache: "no-store",
+        
         headers: {
           Accept: "application/json",
         },
@@ -404,7 +405,7 @@ export async function fetchLastThreePosts(): Promise<Post[]> {
 export async function fetchPostsByCategory(categoryId: number): Promise<Post[]> {
   try {
     const response = await fetch(`${API_BASE_URL}/posts?categories=${categoryId}&_embed&per_page=100`, {
-      cache: "no-store",
+      
       headers: {
         Accept: "application/json",
       },
@@ -430,11 +431,33 @@ export async function fetchPostsByCategory(categoryId: number): Promise<Post[]> 
   }
 }
 
+// Fetch post by ID
+export async function fetchPostById(id: number): Promise<Post | null> {
+  try {
+    const response = await fetch(`${API_BASE_URL}/posts/${id}?_embed`, {
+      headers: {
+        Accept: "application/json",
+      },
+    })
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch post by ID: ${response.status}`)
+    }
+
+    const post = await response.json()
+
+    // Vérifier si le post a été trouvé
+    return post || null
+  } catch (error) {
+    console.error(`Error fetching post by ID ${id}:`, error)
+    return null
+  }
+}
+
 // Fetch a specific post by slug
 export async function fetchPostBySlug(slug: string): Promise<Post | null> {
   try {
     const response = await fetch(`${API_BASE_URL}/posts?slug=${slug}&_embed`, {
-      cache: "no-store",
       headers: {
         Accept: "application/json",
       },
@@ -458,7 +481,7 @@ export async function fetchPostBySlug(slug: string): Promise<Post | null> {
 export async function fetchRecentPostsByCategory(categoryId: number): Promise<Post[]> {
   try {
     const response = await fetch(`${API_BASE_URL}/posts?categories=${categoryId}&_embed&per_page=4`, {
-      cache: "no-store",
+      
       headers: {
         Accept: "application/json",
       },
@@ -476,7 +499,7 @@ export async function fetchRecentPostsByCategory(categoryId: number): Promise<Po
         if (post.featured_media) {
           try {
             const mediaResponse = await fetch(`${API_BASE_URL}/media/${post.featured_media}`, {
-              cache: "no-store",
+              
               headers: {
                 Accept: "application/json",
               },
@@ -636,7 +659,7 @@ export async function fetchPostsByGroupeLocalCPT(groupeLocalCptId: number): Prom
 
     // Récupérer tous les posts (limité à 100 pour des raisons de performance)
     const response = await fetch(`${API_BASE_URL}/posts?_embed&per_page=100`, {
-      cache: "no-store",
+      
       headers: {
         Accept: "application/json",
       },
@@ -669,7 +692,7 @@ export async function fetchPostsByGroupeLocalCPT(groupeLocalCptId: number): Prom
 export async function fetchCategoriesForPost(postId: number): Promise<Category[]> {
   try {
     const response = await fetch(`${API_BASE_URL}/categories?post=${postId}&per_page=100`, {
-      cache: "no-store",
+      
       headers: {
         Accept: "application/json",
       },
@@ -760,7 +783,7 @@ export async function fetchGroupesLocaux(): Promise<GroupeLocalPost[]> {
     }
 
     const response = await fetch(`${API_BASE_URL}/groupe_local?_embed&per_page=100`, {
-      cache: "no-store",
+      
       headers: {
         Accept: "application/json",
       },
@@ -794,7 +817,7 @@ export async function fetchAllGroupesLocaux(
 }> {
   try {
     const response = await fetch(`${API_BASE_URL}/groupe_local?_embed&per_page=${perPage}&page=${page}`, {
-      cache: "no-store",
+      
       headers: {
         Accept: "application/json",
       },
@@ -838,7 +861,7 @@ export async function fetchGroupeLocalBySlug(slug: string): Promise<GroupeLocalP
 
     // Si non trouvé dans le cache, essayer un appel API direct
     const response = await fetch(`${API_BASE_URL}/groupe_local?slug=${slug}&_embed`, {
-      cache: "no-store",
+      
       headers: {
         Accept: "application/json",
       },
@@ -887,7 +910,7 @@ export async function fetchGroupeLocalById(id: number): Promise<GroupeLocalPost 
       `Groupe local non trouvé dans le cache, tentative d'appel API direct à ${API_BASE_URL}/groupe_local/${id}`,
     )
     const response = await fetch(`${API_BASE_URL}/groupe_local/${id}?_embed`, {
-      cache: "no-store",
+      
       headers: {
         Accept: "application/json",
       },
@@ -1015,7 +1038,7 @@ export async function fetchRandomVerbatimImage(): Promise<VerbatimImage[] | null
   
   try {
     const response = await fetch(`${API_BASE_URL}/image`, {
-      cache: "no-store",
+      
       headers: {
         Accept: "application/json",
       },
@@ -1038,5 +1061,3 @@ export async function fetchRandomVerbatimImage(): Promise<VerbatimImage[] | null
     return null;
   }
 }
-
-

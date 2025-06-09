@@ -9,6 +9,8 @@ import { Badge } from "@/components/ui/badge"
 import { MapPin, Calendar, Users } from "lucide-react"
 import StaticMap from "@/components/map/static-map"
 import DateFormat, { TimeFormat } from "@/components/date-format"
+import ShareSocial from "@/components/ui/share-social"
+import { GutenbergContent } from "@/components/gutenberg-content"
 
 interface ArticleContentProps {
   post: Post
@@ -88,7 +90,6 @@ export default function ArticleContent({ post }: ArticleContentProps) {
     console.error("Error extracting ACF fields:", error)
   }
 
-console.log("ACF Fields:", acfFields)
 
   // Récupérer l'ID du groupe local depuis les champs ACF (utiliser tax_groupe_local ou groupe_local_tax)
   const groupeLocalId = post.acf?.tax_groupe_local || post.acf?.groupe_local_tax || null
@@ -100,14 +101,7 @@ console.log("ACF Fields:", acfFields)
       if (groupeLocalId) {
         try {
           setIsLoadingGroupe(true)
-          console.log(`Chargement du groupe local avec l'ID ${groupeLocalId} depuis les champs ACF`)
           const groupe = await fetchGroupeLocalById(groupeLocalId)
-          if (groupe) {
-            console.log(`Groupe local trouvé: ${groupe.title.rendered}`)
-            setGroupeLocalPost(groupe)
-          } else {
-            console.log(`Aucun groupe local trouvé avec l'ID ${groupeLocalId}`)
-          }
         } catch (error) {
           console.error("Error loading groupe local post from ACF:", error)
         } finally {
@@ -182,7 +176,7 @@ console.log("ACF Fields:", acfFields)
   })()
 
   return (
-    <div className="px-4 py-8 mx-auto">
+    <div className="lg:py-8 py-0 mx-auto">
       {/* Nouvelle mise en page pour les événements avec image à gauche (50%) et détails à droite (50%) */}
       {isEvent ? (
         <div className="mb-8">
@@ -294,23 +288,23 @@ console.log("ACF Fields:", acfFields)
         </div>
       ) : (
         // Affichage standard pour les articles non-événements
-        <div className="flex">
+        <div className="flex lg:flex-row flex-col lg:gap-8">
           {/* Colonne de gauche: Image (33%) */}
-          <div className="hidden md:block w-1/3 py-4 mx-auto">
+          <div className="w-full lg:w-1/3 py-4 mx-auto">
 
-                <div className="relative h-64 md:h-96 mb-8">
+                <div className="relative lg:h-64 md:h-48 h-36 mb-8">
                   <Image
                     src={featuredImage || "/img/placeholder.png"}
                     alt=""
                     fill
-                    className="object-cover rounded-lg"
+                    className="object-cover object-top rounded-lg"
                     sizes="(max-width: 768px) 40vw, (max-width: 1200px) 768px, 1024px"
                   />
                 </div>
           </div>
           {/* Colonne de droite: Détails de l'article (67%) */}
-          <div className="w-2/3 md:w-2/3 px-4 py-8">
-                <div className="w-max px-8 pt-8 mb-8 bg-white border shadow-sm rounded-lg">
+          <div className="lg:w-2/3 w-full md:px-4 lg:py-8 p-4">
+                <div className="px-8 lg:pt-8 pt-4 md:mb-8 mb-0 bg-white border shadow-sm rounded-lg">
                   <Badge variant="secondary" className="mb-4">
                   <Link href={`/category/${categorySlug}`}>
                       {categoryName}
@@ -342,6 +336,7 @@ console.log("ACF Fields:", acfFields)
                         </Link>
                       </div>
                     )}
+                    
                   </div>
                 </div>
                 {acfFields.length > 0 && !isEvent && (
@@ -349,7 +344,7 @@ console.log("ACF Fields:", acfFields)
                   ["auteur", "lien_de_la_publication", "date_de_la_publication", "auteur_et_media", "lien_vers_larticle"].includes(key)
                   ) && (
                   <>
-                  <div className="ml-2 rounded-lg">
+                  <div className="md:ml-2 ml-0 md:mt-0 mt-8">
                   <dl className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <>
                       <div className="space-y-1">
@@ -444,6 +439,7 @@ console.log("ACF Fields:", acfFields)
 
       {/* Affichage du contenu principal de l'article */}
 
+
           {post.acf?.descriptif && (
             <div className="gap-2 py-4">
               <div className="text-sm text-muted-foreground">
@@ -453,15 +449,9 @@ console.log("ACF Fields:", acfFields)
         )}
 
         {post?.content.rendered && (
-            <article className="gap-2 mt-4">
-              <div
-                dangerouslySetInnerHTML={{
-                  __html:
-                    post?.content.rendered ??
-                    "",
-                }}
-              />
-            </article>
+            <div className="gutenberg-wrapper">
+              <GutenbergContent content={post.content.rendered} />
+            </div>
         )}  
 
           {post.acf?.contenu_de_larticle && (

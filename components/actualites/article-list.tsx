@@ -26,7 +26,6 @@ export default function ArticleList({ initialPosts, categoryId, isEventCategory 
   // Filtrer les articles lorsque les paramètres de recherche changent
   useEffect(() => {
     let isMounted = true
-    console.log("Filtrage avec paramètres:", { searchQuery, dateFilter, groupeLocalCptFilter })
 
     const fetchFilteredPosts = async () => {
       try {
@@ -73,7 +72,6 @@ export default function ArticleList({ initialPosts, categoryId, isEventCategory 
                     }
                     return false
                   } catch (error) {
-                    console.error(`Erreur lors du filtrage par date pour l'article ${post.slug}:`, error)
                     return false
                   }
                 })
@@ -95,7 +93,6 @@ export default function ArticleList({ initialPosts, categoryId, isEventCategory 
               setFilteredPosts(filtered)
             }
           } catch (error) {
-            console.error("Error fetching filtered posts:", error)
             if (isMounted) {
               setFilteredPosts([]) // Set empty array on error
             }
@@ -146,7 +143,7 @@ export default function ArticleList({ initialPosts, categoryId, isEventCategory 
                   }
                   return false
                 } catch (error) {
-                  console.error(`Erreur lors du filtrage par date pour l'article ${post.slug}:`, error)
+                  
                   return false
                 }
               })
@@ -175,7 +172,7 @@ export default function ArticleList({ initialPosts, categoryId, isEventCategory 
           }
         }
       } catch (error) {
-        console.error("Error in fetchFilteredPosts:", error)
+        
         if (isMounted) {
           setFilteredPosts([]) // Set empty array on error
         }
