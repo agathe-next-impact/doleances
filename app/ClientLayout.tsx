@@ -171,25 +171,6 @@ export default function ClientLayout({
                 </li>
                 <li>
                 <Link
-                  href="/contribuer"
-                  className="flex items-center text-sm font-medium hover:text-primary"
-                  onClick={(e) => {
-                  e.preventDefault(); // Empêche la navigation immédiate
-                  const closeEvent = new CustomEvent("close-sheet");
-                  window.dispatchEvent(closeEvent);
-                
-                  // Attendre un court instant pour que le Sheet se ferme avant de naviguer
-                  setTimeout(() => {
-                    window.location.href = "/contribuer"; // Naviguer manuellement
-                  }, 300); // Ajustez le délai si nécessaire
-                  }}
-                >
-                  <Pen className="mr-2 h-4 w-4" />
-                  Contribuer
-                </Link>
-                </li>
-                <li>
-                <Link
                   href="/pages/a-propos"
                   className="flex items-center text-sm font-medium hover:text-primary"
                   onClick={(e) => {
@@ -207,6 +188,27 @@ export default function ClientLayout({
                   A propos
                 </Link>
                 </li>
+
+                <li>
+                <Link
+                  href="/contribuer"
+                  className="flex items-center text-sm font-medium hover:text-primary"
+                  onClick={(e) => {
+                  e.preventDefault(); // Empêche la navigation immédiate
+                  const closeEvent = new CustomEvent("close-sheet");
+                  window.dispatchEvent(closeEvent);
+                
+                  // Attendre un court instant pour que le Sheet se ferme avant de naviguer
+                  setTimeout(() => {
+                    window.location.href = "/contribuer"; // Naviguer manuellement
+                  }, 300); // Ajustez le délai si nécessaire
+                  }}
+                >
+                  <Pen className="mr-2 h-4 w-4" />
+                  Nous contacter
+                </Link>
+                </li>
+
               </ul>
               </nav>
             </SheetContent>

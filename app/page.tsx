@@ -174,12 +174,12 @@ export default async function Home() {
         <div className="h-max flex flex-col lg:col-span-2 col-span-1 md:row-span-1 rounded-lg border bg-card shadow-lg overflow-hidden">
           <div className="flex flex-col flex-grow justify-between p-6">
                   <div>
-                  <h2 className="w-full mb-4 pb-3 text-2xl font-serif font-light uppercase border-b-[1px]">Participer</h2>
+                  <h2 className="w-full mb-4 pb-3 text-2xl font-serif font-light uppercase border-b-[1px]">Nous contacter</h2>
                   <div className="mb-6 line-clamp-4 text-muted-foreground" dangerouslySetInnerHTML={
                     { __html: contribuer?.acf?.intro }} />    
                   </div>  
                     <Button variant="outline" asChild>
-                      <Link href='/contribuer'>Contribuer</Link>
+                      <Link href='/contribuer'>Envoyer un message</Link>
                     </Button>
             </div>
             </div>           
