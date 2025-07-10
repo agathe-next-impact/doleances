@@ -110,11 +110,11 @@ export default async function Home() {
         <div className="flex lg:flex-col sm:flex-row flex-col lg:col-span-2 col-span-6 gap-12"> 
           <div className="h-max flex flex-col overflow-hidden border rounded-lg bg-card shadow-lg">
             <Image 
-              src="/img/festival_recto.jpg"
+              src="/img/fanzine-couv.jpg"
               alt="Image d'illustration"
-              width={500}
+              width={400}
               height={300}
-              className="object-contain w-full mb-4 "
+              className="object-contain mb-4 "
             />
             {/*
             <div className="items-end">
@@ -123,7 +123,7 @@ export default async function Home() {
             */}
             
             <Button variant="outline" asChild className="mb-8 max-w-max">
-              <Link href='/festival'>Découvrir</Link>
+              <Link target="_blank" href='/doc/fanzine-doleance_avec-couv.pdf'>Découvrir</Link>
             </Button>
           </div>           
           <div className="flex flex-col justify-start p-6">

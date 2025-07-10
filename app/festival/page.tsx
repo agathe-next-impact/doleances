@@ -92,15 +92,21 @@ export default async function Page() {
           )}
           <div className="h-max mt-8 flex flex-col col-span-2 border rounded-lg bg-card shadow-lg overflow-hidden">
             <Image
-              src="/img/festival_recto.jpg"
+              src="/img/fanzine-couv.jpg"
               alt="Image d'illustration"
               width={500}
               height={300}
               className="object-contain w-full h-full mb-4 "
             />
+            {/*
             <div className="items-end">
               <PopupImage image="/img/festival_verso.jpg" />
             </div>
+            */}
+
+            <Button variant="outline" asChild className="mb-8 max-w-max">
+              <Link target="_blank" href='/doc/fanzine-doleance_avec-couv.pdf'>Découvrir</Link>
+            </Button>
           </div>
         </div>
         <div className="h-max flex flex-col lg:col-span-4 col-span-6 flex-grow p-6 justify-between rounded-lg border bg-card shadow-lg">
