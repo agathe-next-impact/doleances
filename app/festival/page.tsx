@@ -105,7 +105,7 @@ export default async function Page() {
             */}
 
             <Button variant="outline" asChild className="mb-8 max-w-max">
-              <Link target="_blank" href='/doc/fanzine-doleance_avec-couv.pdf'>Découvrir</Link>
+              <Link target="_blank" href='/doc/fanzine-doleance_avec-couv-min.pdf'>Découvrir</Link>
             </Button>
           </div>
         </div>
