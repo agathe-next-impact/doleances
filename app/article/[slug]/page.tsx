@@ -18,7 +18,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
         siteName: "Les Doléances",
         title: "Actualités - Les Doléances",
         description: "L'actualité des doléances",
-        url: `https://lesdoleances.fr/article/${params.slug}`,
+        url: `https://www.lesdoleances.fr/article/${params.slug}`,
         type: "article",
         images: [
           {
@@ -32,16 +32,34 @@ export async function generateMetadata({ params }: { params: { slug: string } })
 
   // Post exists, generate metadata
   const title = post.title?.rendered
-    ? post.title.rendered.replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&rsquo;/g, "'")
+    ? post.title.rendered
+        .replace(/<[^>]*>/g, "")  // Supprime les balises HTML
+        .replace(/&amp;/g, "&")
+        .replace(/&quot;/g, '"')
+        .replace(/&rsquo;/g, "'")
+        .replace(/&hellip;/g, "...")
+        .replace(/&ndash;/g, "–")
+        .replace(/&mdash;/g, "—")
+        .trim()
     : "Actualités - Les Doléances"
   
   const description = post.excerpt?.rendered
-    ? post.excerpt.rendered.replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&rsquo;/g, "'").replace(/<[^>]+>/g, "")
+    ? post.excerpt.rendered
+        .replace(/<[^>]*>/g, "")  // Supprime les balises HTML
+        .replace(/&amp;/g, "&")
+        .replace(/&quot;/g, '"')
+        .replace(/&rsquo;/g, "'")
+        .replace(/&hellip;/g, "...")
+        .replace(/&ndash;/g, "–")
+        .replace(/&mdash;/g, "—")
+        .replace(/\s+/g, " ")  // Remplace les espaces multiples par un seul
+        .trim()
+        .substring(0, 160)  // Limite à 160 caractères pour les méta descriptions
     : "L'actualité des doléances"
 
   // Fetch featured image if available
   const img = post.featured_media ? await fetchAttachmentById(post.featured_media) : null
-  const imageUrl = img?.source_url || "https://lesdoleances.fr/img/doleances_couv.png"
+  const imageUrl = img?.source_url || "https://www.lesdoleances.fr/img/doleances_couv.png"
 
   return {
     title,
@@ -50,7 +68,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
       siteName: "Les Doléances",
       title,
       description,
-      url: `https://lesdoleances.fr/article/${params.slug}`,
+      url: `https://www.lesdoleances.fr/article/${params.slug}`,
       type: "article",
       images: [
         {
