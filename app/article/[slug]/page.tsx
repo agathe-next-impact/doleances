@@ -9,68 +9,63 @@ import type React from "react"
 
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
   const post = await fetchPostBySlug(params.slug)
+  
   if (!post) {
-    const title = post?.title?.rendered || "Actualités - Les Doléances"
-    const description = post?.excerpt?.rendered || "L'actualité des doléances"
-    const img = await fetchAttachmentById(post?.featured_media || 0)
-    if (!img) {
-      return {
-        title: title.replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&rsquo;/g, "'"),
-        description: description.replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&rsquo;/g, "'") || "L'actualité des doléances",
-        openGraph: {
-          siteName: "Les Doléances",
-          title: "Actualités - Les Doléances",
-          description: "L'actualité des doléances",
-          url: `https://doleances.fr/article/${params.slug}`,
-          type: "article",
-          images: [
-            {
-              url: "https://doleances.fr/img/doleance_couv.png",
-              alt: "Actualités - Les Doléances",
-            },
-          ],
-        },
-      }
-    }
-  else {  
     return {
-      title: title.replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&rsquo;/g, "'"),
-      description: description.replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&rsquo;/g, "'") || "L'actualité des doléances",
+      title: "Actualités - Les Doléances",
+      description: "L'actualité des doléances",
       openGraph: {
         siteName: "Les Doléances",
         title: "Actualités - Les Doléances",
         description: "L'actualité des doléances",
-        url: `https://doleances.fr/article/${params.slug}`,
+        url: `https://lesdoleances.fr/article/${params.slug}`,
         type: "article",
         images: [
           {
-            url: `https://doleances.fr/${img}`,
+            url: "https://lesdoleances.fr/img/doleances_couv.png",
             alt: "Actualités - Les Doléances",
           },
         ],
       },
     }
   }
-  }
 
-
+  // Post exists, generate metadata
   const title = post.title?.rendered
     ? post.title.rendered.replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&rsquo;/g, "'")
     : "Actualités - Les Doléances"
-  const description = post.excerpt?.rendered.replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&rsquo;/g, "'") || "L'actualité des doléances"
+  
+  const description = post.excerpt?.rendered
+    ? post.excerpt.rendered.replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&rsquo;/g, "'").replace(/<[^>]+>/g, "")
+    : "L'actualité des doléances"
+
+  // Fetch featured image if available
+  const img = post.featured_media ? await fetchAttachmentById(post.featured_media) : null
+  const imageUrl = img?.source_url || "https://lesdoleances.fr/img/doleances_couv.png"
 
   return {
     title,
     description,
     openGraph: {
+      siteName: "Les Doléances",
       title,
       description,
+      url: `https://lesdoleances.fr/article/${params.slug}`,
+      type: "article",
       images: [
         {
-          url: "/img/logo.svg",
+          url: imageUrl,
           alt: title,
+          width: 1200,
+          height: 630,
         },
       ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [imageUrl],
     },
   }
 }
@@ -115,4 +110,3 @@ export default async function ArticlePage({ params }: { params: { slug: string }
     notFound()
   }
 }
- 
