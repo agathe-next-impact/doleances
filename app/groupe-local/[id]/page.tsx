@@ -21,7 +21,6 @@ export default async function GroupeLocalPage({ params }: { params: { id: string
     const groupeLocal = await fetchGroupeLocalById(groupeLocalId)
 
     if (!groupeLocal) {
-      console.log(`Groupe local avec l'ID ${groupeLocalId} non trouvé`)
       notFound()
     }
 
@@ -36,11 +35,9 @@ export default async function GroupeLocalPage({ params }: { params: { id: string
       groupeLocal.content = { rendered: "" }
     }
 
-    console.log("Groupe local récupéré:", groupeLocal)
 
     // Récupérer les articles liés à ce groupe local via le champ tax_groupe_local
     const relatedPosts = await fetchPostsByGroupeLocalTax(groupeLocalId)
-    console.log(`Nombre d'articles associés au groupe local ${groupeLocalId}: ${relatedPosts.length}`)
 
     // Récupérer l'image du groupe local si disponible
     const featuredImage = (() => {

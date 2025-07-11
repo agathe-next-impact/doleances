@@ -74,6 +74,8 @@ export default function LocationSidebar({ location, locations, onClose, onLocati
 
   const groupedLocations = groupLocationsByRegion(locations);
 
+  console.log("Localisations regroupées par région:", groupedLocations);
+
   // Fonction pour nettoyer le HTML
   const createMarkup = (htmlContent: string) => {
     return { __html: htmlContent }
