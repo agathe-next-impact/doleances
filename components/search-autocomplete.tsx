@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { Search, Loader2, FileText } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { fetchSearchSuggestions } from "@/lib/wordpress";
+import { fetchSearchSuggestions } from "@/lib/api";
 import { cn } from "@/lib/utils";
 
 interface SearchAutocompleteProps {
@@ -80,9 +80,9 @@ export function SearchAutocomplete({
     }
   };
 
-  const handleSuggestionSelect = (slug: string) => {
+  const handleSuggestionSelect = (id: number) => {
     if (redirectOnSelect) {
-      router.push(`/article/${slug}`);
+      router.push(`/article/${id}`);
     } else if (onSearch) {
       onSearch(slug);
     }
@@ -122,20 +122,21 @@ export function SearchAutocomplete({
 
       {showSuggestions && Object.keys(groupedSuggestions).length > 0 && (
         <div className="absolute z-50 mt-1 w-full rounded-md border bg-background shadow-lg">
-          <ul className="py-1">
+          <ul className="py-1 search">
             {Object.entries(groupedSuggestions).map(([category, articles]) => (
               <li key={category}>
-                <div className="px-4 py-2 text-sm font-semibold text-muted-foreground">
+                <div className="px-4 py-2 text-sm uppercase text-muted-foreground">
                   {category}
                 </div>
                 {articles.map((article) => (
                   <button
                     key={article.id}
-                    className="flex w-full items-center px-4 py-2 text-left text-sm hover:bg-accent"
+                    className="flex w-full items-center px-4 py-2 ml-4 text-left text-sm hover:text-primary"
                     onClick={() => handleSuggestionSelect(article.slug)}
                   >
-                    <FileText className="mr-2 h-4 w-4 text-muted-foreground" />
-                    {article.title}
+                    {article.title
+                      ? <span dangerouslySetInnerHTML={{ __html: article.title }} />
+                      : article.slug}
                   </button>
                 ))}
               </li>

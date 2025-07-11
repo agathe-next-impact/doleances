@@ -5,10 +5,11 @@ import "@/app/globals.css"
 import { Inter } from "next/font/google"
 import Link from "next/link"
 import { Suspense, useEffect } from "react"
+import { resetCookieConsent } from "@/lib/cookies";
 
 import { ThemeProvider } from "@/components/theme-provider"
 import { Button } from "@/components/ui/button"
-import { FileText, Info, Library, Pen, Map, Menu } from "lucide-react"
+import { FileText, Info, Library, Pen, Map, Menu, User } from "lucide-react"
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 import { SearchAutocomplete } from "@/components/search-autocomplete"
 import LottieAnimation from "@/components/ui/lottie-animation"
@@ -45,185 +46,245 @@ export default function ClientLayout({
   }, [])
 
   return (
-    <html lang="fr" suppressHydrationWarning>
+    <html lang="fr" suppressHydrationWarning className="scroll-smooth">
       <head>
-        {/* Ajouter les styles pour Leaflet */}
-        <style>{`
-          .leaflet-container {
-            z-index: 1;
-          }
-          .custom-div-icon {
-            background: transparent;
-            border: none;
-          }
-        `}</style>
+      <meta charSet="UTF-8" />
+      <link rel="icon" href="/img/logo.svg" />
+      {/* Ajouter les styles pour Leaflet */}
+      <style>{`
+        .leaflet-container {
+        z-index: 1;
+        }
+        .custom-div-icon {
+        background: transparent;
+        border: none;
+        }
+      `}</style>
       </head>
-      <body className={inter.className}>
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-          <div className="flex min-h-screen flex-col">
-            <header className="sticky top-0 z-10 border-b bg-background">
-              <div className="container mx-auto flex h-16 items-center justify-between px-4">
-                <div className="flex items-center gap-4">
-                  <Sheet>
-                    <SheetTrigger asChild>
-                      <Button variant="ghost" size="icon" className="mr-2">
-                        <Menu className="h-5 w-5" />
-                        <span className="sr-only">Toggle menu</span>
-                      </Button>
-                    </SheetTrigger>
-                    <SheetContent side="left" className="w-[250px] sm:w-[300px]">
-                      <SheetHeader>
-                        <LottieAnimation animationPath="/animations/note.json" width="80px" height="80px"/>
-                        <SheetTitle className="text-left font-light text-2xl">Les doléances</SheetTitle>
-                      </SheetHeader>
-                      <nav className="mt-6">
-                        <ul className="space-y-4">
-                        <li>
-                            <Link
-                              href="/category"
-                              className="flex items-center text-sm font-medium hover:text-primary"
-                              onClick={(e) => {
-                                // Close the sheet when a link is clicked
-                                const closeEvent = new CustomEvent("close-sheet")
-                                window.dispatchEvent(closeEvent)
-                              }}
-                            >
-                              <FileText className="mr-2 h-4 w-4" />
-                              Actualités
-                            </Link>
-                          </li>
-                          <li>
-                            <Link
-                              href="/cartographie"
-                              className="flex items-center text-sm font-medium hover:text-primary"
-                              onClick={(e) => {
-                                // Close the sheet when a link is clicked
-                                const closeEvent = new CustomEvent("close-sheet")
-                                window.dispatchEvent(closeEvent)
-                              }}
-                            >
-                              <Map className="mr-2 h-4 w-4" />
-                              Cartographie des groupes locaux
-                            </Link>
-                          </li>
-                          <li>
-                            <Link
-                              href="/contribuer"
-                              className="flex items-center text-sm font-medium hover:text-primary"
-                              onClick={(e) => {
-                                // Close the sheet when a link is clicked
-                                const closeEvent = new CustomEvent("close-sheet")
-                                window.dispatchEvent(closeEvent)
-                              }}
-                            >
-                              <Pen className="mr-2 h-4 w-4" />
-                              Contribuer
-                            </Link>
-                          </li>
-                          <li>
-                            <Link
-                              href="/pages/a-propos"
-                              className="flex items-center text-sm font-medium hover:text-primary"
-                              onClick={(e) => {
-                                // Close the sheet when a link is clicked
-                                const closeEvent = new CustomEvent("close-sheet")
-                                window.dispatchEvent(closeEvent)
-                              }}
-                            >
-                              <Info className="mr-2 h-4 w-4" />
-                              A propos
-                            </Link>
-                          </li>
-                          <li>
-                            <Link
-                              href="/doleances"
-                              className="flex items-center text-sm font-medium hover:text-primary"
-                              onClick={(e) => {
-                                // Close the sheet when a link is clicked
-                                const closeEvent = new CustomEvent("close-sheet")
-                                window.dispatchEvent(closeEvent)
-                              }}
-                            >
-                              <Library className="mr-2 h-4 w-4" />
-                              Les doléances
-                            </Link>
-                          </li>
-                        </ul>
-                      </nav>
-                    </SheetContent>
-                  </Sheet>
-                  <Link href="/" className="flex items-center gap-2 text-2xl font-serif font-ligth">
-                  <LottieAnimation animationPath="/animations/note.json" width="50px" height="50px"/>
-                    Les doléances
-                  </Link>
-                </div>
-                <div className="flex items-center gap-4">
-                  <div className="relative hidden md:block">
-                    <SearchAutocomplete placeholder="Rechercher des doléances..." className="w-64" showButton={false} />
-                  </div>
-                  <Button variant="outline" size="sm" asChild>
-                    <Link href="https://palegreen-capybara-652133.hostingersite.com/wp-admin" target="_blank">
-                      Contributeur
-                    </Link>
-                  </Button>
-                </div>
-              </div>
-            </header>
-            <Suspense>
-              <main className="flex-1">{children}</main>
-            </Suspense>
-            <footer className="border-t py-6">
-              <div className="container mx-auto px-4">
-                <div className="grid gap-8 md:grid-cols-3">
-                  <div>
-                    <h3 className="mb-3 text-lg font-light">Les doléances</h3>
-                    <p className="text-sm text-muted-foreground">
-                      Archives des doléances de la convention citoyenne. 
-                    </p>
-                  </div>
-                  <div>
-                    <h3 className="mb-3 text-lg font-semibold">Liens</h3>
-                    <ul className="space-y-2 text-sm">
-                      <li>
-                        <Link href="/category" className="text-muted-foreground hover:underline">
-                          Actualités
-                        </Link>
-                      </li>
-                      <li>
-                        <Link href="/articles" className="text-muted-foreground hover:underline">
-                          Doléances
-                        </Link>
-                      </li>
-                      <li>
-                        <Link href="/pages/a-propos" className="text-muted-foreground hover:underline">
-                          A propos
-                        </Link>
-                      </li>
-                    </ul>
-                  </div>
-                  <div>
-                    <h3 className="mb-3 text-lg font-semibold">RGPD</h3>
-                    <ul className="space-y-2 text-sm">
-                      <li>
-                        <Link href="/privacy" className="text-muted-foreground hover:underline">
-                          Politique de confidentialité
-                        </Link>
-                      </li>
-                      <li>
-                        <Link href="/terms" className="text-muted-foreground hover:underline">
-                          Mentions légales
-                        </Link>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-                <div className="mt-8 border-t pt-4 text-center text-sm text-muted-foreground">
-                  © {new Date().getFullYear()} Les doléances
-                </div>
-              </div>
-            </footer>
+      <body className={`${inter.className} overflow-x-hidden`}>
+      <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+        <div className="flex min-h-screen flex-col">
+        <header className="sticky top-0 z-10 border-b bg-white/90 backdrop-blur-md transition-colors duration-">
+          <div className="container mx-auto flex h-16 items-center justify-between px-4">
+          <div className="flex items-center md:justify-normal justify-start gap-4">
+            <Sheet>
+            <SheetTrigger asChild className="w-max md:ml-8 ml-0">
+              <Button size="icon" className="mr-2" variant="link">
+              <Menu className="h-5 w-5"/>
+              <span className="sr-only">Toggle menu</span>
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="left" className="w-[250px] w-[100%] left-sheet">
+              <SheetHeader>
+              <Link href="/"
+                onClick={(e) => {
+                  e.preventDefault(); // Empêche la navigation immédiate
+                  const closeEvent = new CustomEvent("close-sheet");
+                  window.dispatchEvent(closeEvent);
+                
+                  // Attendre un court instant pour que le Sheet se ferme avant de naviguer
+                  setTimeout(() => {
+                    window.location.href = "/"; // Naviguer manuellement
+                  }, 300); // Ajustez le délai si nécessaire
+                  }}>
+              <LottieAnimation animationPath="/animations/note.json" width="80px" height="80px"/>
+              <SheetTitle className="text-left font-light text-2xl">Les doléances</SheetTitle>
+              </Link>
+              </SheetHeader>
+              <nav className="mt-6">
+              <ul className="space-y-4 left-sheet">
+                <li>
+                <Link
+                  href="/cartographie"
+                  className="flex items-center text-sm font-medium hover:text-primary"
+                  onClick={(e) => {
+                  e.preventDefault(); // Empêche la navigation immédiate
+                  const closeEvent = new CustomEvent("close-sheet");
+                  window.dispatchEvent(closeEvent);
+                
+                  // Attendre un court instant pour que le Sheet se ferme avant de naviguer
+                  setTimeout(() => {
+                    window.location.href = "/cartographie"; // Naviguer manuellement
+                  }, 300); // Ajustez le délai si nécessaire
+                  }}
+                >
+                  <Map className="mr-2 h-4 w-4" />
+                  Cartographie des groupes locaux
+                </Link>
+                </li>
+                <li>
+                <Link
+                  href="/etats-generaux-communaux"
+                  className="flex items-center text-sm font-medium hover:text-primary"
+                  onClick={(e) => {
+                  e.preventDefault(); // Empêche la navigation immédiate
+                  const closeEvent = new CustomEvent("close-sheet");
+                  window.dispatchEvent(closeEvent);
+                
+                  // Attendre un court instant pour que le Sheet se ferme avant de naviguer
+                  setTimeout(() => {
+                    window.location.href = "/etats-generaux-communaux"; // Naviguer manuellement
+                  }, 300); // Ajustez le délai si nécessaire
+                  }}
+                >
+                  <Library className="mr-2 h-4 w-4" />
+                  Etats généraux communaux
+                </Link>
+                </li>
+                <li>
+                <Link
+                  href="/category"
+                  className="flex items-center text-sm font-medium hover:text-primary"
+                  onClick={(e) => {
+                  e.preventDefault(); // Empêche la navigation immédiate
+                  const closeEvent = new CustomEvent("close-sheet");
+                  window.dispatchEvent(closeEvent);
+                
+                  // Attendre un court instant pour que le Sheet se ferme avant de naviguer
+                  setTimeout(() => {
+                    window.location.href = "/category"; // Naviguer manuellement
+                  }, 300); // Ajustez le délai si nécessaire
+                  }}
+                >
+                  <FileText className="mr-2 h-4 w-4" />
+                  Actualités
+                </Link>
+                </li>
+                                <li>
+                <Link
+                  href="/festival"
+                  className="flex items-center text-sm font-medium hover:text-primary"
+                  onClick={(e) => {
+                  e.preventDefault(); // Empêche la navigation immédiate
+                  const closeEvent = new CustomEvent("close-sheet");
+                  window.dispatchEvent(closeEvent);
+                
+                  // Attendre un court instant pour que le Sheet se ferme avant de naviguer
+                  setTimeout(() => {
+                    window.location.href = "/festival"; // Naviguer manuellement
+                  }, 300); // Ajustez le délai si nécessaire
+                  }}
+                >
+                  <User className="mr-2 h-4 w-4" />
+                  Festival
+                </Link>
+                </li>
+                <li>
+                <Link
+                  href="/pages/a-propos"
+                  className="flex items-center text-sm font-medium hover:text-primary"
+                  onClick={(e) => {
+                  e.preventDefault(); // Empêche la navigation immédiate
+                  const closeEvent = new CustomEvent("close-sheet");
+                  window.dispatchEvent(closeEvent);
+                
+                  // Attendre un court instant pour que le Sheet se ferme avant de naviguer
+                  setTimeout(() => {
+                    window.location.href = "/a-propos"; // Naviguer manuellement
+                  }, 300); // Ajustez le délai si nécessaire
+                  }}
+                >
+                  <Info className="mr-2 h-4 w-4" />
+                  A propos
+                </Link>
+                </li>
+
+                <li>
+                <Link
+                  href="/contribuer"
+                  className="flex items-center text-sm font-medium hover:text-primary"
+                  onClick={(e) => {
+                  e.preventDefault(); // Empêche la navigation immédiate
+                  const closeEvent = new CustomEvent("close-sheet");
+                  window.dispatchEvent(closeEvent);
+                
+                  // Attendre un court instant pour que le Sheet se ferme avant de naviguer
+                  setTimeout(() => {
+                    window.location.href = "/contribuer"; // Naviguer manuellement
+                  }, 300); // Ajustez le délai si nécessaire
+                  }}
+                >
+                  <Pen className="mr-2 h-4 w-4" />
+                  Nous contacter
+                </Link>
+                </li>
+
+              </ul>
+              </nav>
+            </SheetContent>
+            </Sheet>
+            <Link href="/" className="flex items-center gap-2 text-2xl font-serif font-ligth">
+            <LottieAnimation animationPath="/animations/note.json" width="50px" height="50px"/>
+            Les doléances
+            </Link>
           </div>
-        </ThemeProvider>
+          <div className="flex items-center gap-4">
+            <div className="relative hidden md:block">
+            <SearchAutocomplete placeholder="Rechercher dans notre actu..." className="w-64" showButton={false} />
+            </div>
+          </div>
+          </div>
+        </header>
+        <Suspense>
+          <main className="flex-1">{children}</main>
+        </Suspense>
+        <footer className="border-t py-6">
+          <div className="container mx-auto px-4">
+          <div className="grid gap-8 md:grid-cols-3">
+            <div>
+            <LottieAnimation animationPath="/animations/note.json" width="80px" height="80px"/>
+            <h3 className="mb-3 text-xl font-serif font-light">Les doléances</h3>
+            <p className="text-sm text-muted-foreground">
+            Wiki du corpus des doléances de 2018/2019 
+            </p>
+            </div>
+            <div>
+            <h3 className="mb-3 text-lg font-semibold">Liens</h3>
+            <ul className="space-y-2 text-sm">
+              <li>
+              <Link href="/category" className="text-muted-foreground hover:underline">
+                Actualités
+              </Link>
+              </li>
+              <li>
+              <Link href="/etats-generaux-communaux" className="text-muted-foreground hover:underline">
+                Etats Généraux communaux
+              </Link>
+              </li>
+              <li>
+              <Link href="/a-propos" className="text-muted-foreground hover:underline">
+                A propos
+              </Link>
+              </li>
+            </ul>
+            </div>
+            <div>
+            <h3 className="mb-3 text-lg font-semibold">RGPD</h3>
+            <ul className="space-y-2 text-sm">
+              <li>
+              <Link href="/rgpd/mentions-legales" className="text-muted-foreground hover:underline">
+                Mentions légales
+              </Link>
+              </li>
+              <li>
+              <button
+                type="button"
+                className="text-muted-foreground hover:underline bg-transparent border-0 p-0"
+                onClick={() => resetCookieConsent()}
+              >
+                Gérer les cookies
+              </button>
+            </li>
+            </ul>
+            </div>
+          </div>
+          <div className="mt-8 border-t pt-4 font-serif text-center">
+            © {new Date().getFullYear()} Les doléances
+          </div>
+          </div>
+        </footer>
+        </div>
+      </ThemeProvider>
       </body>
     </html>
   )

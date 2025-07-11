@@ -1,185 +1,234 @@
 import Link from "next/link"
 import Image from "next/image"
-import { ArrowRight, Video } from "lucide-react"
-import { CalendarIcon, User2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { formatDate } from "@/lib/utils"
-import { ArticleCardHome } from "@/components/article-card-home"
-import { PageCard } from "@/components/page-card"
-import { fetchFeaturedArticles, fetchPages } from "@/lib/wordpress"
-import { SearchAutocomplete } from "@/components/search-autocomplete"
+import { ArticleCardHome } from "@/components/actualites/article-card-home"
+import { fetchLastThreePosts, fetchPageBySlug, fetchRandomVerbatimImage, fetchAttachmentById, fetchGroupesLocaux } from "@/lib/api"
 import YouTubeEmbed from "@/components/ui/video"
-import { Badge } from "@/components/ui/badge"
+import Verbatim from "@/components/verbatim"
+import React from "react";
+import {
+  DraggableCardBody,
+  DraggableCardContainer,
+} from "@/components/ui/draggable-card";
+import CardMap from "@/components/map/map-card";
+import type { Metadata } from "next"
+
+export const metadata: Metadata = {
+  title: "Les Doléances",
+  description: "Wiki du corpus des doléances de 2018/2019",
+  openGraph: {
+    title: "Les Doléances",
+    description: "Wiki du corpus des doléances de 2018/2019",
+    images: [
+      {
+        url: "https://doleances.fr/img/doleances_couv.png",
+        alt: "Les Doléances",
+      },
+    ],
+  },
+}
+
 
 export default async function Home() {
-  const articles = await fetchFeaturedArticles()
-  const pages = await fetchPages()
+  const articles = await fetchLastThreePosts()
+  const accueil = await fetchPageBySlug("accueil")
+  const contribuer = await fetchPageBySlug("contribuer")
+  const etatsGeneraux = await fetchPageBySlug("etats-generaux-communaux")
+  const cartographie = await fetchPageBySlug("cartographie")
 
-  // Get specific pages by slug
-  const presentationPage = pages.find((page) => page.slug === "presentation")
-  const stickyArticle = articles[0]
-  // Get pages for the different sections
-  const cartographiePage = pages.find((page) => page.slug === "cartographie")
-  const consulterPage = pages.find((page) => page.slug === "consulter")
-  const aboutPage = pages.find((page) => page.slug === "about")
-  const contributePage = pages.find((page) => page.slug === "contribute")
+  const images = await fetchRandomVerbatimImage()
+  const imagesObjects = await Promise.all(
+    (images ?? [])
+      .map((image) => image.acf?.image_du_verbatim)
+      .map((id) => fetchAttachmentById(Number(id)))
+  )
+
+  // Mélanger les images et les retourner en ordre aléatoire en tableau sans index
+  const shuffledImages = imagesObjects.sort(() => Math.random() - 0.5)
+  const verbatimImages = shuffledImages.map((image) => {
+
+    return {
+      title: image?.title?.rendered,
+      image: image?.source_url,
+      className: `absolute`,
+    };
+  });
+
+  const locations = await fetchGroupesLocaux()
+  // Adapter les données pour correspondre à l'interface attendue par CardMap
+  const mapLocations = locations.map((location) => ({
+    id: String(location.id),
+    slug: location.slug,
+    position: {
+      lat: parseFloat(location.acf?.localisation.lat),
+      lng: parseFloat(location.acf?.localisation.lng),
+    },
+  }));
+
+  
+
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="mb-12 text-center">
+    <>
+    <div className="absolute inset-0 -z-10">
+      <div className="absolute top-0 left-0 h-[500px] w-[40vw] rounded-full bg-gradient-to-r from-pink-200 to-blue-200 opacity-20 blur-3xl"></div>
+      <div className="absolute bottom-0 right-0 h-[400px] w-[40vw] rounded-full bg-gradient-to-r from-blue-200 to-pink-200 opacity-20 blur-3xl"></div>
+    </div>
+    <div className="container mx-auto md:p-8 p-4">
+      <div className="mt-8 mb-12 md:mt-8 text-center">
         <h1 className="mb-4 text-4xl font-light tracking-tight md:text-5xl">Les doléances</h1> 
         <p className="mx-auto mb-6 max-w-2xl text-lg text-muted-foreground">
         Wiki du corpus des doléances de 2018/2019
         </p>
       </div>
 
-      <section className="mb-12 grid gap-8 md:grid-cols-6 md:grid-rows-3">
-        <div className="flex flex-col col-span-4 row-span-3 justify-between rounded-lg border bg-card shadow-lg overflow-hidden">
+{/* Hero section */}
+      <section className="h-max mb-12 grid gap-12 grid-cols-6 place-items-start">
+        {accueil && (
+        <div className="flex flex-col lg:col-span-4 col-span-6 h-full justify-between rounded-lg border bg-card shadow-lg overflow-hidden">
             <div className="flex flex-col p-6">
-              <h2 className="w-full mb-4 pb-3 text-2xl font-serif font-light uppercase border-b-[1px]">L'association Les doléances</h2>
-              <div className="flex flex-col gap-4 mb-4 flex-grow text-sm text-muted-foreground">
-                  <p>Le 27 novembre 1903, Jean Jaurès interpella les députés : « Ces
-                  documents sont dispersés dans les archives ; ils ne sont même pas
-                  classés, et fussent-ils classés, il serait impossible à un travailleur
-                  isolé d'en prendre connaissance. Voilà pourquoi il faut que l'Etat, par
-                  une publication d'ensemble, mette au service des historiens qui
-                  veulent aller jusqu'au fond des choses les moyens nécessaires de
-                  travail. »</p>
-                  <p>Le 12 décembre 2024, réunis au deuxième sous-sol de l'Assemblée
-                  nationale, plus d'une centaine de citoyennes et citoyens réunis ont
-                  de nouveau fait échos aux paroles prononcées 121 ans plus tôt par
-                  le parlementaire.
-                  Au regard des crises politiques et sociales en cours, ils ont
-                  symboliquement exprimé le serment de travailler ensemble à leur
-                  publication sur une plateforme d'accès universel, et de poursuivre la
-                  mobilisation de collectifs de citoyens locaux.</p>                
-                  <p>La création le 17 novembre 2024 de l'association
-                  Les doléances vise à tenir cette promesse.</p>
-              </div>
-            </div>
-            <div className="relative w-full">
-            <YouTubeEmbed videoLink="https://www.youtube.com/embed/8bof5Anluk4?si=H5M7BGGsvWFUODBM" />
-            </div>
-        </div>
-        <div className="flex flex-col col-span-2 row-span-2 rounded-lg border bg-card shadow-lg overflow-hidden">
-          {stickyArticle && stickyArticle.featuredImage && (
-            <div className="relative h-48 w-full">
-              <Image
-                src={stickyArticle.featuredImage || "/placeholder.svg"}
-                alt={stickyArticle.title}
-                fill
-                className="object-cover object-center"
-              />
-            </div>
-          )}
-          <div className="flex flex-col flex-grow p-6">
-            <h2 className="w-full mb-4 pb-3 text-2xl font-serif font-light uppercase border-b-[1px]">à la une</h2>
-            {stickyArticle && (
-              <>
-                <h3 className="mb-2 font-medium">
-                  <Link href={`/article/${stickyArticle.id}`}>
-                    {stickyArticle.title}
-                  </Link></h3>
+              <h2 className="w-full mb-4 pb-3 text-2xl font-serif font-light uppercase border-b-[1px]">
+                {accueil?.acf?.carte_de_une?.titre}
+              </h2>
                 <div
-                  className="mb-4 flex-grow line-clamp-3 text-sm text-muted-foreground"
-                  dangerouslySetInnerHTML={{ __html: stickyArticle.excerpt }}
+                className="flex flex-col gap-4 mb-4 flex-grow text-sm text-muted-foreground"
+                dangerouslySetInnerHTML={{
+                  __html: accueil?.acf?.carte_de_une?.texte,
+                }}
                 />
-                    <div className="flex flex-wrap gap-2 pt-2">
-                    {stickyArticle.categories.map((category, index) => (
-                      <Badge key={`cat-${index}`} variant="secondary">            
-                        <Link href={`/article/${stickyArticle.categoriesId[index]}`}>
-                        {category}
-                        </Link>
-                      </Badge>
-                    ))}
-                    {stickyArticle.tags.slice(0, 2).map((tag, index, id) => (
-                      <Badge key={`tag-${index}`} variant="outline">
-                        <Link href={`article/?tag=${id}`}>{tag}</Link>
-                      </Badge>
-                    ))}
-                  </div>
-                  <div className="flex w-full items-center justify-between p-2 text-xs text-muted-foreground">
-                    <div className="flex items-center gap-1">
-                      <User2 className="h-3 w-3" />
-                      <span>{stickyArticle.author}</span>
-                    </div>
-                    <div className="flex items-center gap-1 pb-2">
-                      <CalendarIcon className="h-3 w-3" />
-                      <span>{formatDate(stickyArticle.date)}</span>
-                    </div>
-                  </div>
-                <Button variant="outline" asChild>
-                  <Link href={`/article/${stickyArticle.id}`}>Lire plus</Link>
-                </Button>
-              </>
-            )}
-          </div>
+              <div className="h-max flex flex-col rounded-lg border bg-card shadow-lg overflow-hidden">
+                <div className="relative w-full">
+                <YouTubeEmbed videoLink="https://www.youtube.com/embed/b-vrQ-jUxRk?si=ao4g3inJG_-YwGN3" />
+                </div>
+              </div>
+          
+            </div>
         </div>
-        <div className="flex flex-col col-span-2 row-span-1 rounded-lg border bg-card shadow-lg overflow-hidden">
-          <div className="flex flex-col flex-grow p-6">
-            <h2 className="w-full mb-4 pb-3 text-2xl font-serif font-light uppercase border-b-[1px]">Contribuer</h2>
-                <h3 className="mb-2 font-medium">Participer à la démarche</h3>
-                <div
-                  className="mb-4 flex-grow line-clamp-3 text-sm text-muted-foreground">
-                  <p>Vous pouvez contribuer à la démarche en nous aidant à
-                  collecter les doléances, en nous aidant à les publier, ou en
-                  participant à la rédaction d'articles.</p>
-                  <p>Nous avons besoin de vous pour faire vivre cette plateforme et
-                  la rendre accessible à tous.</p>
-                  </div>
-                <Button variant="outline" asChild>
-                  <Link href={`/contribuer`}>Contribuer</Link>
-                </Button>
+
+        )}
+        
+        <div className="flex lg:flex-col sm:flex-row flex-col lg:col-span-2 col-span-6 gap-12"> 
+          <div className="h-max flex flex-col overflow-hidden border rounded-lg bg-card shadow-lg">
+            <Image 
+              src="/img/fanzine-couv.jpg"
+              alt="Image d'illustration"
+              width={400}
+              height={300}
+              className="object-contain mb-4 "
+            />
+            {/*
+            <div className="items-end">
+            <PopupImage image="/img/festival_verso.jpg"/>
+            </div>
+            */}
+            
+            <Button variant="outline" asChild className="mb-8 max-w-max">
+              <Link target="_blank" href='/doc/fanzine-doleance_avec-couv-min.pdf'>Découvrir</Link>
+            </Button>
+          </div>           
+          <div className="flex flex-col justify-start p-6">
+            <Verbatim />
           </div>
         </div>
       </section> 
 
-      <section className="mb-8 grid gap-8 grid-cols-2">
-      <div className="flex flex-col rounded-lg border bg-card shadow-lg overflow-hidden">
-        <div className="flex flex-col flex-grow p-6">
-            <h2 className="w-full mb-4 pb-3 text-2xl font-serif font-light uppercase border-b-[1px]">Cartographie des groupes locaux</h2>
-            {stickyArticle && (
-                <>
-                    <p className="mb-6 line-clamp-3 text-muted-foreground">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut pellentesque tristique dolor, dictum mollis neque. Morbi nisl nisi, tempor vitae turpis id, posuere venenatis augue. Nam consectetur purus eu mi malesuada, venenatis congue felis interdum. Nullam vehicula est vitae est dictum, vel lobortis nisl fermentum. Donec dapibus sed lorem a convallis. Sed in risus augue. Aliquam a tortor sit amet nisl tincidunt porta rhoncus quis mauris. Quisque in suscipit nibh.</p>
-                  <Button variant="outline" asChild>
-                    <Link href='/cartographie'>Localiser les groupes</Link>
-                  </Button>
-                </>
-            )}
+{/* Section des cartes d'introduction */}
+    <div className="absolute inset-0 -z-10">
+      <div className="absolute top-[900px] left-0 h-full w-[50vw] rounded-full bg-gradient-to-r from-pink-200 to-blue-200 opacity-20 blur-3xl"></div>
+      <div className="absolute top-[1400px] right-0 h-[400px] w-[50vw] rounded-full bg-gradient-to-r from-blue-200 to-pink-200 opacity-20 blur-3xl"></div>
+    </div>
+      <section className="mb-8 grid gap-12 lg:grid-cols-4">
+        <div className="h-max flex flex-col lg:col-span-2 md:row-span-1 shrink rounded-lg border bg-card shadow-lg overflow-hidden">
+          <div className="flex flex-col flex-grow justify-between p-6">
+              <div>
+              <h2 className="w-full mb-4 pb-3 text-2xl font-serif font-light uppercase border-b-[1px]">Les Etats généraux communaux</h2>
+                <div
+                className="gap-4 mb-4 text-muted-foreground"
+                dangerouslySetInnerHTML={{
+                  __html: etatsGeneraux?.acf?.carte_de_une,
+                }}
+                />              
+                </div>  
+                <Button variant="outline" asChild>
+                  <Link href='/etats-generaux-communaux'>La démarche</Link>
+                </Button>
+        </div>
+        </div> 
+        <div className="h-max flex flex-col lg:col-span-2 col-span-1 md:row-span-2 rounded-lg border bg-card shadow-lg overflow-hidden">
+        <div className="flex flex-col flex-grow justify-between p-6">
+              <h2 className="w-full pb-3 text-2xl font-serif font-light uppercase border-b-[1px]">Les groupes locaux</h2>
+                <div
+                className="gap-4 my-4 text-muted-foreground"
+                dangerouslySetInnerHTML={{
+                  __html: cartographie?.acf?.texte_dintro ,
+                }}
+                /> 
+              <CardMap
+                locations={mapLocations}
+              /> 
+              <Button variant="outline" asChild>
+                <Link href='/cartographie'>Voir les groupes</Link>
+              </Button>
           </div>
-          </div>
-        <div className="flex flex-col rounded-lg border bg-card shadow-lg overflow-hidden">
-        <div className="flex flex-col flex-grow p-6">
-            <h2 className="w-full mb-4 pb-3 text-2xl font-serif font-light uppercase border-b-[1px]">Les archives des doléances</h2>
-            {stickyArticle && (
-                <>
-                    <p className="mb-6 line-clamp-3 text-muted-foreground">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut pellentesque tristique dolor, dictum mollis neque. Morbi nisl nisi, tempor vitae turpis id, posuere venenatis augue. Nam consectetur purus eu mi malesuada, venenatis congue felis interdum. Nullam vehicula est vitae est dictum, vel lobortis nisl fermentum. Donec dapibus sed lorem a convallis. Sed in risus augue. Aliquam a tortor sit amet nisl tincidunt porta rhoncus quis mauris. Quisque in suscipit nibh.</p>
-                  <Button variant="outline" asChild>
-                    <Link href='/articles'>Consulter les archives</Link>
-                  </Button>
-                </>
-            )}
-          </div>
-          </div>
+          </div> 
+        <div className="h-max flex flex-col lg:col-span-2 col-span-1 md:row-span-1 rounded-lg border bg-card shadow-lg overflow-hidden">
+          <div className="flex flex-col flex-grow justify-between p-6">
+                  <div>
+                  <h2 className="w-full mb-4 pb-3 text-2xl font-serif font-light uppercase border-b-[1px]">Nous contacter</h2>
+                  <div className="mb-6 line-clamp-4 text-muted-foreground" dangerouslySetInnerHTML={
+                    { __html: contribuer?.acf?.intro }} />    
+                  </div>  
+                    <Button variant="outline" asChild>
+                      <Link href='/contribuer'>Envoyer un message</Link>
+                    </Button>
+            </div>
+            </div>           
       </section>
 
-
-      <section className="mb-12 p-6 rounded-lg shadow-lg">
+    <div className="absolute inset-0 -z-10">
+      <div className="absolute top-[2100px] left-0 h-full w-[50vw] rounded-full bg-gradient-to-r from-pink-200 to-blue-200 opacity-20 blur-3xl"></div>
+      <div className="absolute top-[2200px] right-0 h-[400px] w-[50vw] rounded-full bg-gradient-to-r from-blue-200 to-pink-200 opacity-20 blur-3xl"></div>
+    </div>
+      <section className="my-36 p-6 rounded-lg border bg-card shadow-lg overflow-hidden">
         <div className="mb-6 flex items-center justify-between border-b-[1px] pb-3">
           <h2 className="text-2xl font-serif font-light uppercase">Actualités</h2>
-          <Link href="/articles" className="flex items-center text-sm font-medium text-lime-600">
-            Voir toute l'actualité
-            <ArrowRight className="ml-1 h-4 w-4" />
-          </Link>
         </div>
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {articles.map((article) => (
+            {articles.map((article) => (
             <ArticleCardHome key={article.id} article={article} />
-          ))}
+            ))}
         </div>
+        
+          <div className="flex items-center justify-center">
+          <Button variant="outline" asChild className="mt-12">
+          <Link href="/category">
+            Voir toute l'actualité
+          </Link>
+          </Button>
+          </div>
+      </section>  
+
+      <div className="absolute inset-0 -z-10">
+        <div className="absolute top-[3200px] left-0 h-full w-[50vw] rounded-full bg-gradient-to-r from-pink-200 to-blue-200 opacity-20 blur-3xl"></div>
+        <div className="absolute top-[3400px] right-0 h-[400px] w-[50vw] rounded-full bg-gradient-to-r from-blue-200 to-pink-200 opacity-20 blur-3xl"></div>
+      </div>
+      <section className="mb-24 ">
+            <DraggableCardContainer className="relative flex md:min-h-screen min-h-[50rem] w-full md:items-center items-start justify-center">
+              <p className="absolute top-1/2 mx-auto max-w-sm -translate-y-3/4 text-center text-2xl font-serif md:text-4xl dark:text-neutral-800">
+              Cahier de la colère et de l'espoir
+              </p>
+              {verbatimImages.map((item, idx) => (
+              <DraggableCardBody key={item.image ?? idx} className={item.className}>
+                <img
+                src={item.image}
+                alt={item.title}
+                className="pointer-events-none relative z-10 w-[40rem] object-contain"
+                />
+              </DraggableCardBody>
+              ))}
+            </DraggableCardContainer>
       </section>
-
-
     </div>
+    </>
   )
 }

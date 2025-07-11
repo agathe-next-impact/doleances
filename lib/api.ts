@@ -1,3 +1,5 @@
+import { env } from "process"
+
 // Types for WordPress API responses
 export interface Category {
   id: number
@@ -24,8 +26,10 @@ export interface Post {
   excerpt: {
     rendered: string
   }
+  author: number
   slug: string
   link: string
+  featured_media?: number
   categories?: number[]
   acf?: {
     groupe_local?: string
@@ -35,6 +39,10 @@ export interface Post {
     heure_evenement?: string
     lieu_evenement?: string
     adresse_evenement?: string
+    descriptif?: string
+    fichier_de_la_publication?: string
+    region_etats_generaux_communaux?: string
+    contenu_de_larticle?: string
     adress?: string
     adresse?: string
     latitude?: string | number
@@ -72,10 +80,10 @@ export interface Post {
       }>
     >
   }
+  featuredImage?: number // Add this property to match the usage in the code
 }
 
-// Interface pour le custom post type "groupe_local"
-export interface GroupeLocalPost {
+export interface Page {
   id: number
   title: {
     rendered: string
@@ -95,12 +103,71 @@ export interface GroupeLocalPost {
   }
 }
 
+// Interface pour le custom post type "groupe_local"
+export interface GroupeLocalPost {
+  id: number
+  title: {
+    rendered: string
+  }
+  content: {
+    rendered: string
+  }
+  slug: string
+  link: string
+  position?: {
+    lat: number
+    lng: number
+  }
+  acf?: {
+    [key: string]: any
+  }
+  _embedded?: {
+    "wp:featuredmedia"?: Array<{
+      source_url: string
+    }>
+  }
+}
+
 export interface GroupeLocal {
   id: number
   name: string
+  slug: string
 }
 
-const API_BASE_URL = "https://palegreen-capybara-652133.hostingersite.com/wp-json/wp/v2"
+export interface Media {
+  id: number
+  title: {
+    rendered: string
+  }
+  date: string
+  link: string
+  media_type: string
+  mime_type: string
+  source_url: string
+  alt_text?: string
+  caption?: {
+    rendered: string
+  }
+}
+
+export interface Verbatim {
+  id: number;
+  acf: {
+    texte_du_verbatim?: string;
+    date?: string;
+    departement?: string;
+    groupe_local?: string;
+  };
+}
+
+export interface VerbatimImage {
+  id: number;
+  acf: {
+    image_du_verbatim?: string;
+  };
+}
+
+const API_BASE_URL = env.NEXT_PUBLIC_API_BASE_URL || "https://wp-starter.io/wp-json/wp/v2"
 
 // Cache for categories to avoid multiple requests
 let categoriesCache: Category[] | null = null
@@ -121,14 +188,15 @@ export async function fetchCategories(): Promise<Category[]> {
     // Check if we have a valid cache
     const now = Date.now()
     if (categoriesCache && categoriesCacheTime + CACHE_DURATION > now) {
-      return categoriesCache
+      return categoriesCache.sort((a, b) => b.count - a.count)
     }
 
     const response = await fetch(`${API_BASE_URL}/categories?per_page=100`, {
-      cache: "no-store",
+      // Remove 'cache: "no-store"' to allow static rendering and ISR
       headers: {
         Accept: "application/json",
       },
+      // Optionally, you can add: next: { revalidate: 3600 }, // Revalidate every hour
     })
 
     if (!response.ok) {
@@ -140,13 +208,38 @@ export async function fetchCategories(): Promise<Category[]> {
     // Update cache
     categoriesCache = data
     categoriesCacheTime = now
-
-    return data
+    // Sort categories by count in descending order
+    return data.sort((a: Category, b: Category) => b.count - a.count)
   } catch (error) {
     console.error("Error fetching categories:", error)
     return []
   }
 }
+
+// Fetch a specific category by slug
+export async function fetchCategoryBySlug(slug: string): Promise<Category | null> {
+  try {
+    const response = await fetch(`${API_BASE_URL}/categories?slug=${slug}`, {
+      
+      headers: {
+        Accept: "application/json",
+      },
+    })
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch category by slug: ${response.status}`)
+    }
+
+    const categories = await response.json()
+
+    // Check if a category was found
+    return categories.length > 0 ? categories[0] : null
+  } catch (error) {
+    console.error(`Error fetching category by slug ${slug}:`, error)
+    return null
+  }
+}
+
 
 // Fetch a specific category by ID
 export async function fetchCategory(id: number): Promise<Category> {
@@ -162,7 +255,7 @@ export async function fetchCategory(id: number): Promise<Category> {
     // If not found in cache, try direct API call
     try {
       const response = await fetch(`${API_BASE_URL}/categories/${id}`, {
-        cache: "no-store",
+        
         headers: {
           Accept: "application/json",
         },
@@ -205,7 +298,7 @@ export async function fetchAllPosts(): Promise<Post[]> {
 
     // Récupérer le nombre total de pages
     const countResponse = await fetch(`${API_BASE_URL}/posts?per_page=1`, {
-      cache: "no-store",
+      
       headers: {
         Accept: "application/json",
       },
@@ -230,7 +323,7 @@ export async function fetchAllPosts(): Promise<Post[]> {
       console.log(`Récupération de la page ${page}/${maxPages}`)
 
       const response = await fetch(`${API_BASE_URL}/posts?_embed&per_page=100&page=${page}`, {
-        cache: "no-store",
+        
         headers: {
           Accept: "application/json",
         },
@@ -253,8 +346,6 @@ export async function fetchAllPosts(): Promise<Post[]> {
       }
     }
 
-    console.log(`Récupéré ${allPosts.length} posts au total`)
-
     // Mettre à jour le cache
     allPostsCache = allPosts
     allPostsCacheTime = now
@@ -266,11 +357,55 @@ export async function fetchAllPosts(): Promise<Post[]> {
   }
 }
 
+// Fetch last 4 posts
+export async function fetchLastThreePosts(): Promise<Post[]> {
+  try {
+    const response = await fetch(`${API_BASE_URL}/posts?_embed&per_page=3`, {
+      headers: {
+        Accept: "application/json",
+      },
+      next: { revalidate: 3600 }, // Revalidate every hour (adjust as needed)
+    })
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch last three posts: ${response.status}`)
+    }
+
+    const posts = await response.json()
+
+    // Fetch the featured media URL for each post
+    return posts.map((post: any) => ({
+      id: post.id,
+      slug: post.slug,
+      title: post.title.rendered,
+      excerpt: post.excerpt.rendered,
+      descriptif: post.acf?.descriptif || "",
+      resume: post.acf?.resume || "",
+      chapeau: post.acf?.chapeau || "",
+      content: post.content.rendered,
+      date: post.date,
+      date_de_levenement: post.acf?.date_de_levenement || "",
+      heure_de_levenement: post.acf?.heure_de_levenement || "",
+      lieu_de_levenement: post.acf?.lieu_de_levenement || "",
+      author: post._embedded?.author?.[0]?.name || "Unknown Author",
+      categories: post._embedded?.["wp:term"]?.[0]?.map((term: any) => term.name) || [],
+      categoriesId: post._embedded?.["wp:term"]?.[0]?.map((term: any) => term.id) || [],
+      categoriesSlug: post._embedded?.["wp:term"]?.[0]?.map((term: any) => term.slug) || [],
+      tags: post._embedded?.["wp:term"]?.[1]?.map((term: any) => term.name) || [],
+      featuredImage: post._embedded?.["wp:featuredmedia"]?.[0]?.source_url || null,
+    }))
+  } catch (error) {
+    console.error("Error fetching featured articles:", error);
+    return [];
+  }
+}
+
+
 // Améliorer la fonction fetchPostsByCategory pour s'assurer que les posts ont l'information de catégorie
 export async function fetchPostsByCategory(categoryId: number): Promise<Post[]> {
   try {
     const response = await fetch(`${API_BASE_URL}/posts?categories=${categoryId}&_embed&per_page=100`, {
-      cache: "no-store",
+      
       headers: {
         Accept: "application/json",
       },
@@ -296,40 +431,57 @@ export async function fetchPostsByCategory(categoryId: number): Promise<Post[]> 
   }
 }
 
-// Fetch a specific post by ID
-export async function fetchPost(id: number): Promise<Post> {
+// Fetch post by ID
+export async function fetchPostById(id: number): Promise<Post | null> {
   try {
     const response = await fetch(`${API_BASE_URL}/posts/${id}?_embed`, {
-      cache: "no-store",
       headers: {
         Accept: "application/json",
       },
     })
 
     if (!response.ok) {
-      throw new Error(`Failed to fetch post: ${response.status}`)
+      throw new Error(`Failed to fetch post by ID: ${response.status}`)
     }
 
     const post = await response.json()
 
-    // Ajouter un log pour déboguer la structure des données
-    console.log("Structure ACF du post:", post.acf)
-    if (post.acf?.lieu_de_levenement) {
-      console.log("Structure lieu_de_levenement:", post.acf.lieu_de_levenement)
+    // Vérifier si le post a été trouvé
+    return post || null
+  } catch (error) {
+    console.error(`Error fetching post by ID ${id}:`, error)
+    return null
+  }
+}
+
+// Fetch a specific post by slug
+export async function fetchPostBySlug(slug: string): Promise<Post | null> {
+  try {
+    const response = await fetch(`${API_BASE_URL}/posts?slug=${slug}&_embed`, {
+      headers: {
+        Accept: "application/json",
+      },
+    })
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch post by slug: ${response.status}`)
     }
 
-    return post
+    const posts = await response.json()
+
+    // Vérifier si un post correspondant a été trouvé
+    return posts.length > 0 ? posts[0] : null
   } catch (error) {
-    console.error(`Error fetching post ${id}:`, error)
-    throw error
+    console.error(`Error fetching post by slug ${slug}:`, error)
+    return null
   }
 }
 
 // Fetch the 3 most recent posts for a category
 export async function fetchRecentPostsByCategory(categoryId: number): Promise<Post[]> {
   try {
-    const response = await fetch(`${API_BASE_URL}/posts?categories=${categoryId}&_embed&per_page=3`, {
-      cache: "no-store",
+    const response = await fetch(`${API_BASE_URL}/posts?categories=${categoryId}&_embed&per_page=4`, {
+      
       headers: {
         Accept: "application/json",
       },
@@ -339,31 +491,136 @@ export async function fetchRecentPostsByCategory(categoryId: number): Promise<Po
       throw new Error(`Failed to fetch recent posts: ${response.status}`)
     }
 
-    return response.json()
+    const posts: Post[] = await response.json()
+
+    // Fetch the featured media URL for each post
+    const postsWithMedia = await Promise.all(
+      posts.map(async (post) => {
+        if (post.featured_media) {
+          try {
+            const mediaResponse = await fetch(`${API_BASE_URL}/media/${post.featured_media}`, {
+              
+              headers: {
+                Accept: "application/json",
+              },
+            })
+
+            if (mediaResponse.ok) {
+              const mediaData = await mediaResponse.json()
+              post._embedded = post._embedded || {}
+              post._embedded["wp:featuredmedia"] = [{ source_url: mediaData.source_url }]
+            }
+          } catch (error) {
+            console.error(`Error fetching media for post ${post.id}:`, error)
+          }
+        }
+        return post
+      }),
+    )
+
+    return postsWithMedia
   } catch (error) {
     console.error(`Error fetching recent posts for category ${categoryId}:`, error)
     return []
   }
 }
 
-// Search posts by query and category
-export async function searchPosts(query: string, categoryId: number): Promise<Post[]> {
+// Fetch search suggestions
+export async function fetchSearchSuggestions(query: string): Promise<{
+  groupedArticles: { [category: string]: { id: number; title: string; slug: string }[] };
+}> {
+  if (!API_BASE_URL ) {
+    console.warn("WORDPRESS_API_URL is not defined.");
+    return { groupedArticles: {} };
+  }
+
   try {
-    const response = await fetch(`${API_BASE_URL}/posts?search=${query}&categories=${categoryId}&_embed&per_page=100`, {
-      cache: "no-store",
+    console.log("Fetching search suggestions for query:", query);
+    // Fetch articles matching the search query
+    const articlesResponse = await fetch(
+      `${API_BASE_URL}/posts?search=${encodeURIComponent(query)}&_embed&per_page=10`
+    );
+
+    if (!articlesResponse.ok) {
+      throw new Error(`Failed to fetch article suggestions: ${articlesResponse.status}`);
+    }
+
+    const articles = await articlesResponse.json();
+    console.log("Articles fetched:", articles);
+
+    // Group articles by category
+    const groupedArticles: { [category: string]: { id: number; title: string; slug: string }[] } =
+      {};
+
+    articles.forEach((article: any) => {
+      const categories = article._embedded?.["wp:term"]?.[0]?.map((term: any) => term.name) || [
+        "Uncategorized",
+      ];
+
+      categories.forEach((category: string) => {
+        if (!groupedArticles[category]) {
+          groupedArticles[category] = [];
+        }
+
+        groupedArticles[category].push({
+          id: article.id,
+          title: article.title.rendered,
+          slug: article.slug,
+        });
+      });
+    });
+
+    return { groupedArticles };
+  } catch (error) {
+    console.error("Error fetching search suggestions:", error);
+    return { groupedArticles: {} };
+  }
+}
+
+// récupérer le contenu des pages
+export async function fetchPageBySlug(slug: string): Promise<Page | null> {
+  try {
+    const response = await fetch(`${API_BASE_URL}/pages?slug=${slug}`, {
       headers: {
         Accept: "application/json",
       },
+      next: { revalidate: 3600 }, // Revalidate every hour
     })
 
     if (!response.ok) {
-      throw new Error(`Failed to search posts: ${response.status}`)
+      throw new Error(`Failed to fetch page by slug: ${response.status}`)
     }
 
-    return response.json()
+    const pages = await response.json()
+
+    // Vérifier si une page correspondante a été trouvée
+    return pages.length > 0 ? pages[0] : null
   } catch (error) {
-    console.error(`Error searching posts for category ${categoryId}:`, error)
-    return []
+    console.error(`Error fetching page by slug ${slug}:`, error)
+    return null
+  }
+}
+
+// récupérer les fichiers joints par des champs ACF 
+export async function fetchAttachmentById(id: number) {
+  try {
+    const response = await fetch(`${API_BASE_URL}/media/${id}`, {
+      headers: {
+        Accept: "application/json",
+      },
+      next: { revalidate: 3600 }, // Revalidate every hour (adjust as needed)
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch attachment: ${response.status}`);
+      console.log
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error(`Error fetching attachment by ID ${id}:`, error);
+    return null;
   }
 }
 
@@ -402,7 +659,7 @@ export async function fetchPostsByGroupeLocalCPT(groupeLocalCptId: number): Prom
 
     // Récupérer tous les posts (limité à 100 pour des raisons de performance)
     const response = await fetch(`${API_BASE_URL}/posts?_embed&per_page=100`, {
-      cache: "no-store",
+      
       headers: {
         Accept: "application/json",
       },
@@ -435,7 +692,7 @@ export async function fetchPostsByGroupeLocalCPT(groupeLocalCptId: number): Prom
 export async function fetchCategoriesForPost(postId: number): Promise<Category[]> {
   try {
     const response = await fetch(`${API_BASE_URL}/categories?post=${postId}&per_page=100`, {
-      cache: "no-store",
+      
       headers: {
         Accept: "application/json",
       },
@@ -526,7 +783,7 @@ export async function fetchGroupesLocaux(): Promise<GroupeLocalPost[]> {
     }
 
     const response = await fetch(`${API_BASE_URL}/groupe_local?_embed&per_page=100`, {
-      cache: "no-store",
+      
       headers: {
         Accept: "application/json",
       },
@@ -560,7 +817,7 @@ export async function fetchAllGroupesLocaux(
 }> {
   try {
     const response = await fetch(`${API_BASE_URL}/groupe_local?_embed&per_page=${perPage}&page=${page}`, {
-      cache: "no-store",
+      
       headers: {
         Accept: "application/json",
       },
@@ -604,7 +861,7 @@ export async function fetchGroupeLocalBySlug(slug: string): Promise<GroupeLocalP
 
     // Si non trouvé dans le cache, essayer un appel API direct
     const response = await fetch(`${API_BASE_URL}/groupe_local?slug=${slug}&_embed`, {
-      cache: "no-store",
+      
       headers: {
         Accept: "application/json",
       },
@@ -621,6 +878,7 @@ export async function fetchGroupeLocalBySlug(slug: string): Promise<GroupeLocalP
     return null
   }
 }
+
 
 // Améliorer la fonction fetchGroupeLocalById pour mieux gérer les erreurs et ajouter des logs
 export async function fetchGroupeLocalById(id: number): Promise<GroupeLocalPost | null> {
@@ -652,7 +910,7 @@ export async function fetchGroupeLocalById(id: number): Promise<GroupeLocalPost 
       `Groupe local non trouvé dans le cache, tentative d'appel API direct à ${API_BASE_URL}/groupe_local/${id}`,
     )
     const response = await fetch(`${API_BASE_URL}/groupe_local/${id}?_embed`, {
-      cache: "no-store",
+      
       headers: {
         Accept: "application/json",
       },
@@ -718,6 +976,7 @@ export async function fetchGroupeLocalById(id: number): Promise<GroupeLocalPost 
   }
 }
 
+
 // Mettre à jour la fonction extractGroupesLocauxCPTFromCategory pour utiliser groupe_local_tax
 export async function extractGroupesLocauxCPTFromCategory(categoryId: number): Promise<GroupeLocalPost[]> {
   try {
@@ -744,5 +1003,61 @@ export async function extractGroupesLocauxCPTFromCategory(categoryId: number): P
   } catch (error) {
     console.error(`Error extracting groupe_local CPTs from category ${categoryId}:`, error)
     return []
+  }
+}
+
+export async function fetchRandomVerbatim(): Promise<Verbatim | null> {
+  
+  try {
+    const response = await fetch(`${API_BASE_URL}/verbatim`, {
+      headers: {
+        Accept: "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch verbatim: ${response.status}`);
+    }
+
+    const verbatims: Verbatim[] = await response.json();
+
+    if (verbatims.length === 0) {
+      return null;
+    }
+
+    // Sélectionner un verbatim aléatoire
+    const randomIndex = Math.floor(Math.random() * verbatims.length);
+    return verbatims[randomIndex];
+  } catch (error) {
+    console.error("Error fetching random verbatim:", error);
+    return null;
+  }
+}
+
+export async function fetchRandomVerbatimImage(): Promise<VerbatimImage[] | null> {
+  
+  try {
+    const response = await fetch(`${API_BASE_URL}/image`, {
+      
+      headers: {
+        Accept: "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch verbatim: ${response.status}`);
+    }
+
+    const verbatimImages: VerbatimImage[] = await response.json();
+
+    if (verbatimImages.length === 0) {
+      return null;
+    }
+
+    // Sélectionner un verbatim aléatoire
+    return verbatimImages;
+  } catch (error) {
+    console.error("Error fetching random verbatim:", error);
+    return null;
   }
 }
