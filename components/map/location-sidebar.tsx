@@ -16,6 +16,9 @@ interface Location {
   phone?: string;
   email?: string;
   website?: string;
+  personne2?: string;
+  phone2?: string;
+  email2?: string;
   departement: string;
   thumbnail?: string;
 }
@@ -105,7 +108,7 @@ export default function LocationSidebar({
             {location.phone && (
               <div className="flex items-center gap-2">
                 <Phone className="h-5 w-5 text-gray-500" />
-                <a href={`tel:${location.phone}`} className="text-primary hover:underline">
+                <a href={`tel:${location.phone?.replace(/\s+/g, "")}`}  className="text-primary hover:underline">
                   {location.phone}
                 </a>
               </div>
@@ -120,7 +123,39 @@ export default function LocationSidebar({
               </div>
             )}
 
+            {location.personne2 && (
+               <>
+                  <hr className="my-4 border-muted" />
+              <div className="border-t border-gray-200 pt-4">
+                <div
+                  className="text-gray-700 prose prose-sm max-w-none">
+                  {location.personne2}
+                </div>
+              </div>
+              </>
+            )}
+
+            {location.phone2 && (
+              <div className="flex items-center gap-2">
+                <Phone className="h-5 w-5 text-gray-500" />
+                <a href={`tel:${location.phone2?.replace(/\s+/g, "")}`} className="text-primary hover:underline">
+                  {location.phone2}
+                </a>
+              </div>
+            )}
+
+            {location.email2 && (
+              <div className="flex items-center gap-2">
+                <Mail className="h-5 w-5 text-gray-500" />
+                <a href={`mailto:${location.email2}`} className="text-primary hover:underline">
+                  {location.email2}
+                </a>
+              </div>
+            )}
+
             {location.website && (
+                  <>
+                  <hr className="my-4 border-muted" />
               <div className="flex items-center gap-2">
                 <Globe className="h-5 w-5 text-gray-500" />
                 <a
@@ -132,6 +167,7 @@ export default function LocationSidebar({
                   {location.website}
                 </a>
               </div>
+              </>
             )}
 
             {location.slug && (

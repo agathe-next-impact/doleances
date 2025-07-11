@@ -15,6 +15,9 @@ interface Location {
   title: { rendered: string };
   acf: {
     personne: string;
+    personne2?: string;
+    telephone2?: string;
+    email2?: string;
     localisation: {
       lat: string | number;
       lng: string | number;
@@ -135,6 +138,9 @@ const { isLoaded, loadError } = useJsApiLoader({
               personne: item.acf?.personne_contact || "",
               phone: item.acf.telephone || "",
               email: item.acf.email || "",
+              personne2: item.acf?.personne_contact_2 || "",
+              phone2: item.acf.telephone_2 || "",
+              email2: item.acf.email_2 || "",
               website: item.acf.site_web || "",
               departement: item.acf.departement || "Autres",
               thumbnail: item._embedded?.["wp:featuredmedia"]?.[0]?.source_url,
@@ -325,7 +331,7 @@ const { isLoaded, loadError } = useJsApiLoader({
       </div>
 
       <div className="flex flex-col md:flex-row flex-1 h-full">
-        <div className="w-full md:w-2/3 h-[500px] h-auto">
+        <div className="w-full md:w-2/3 h-auto">
           <GoogleMap
             mapContainerStyle={containerStyle}
             center={currentGroup?.center || defaultCenter}

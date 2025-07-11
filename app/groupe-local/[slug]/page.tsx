@@ -120,6 +120,9 @@ export default async function GroupeLocalPage({ params }: { params: { slug: stri
       personne: groupeLocal.acf?.personne_contact || null,
       email: groupeLocal.acf?.email || null,
       telephone: groupeLocal.acf?.telephone || groupeLocal.acf?.phone || null,
+      personne2: groupeLocal.acf?.personne_contact_2 || null,
+      email2: groupeLocal.acf?.email_2 || null,
+      telephone2: groupeLocal.acf?.telephone_2 || groupeLocal.acf?.phone2 || null,
       site_web: groupeLocal.acf?.site_web || groupeLocal.acf?.website || null,
     }
 
@@ -256,13 +259,53 @@ export default async function GroupeLocalPage({ params }: { params: { slug: stri
                     <div className="bg-primary/10 p-2 rounded-full">
                       <Phone className="h-5 w-5" />
                     </div>
-                    <a href={`tel:${contact.telephone}`} className="text-primary">
+                    <a href={`tel:${contact.telephone?.replace(/\s+/g, "")}`} className="text-primary">
                       {contact.telephone}
                     </a>
                   </div>
                 )}
 
+                 {contact.personne2 && (
+
+                    <>
+                    <hr className="my-4 border-muted" />
+                  <div className="flex items-center gap-3">
+                    <div className="bg-primary/10 p-2 rounded-full">
+                      <User className="h-5 w-5" />
+                    </div>
+                    <a href={`mailto:${contact.personne2}`} className="text-primary">
+                      {contact.personne2}
+                    </a>
+                  </div>
+                  </>
+                )}
+
+                {contact.email2 && (
+                  <div className="flex items-center gap-3">
+                    <div className="bg-primary/10 p-2 rounded-full">
+                      <Mail className="h-5 w-5" />
+                    </div>
+                    <a href={`mailto:${contact.email2}`} className="text-primary">
+                      {contact.email2}
+                    </a>
+                  </div>
+                )}
+
+                {contact.telephone2 && (
+                  <div className="flex items-center gap-3">
+                    <div className="bg-primary/10 p-2 rounded-full">
+                      <Phone className="h-5 w-5" />
+                    </div>
+                    <a href={`tel:${contact.telephone2?.replace(/\s+/g, "")}`}  className="text-primary">
+                      {contact.telephone2}
+                    </a>
+                  </div>
+                )}
+
+
                 {contact.site_web && (
+                  <>
+                  <hr className="my-4 border-muted" />
                   <div className="flex items-center gap-3">
                     <div className="bg-primary/10 p-2 rounded-full">
                       <Globe className="h-5 w-5" />
@@ -276,6 +319,7 @@ export default async function GroupeLocalPage({ params }: { params: { slug: stri
                       {contact.site_web}
                     </a>
                   </div>
+                  </>
                 )}
 
                 {address && (
