@@ -50,6 +50,7 @@ export default function ClientLayout({
       <head>
       <meta charSet="UTF-8" />
       <link rel="icon" href="/img/logo.svg" />
+      <meta name="facebook-domain-verification" content="qthq59j7j8zxog6h5343r15d964vjl" />
       {/* Ajouter les styles pour Leaflet */}
       <style>{`
         .leaflet-container {
