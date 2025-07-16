@@ -85,8 +85,6 @@ export async function generateMetadata({ params }: { params: { slug: string } })
       description,
       images: [imageUrl],
     },
-    'og:image:width': 1200,
-    'og:image:height': 630,
   }
 }
 

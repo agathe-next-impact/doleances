@@ -11,7 +11,7 @@ export const metadata: Metadata = {
     description: "Cartographie des groupes locaux",
     images: [
       {
-        url: "https://doleances.fr/img/doleances_couv.png",
+        url: "https://www.doleances.fr/img/doleances_couv.png",
         alt: "Cartographie des groupes locaux",
       },
     ],

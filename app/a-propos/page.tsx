@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     description: "Présentation de la démarche et des groupes locaux",
     images: [
       {
-        url: "https://lesdoleances.fr/img/doleances_couv.png",
+        url: "https://www.lesdoleances.fr/img/doleances_couv.png",
         alt: "A propos de nous - Les Doléances",
       },
     ],

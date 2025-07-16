@@ -19,7 +19,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
         description,
         images: [
           {
-            url: "https://doleances.fr/img/doleances_couv.png",
+            url: "https://www.doleances.fr/img/doleances_couv.png",
             alt: title,
           },
         ],
