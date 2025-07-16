@@ -102,7 +102,7 @@ export default async function ArticlePage({ params }: { params: { slug: string }
       "/img/logo.svg"
 
     
-    const url = `https://www.les-doleances.fr"}/article/${params.slug}`
+    const url = `https://www.les-doleances.fr/article/${params.slug}`
 
 
     return (
