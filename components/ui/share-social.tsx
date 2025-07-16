@@ -82,8 +82,8 @@ export const ShareSocial: React.FC<ShareSocialProps> = ({
   image,
   className = "",
 }) => {
-  const replacedUrl = url.replace(/wp-starter\.io/g, "lesdoleances.fr")
-        .replace(/palegreen-capybara-652133.hostingersite.com/g, "lesdoleances.fr").replace(/([^:]\/)\/+/g, "$1");
+  const replacedUrl = url.replace(/wp-starter\.io/g, "www.lesdoleances.fr")
+        .replace(/palegreen-capybara-652133.hostingersite.com/g, "www.lesdoleances.fr").replace(/([^:]\/)\/+/g, "$1");
   return (
     <div className={`flex gap-2 ${className}`}>
       {socialPlatforms.map((platform) => (
