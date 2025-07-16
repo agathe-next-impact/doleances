@@ -18,7 +18,7 @@ type ShareSocialProps = {
 }
 
 const socialPlatforms = [
-  {
+ {/*} {
     name: "Facebook",
     icon: FaFacebookF,
     url: (u: string) => {
@@ -31,7 +31,7 @@ const socialPlatforms = [
       );
       return `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(replacedUrl)}&redirect_uri=${encodeURIComponent(window.location.origin)}`;
     },
-  },
+  },*/},
   {
     name: "LinkedIn",
     icon: FaLinkedinIn,
