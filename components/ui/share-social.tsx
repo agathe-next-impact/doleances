@@ -23,8 +23,8 @@ const socialPlatforms = [
     icon: FaFacebookF,
     url: (u: string) => {
       const replacedUrl: string = u
-        .replace(/wp-starter\.io/g, "lesdoleances.fr")
-        .replace(/palegreen-capybara-652133.hostingersite.com/g, "lesdoleances.fr");
+        .replace(/wp-starter\.io/g, "www.lesdoleances.fr")
+        .replace(/palegreen-capybara-652133.hostingersite.com/g, "www.lesdoleances.fr");
       console.log(
         "Replaced URL for Facebook: https://www.facebook.com/sharer/sharer.php?u=" +
           encodeURIComponent(replacedUrl)
