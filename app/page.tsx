@@ -35,6 +35,7 @@ export default async function Home() {
   const contribuer = await fetchPageBySlug("contribuer")
   const etatsGeneraux = await fetchPageBySlug("etats-generaux-communaux")
   const cartographie = await fetchPageBySlug("cartographie")
+  
 
   const images = await fetchRandomVerbatimImage()
   const imagesObjects = await Promise.all(
