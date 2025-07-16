@@ -18,20 +18,6 @@ type ShareSocialProps = {
 }
 
 const socialPlatforms = [
- {/*} {
-    name: "Facebook",
-    icon: FaFacebookF,
-    url: (u: string) => {
-      const replacedUrl: string = u
-        .replace(/wp-starter\.io/g, "www.lesdoleances.fr")
-        .replace(/palegreen-capybara-652133.hostingersite.com/g, "www.lesdoleances.fr");
-      console.log(
-        "Replaced URL for Facebook: https://www.facebook.com/sharer/sharer.php?u=" +
-          encodeURIComponent(replacedUrl)
-      );
-      return `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(replacedUrl)}&redirect_uri=${encodeURIComponent(window.location.origin)}`;
-    },
-  },*/},
   {
     name: "LinkedIn",
     icon: FaLinkedinIn,
