@@ -28,6 +28,7 @@ export const metadata: Metadata = {
   },
 }
 
+export const revalidate = 60;
 
 export default async function Home() {
   const articles = await fetchLastThreePosts()
@@ -35,7 +36,6 @@ export default async function Home() {
   const contribuer = await fetchPageBySlug("contribuer")
   const etatsGeneraux = await fetchPageBySlug("etats-generaux-communaux")
   const cartographie = await fetchPageBySlug("cartographie")
-  
 
   const images = await fetchRandomVerbatimImage()
   const imagesObjects = await Promise.all(
@@ -99,7 +99,7 @@ export default async function Home() {
                 />
               <div className="h-max flex flex-col rounded-lg border bg-card shadow-lg overflow-hidden">
                 <div className="relative w-full">
-                <YouTubeEmbed videoLink="https://www.youtube.com/embed/b-vrQ-jUxRk?si=ao4g3inJG_-YwGN3" />
+                <YouTubeEmbed videoLink={accueil?.acf?.carte_de_une?.video} />
                 </div>
               </div>
           
