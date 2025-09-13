@@ -157,3 +157,8 @@ button:focus {
   font-size: 0.875rem;
   color: #666;
 }
+
+.gutenberg-wrapper a {
+  color: #3b82f6; /* équivalent de text-blue-500 */
+  text-decoration: underline;
+}
