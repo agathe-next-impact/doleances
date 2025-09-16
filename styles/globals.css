@@ -91,12 +91,5 @@ body {
   body {
     @apply bg-background text-foreground;
   }
-  a {
-    @apply text-blue-500;
-  }
 }
 
-.gutenberg-wrapper a {
-  color: #3b82f6 !important;
-  text-decoration: underline !important;
-}

@@ -29,7 +29,6 @@ export default async function Home() {
   const categories = await fetchCategories()
   categories.sort((a, b) => b.count - a.count)
   const articles = await fetchLastThreePosts()
-  console.log("Articles fetched for homepage:", articles);
   const stickyArticle = articles[0]
 
   return (

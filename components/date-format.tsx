@@ -4,43 +4,32 @@ interface DateFormatProps {
 }
 
 const DateFormat: React.FC<DateFormatProps> = ({ dateStr, short }) => {
-  let dateObj: Date;
-
-  // Vérification si la chaîne est au format "yyyyMMdd"
+  // Affichage manuel sans conversion locale
+  // yyyyMMdd
   if (dateStr.length === 8 && /^\d{8}$/.test(dateStr)) {
-    const isoDate = `${dateStr.slice(0, 4)}-${dateStr.slice(4, 6)}-${dateStr.slice(6)}`;
-    dateObj = new Date(isoDate);
-  } 
-  // Vérification si la chaîne est au format GMT
-  else if (!isNaN(Date.parse(dateStr))) {
-    dateObj = new Date(dateStr);
-  } 
-  // Si le format est invalide
+    const year = dateStr.slice(0, 4);
+    const month = dateStr.slice(4, 6);
+    const day = dateStr.slice(6);
+    if (short) {
+      return <span>{month}/{year}</span>;
+    } else {
+      return <span>{day}/{month}/{year}</span>;
+    }
+  }
+  // ISO ou GMT (2023-06-03T...)
+  else if (/^\d{4}-\d{2}-\d{2}/.test(dateStr)) {
+    const match = dateStr.match(/^(\d{4})-(\d{2})-(\d{2})/);
+    if (!match) return <span>Date invalide</span>;
+    const [_, year, month, day] = match;
+    if (short) {
+      return <span>{month}/{year}</span>;
+    } else {
+      return <span>{day}/{month}/{year}</span>;
+    }
+  }
+  // Sinon, format inconnu
   else {
     return <span>Date invalide</span>;
-  }
-
-  // Vérifie que la date est valide
-  if (isNaN(dateObj.getTime())) {
-    return <span>Date invalide</span>;
-  }
-
-  // Formatage de la date
-  if (short) {
-    // Affiche "juin 2023"
-    const formattedDate = dateObj.toLocaleDateString("fr-FR", {
-      month: "long",
-      year: "numeric",
-    });
-    return <span>{formattedDate}</span>;
-  } else {
-    // Affiche "3 juin 2023"
-    const formattedDate = dateObj.toLocaleDateString("fr-FR", {
-      day: "numeric",
-      month: "long",
-      year: "numeric",
-    });
-    return <span>{formattedDate}</span>;
   }
 };
 
