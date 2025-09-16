@@ -4,32 +4,43 @@ interface DateFormatProps {
 }
 
 const DateFormat: React.FC<DateFormatProps> = ({ dateStr, short }) => {
-  // Affichage manuel sans conversion locale
-  // yyyyMMdd
+  let dateObj: Date;
+
+  // Vérification si la chaîne est au format "yyyyMMdd"
   if (dateStr.length === 8 && /^\d{8}$/.test(dateStr)) {
-    const year = dateStr.slice(0, 4);
-    const month = dateStr.slice(4, 6);
-    const day = dateStr.slice(6);
-    if (short) {
-      return <span>{month}/{year}</span>;
-    } else {
-      return <span>{day}/{month}/{year}</span>;
-    }
-  }
-  // ISO ou GMT (2023-06-03T...)
-  else if (/^\d{4}-\d{2}-\d{2}/.test(dateStr)) {
-    const match = dateStr.match(/^(\d{4})-(\d{2})-(\d{2})/);
-    if (!match) return <span>Date invalide</span>;
-    const [_, year, month, day] = match;
-    if (short) {
-      return <span>{month}/{year}</span>;
-    } else {
-      return <span>{day}/{month}/{year}</span>;
-    }
-  }
-  // Sinon, format inconnu
+    const isoDate = `${dateStr.slice(0, 4)}-${dateStr.slice(4, 6)}-${dateStr.slice(6)}`;
+    dateObj = new Date(isoDate);
+  } 
+  // Vérification si la chaîne est au format GMT
+  else if (!isNaN(Date.parse(dateStr))) {
+    dateObj = new Date(dateStr);
+  } 
+  // Si le format est invalide
   else {
     return <span>Date invalide</span>;
+  }
+
+  // Vérifie que la date est valide
+  if (isNaN(dateObj.getTime())) {
+    return <span>Date invalide</span>;
+  }
+
+  // Formatage de la date
+  if (short) {
+    // Affiche "juin 2023"
+    const formattedDate = dateObj.toLocaleDateString("fr-FR", {
+      month: "long",
+      year: "numeric",
+    });
+    return <span>{formattedDate}</span>;
+  } else {
+    // Affiche "3 juin 2023"
+    const formattedDate = dateObj.toLocaleDateString("fr-FR", {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    });
+    return <span>{formattedDate}</span>;
   }
 };
 
@@ -40,22 +51,14 @@ interface TimeFormatProps {
 }
 
 export const TimeFormat: React.FC<TimeFormatProps> = ({ timeStr }) => {
-    const date = new Date(`1970-01-01T${timeStr}Z`); // Ajout d'une date fictive pour créer un objet Date valide
-
-    // Vérifie que l'heure est valide
-    if (isNaN(date.getTime())) {
-        return <span>Heure invalide</span>;
-    }
-
-    // Formatage de l'heure en "HHhmm"
-    let formattedTime = new Intl.DateTimeFormat("fr-FR", {
-      hour: "2-digit",
-      minute: "2-digit",
-    }).format(date).replace(":", "h");
-
-    if (formattedTime.startsWith("0")) {
-      formattedTime = formattedTime.substring(1);
-    }
-    return <span>{formattedTime}</span>;
+  // Accepte "HH:mm:ss" ou "HH:mm:ss.000Z"
+  const match = timeStr.match(/^(\d{2}):(\d{2})/);
+  if (!match) {
+    return <span>Heure invalide</span>;
+  }
+  let [_, hour, minute] = match;
+  // Supprime le zéro initial si présent
+  if (hour.startsWith("0")) hour = hour.substring(1);
+  return <span>{hour}h{minute}</span>;
 }
 // export default TimeFormat    
