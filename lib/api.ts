@@ -172,7 +172,7 @@ const API_BASE_URL = env.NEXT_PUBLIC_API_BASE_URL || "https://wpasso.fr/wp-json/
 // Cache for categories to avoid multiple requests
 let categoriesCache: Category[] | null = null
 let categoriesCacheTime = 0
-const CACHE_DURATION = 3600000 // 1 hour in milliseconds
+const CACHE_DURATION = 3600000 
 
 // Cache pour les groupes locaux (CPT)
 let groupesLocauxCache: GroupeLocalPost[] | null = null
