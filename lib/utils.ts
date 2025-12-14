@@ -12,7 +12,7 @@ export function formatDate(dateString: string): string {
     year: "numeric",
     month: "short",
     day: "numeric",
-  }).format(date).replace('.', '') // Remove period from short month
+  }).format(date).replace('.', '') 
 }
 
 
