@@ -18,7 +18,7 @@ type FormData = z.infer<typeof formSchema>
 export async function getContactData() {
   try {
     const response = await fetch(
-      "https://wp-starter.io/wp-json/wp/v2/pages?slug=contribuer",
+      "https://wpasso.fr/wp-json/wp/v2/pages?slug=contribuer",
       { next: { revalidate: 3600 } }, // Revalider toutes les heures
     )
 

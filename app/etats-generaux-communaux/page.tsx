@@ -47,7 +47,7 @@ export default async function Page () {
         <section className="w-full h-max mb-12 flex flex-col gap-12 md:grid md:grid-cols-6 md:gap-12">                     
           <div className="h-max flex flex-col lg:col-span-2 col-span-6 gap-4 overflow-hidden">            
             <div className="items-end border rounded-lg bg-card shadow-lg overflow-hidden mb-8"> 
-              <YoutubeEmbed videoLink={page.acf?.video || "https://www.youtube.com/embed/8bof5Anluk4?si=H5M7BGGsvWFUODBM"} />
+              <YoutubeEmbed videoLink={page?.acf?.video || "https://www.youtube.com/embed/8bof5Anluk4?si=H5M7BGGsvWFUODBM"} />
             </div>
              {page?.acf?.carte_de_une && (
             <div className="h-full flex flex-col col-span-4 flex-grow p-6 justify-between rounded-lg border bg-card shadow-lg">

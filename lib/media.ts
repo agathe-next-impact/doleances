@@ -1,6 +1,6 @@
 // utils/media.ts
 const MEDIA_CONFIG = {
-  backendUrl: process.env.NEXT_PUBLIC_WP_BACKEND_URL || 'https://wp-starter.io',
+  backendUrl: process.env.NEXT_PUBLIC_WP_BACKEND_URL || 'https://wpasso.fr',
   frontendUrl: process.env.NEXT_PUBLIC_FRONTEND_URL || 'https://lesdoleances.fr',
   cdnUrl: process.env.NEXT_PUBLIC_CDN_URL || null // optionnel pour un CDN
 };

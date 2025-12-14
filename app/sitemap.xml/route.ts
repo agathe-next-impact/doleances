@@ -1,13 +1,13 @@
 export const dynamic = 'force-dynamic'; // 🔥 indispensable
 
 export async function GET() {
-  const res = await fetch('https://wp-starter.io/wp-json/wp/v2/groupe_local?_embed&per_page=100', {
+  const res = await fetch('https://wpasso.fr/wp-json/wp/v2/groupe_local?_embed&per_page=100', {
     next: { revalidate: 0 }, // ou cache: 'no-store'
   });
-  const articles = await fetch('https://wp-starter.io/wp-json/wp/v2/posts?_embed&per_page=100', {
+  const articles = await fetch('https://wpasso.fr/wp-json/wp/v2/posts?_embed&per_page=100', {
     next: { revalidate: 0 }, // ou cache: 'no-store'
   });
-  const pages = await fetch('https://wp-starter.io/wp-json/wp/v2/pages?_embed&per_page=100', {
+  const pages = await fetch('https://wpasso.fr/wp-json/wp/v2/pages?_embed&per_page=100', {
     next: { revalidate: 0 }, // ou cache: 'no-store'
   });
   if (!res.ok || !articles.ok || !pages.ok) {

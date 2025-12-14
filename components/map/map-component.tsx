@@ -71,7 +71,7 @@ const defaultZoom = 6;
 
 // Clé API Google Maps
 const googleMapsApiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || process.env.GOOGLE_MAPS_API_KEY;
-const WORDPRESS_API_URL = process.env.WORDPRESS_API_URL || "https://wp-starter.io/wp-json/wp/v2";
+const WORDPRESS_API_URL = process.env.WORDPRESS_API_URL || "https://wpasso.fr/wp-json/wp/v2";
 
 export default function MapComponent() {
   const [selectedDepartement, setSelectedDepartement] = useState<string | null>(null);
