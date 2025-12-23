@@ -105,7 +105,7 @@ export default async function Home() {
       <div className="mt-8 mb-12 md:mt-8 text-center">
         <h1 className="mb-4 text-4xl font-light tracking-tight md:text-5xl">Les doléances</h1> 
         <p className="mx-auto mb-6 max-w-2xl text-lg text-muted-foreground">
-        Wiki du corpus des doléances de 2018/2019
+        Les cahiers de la colère et de l’espoir
         </p>
       </div>
 
