@@ -1,10 +1,14 @@
 import Link from "next/link"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
+import CategoryCard from "@/components/actualites/category-card"
 import { ArticleCardHome } from "@/components/actualites/article-card-home"
-import { fetchLastThreePosts, fetchPageBySlug, fetchRandomVerbatimImage, fetchAttachmentById, fetchGroupesLocaux } from "@/lib/api"
+import { fetchLastThreePosts, fetchPageBySlug, fetchRandomVerbatimImage, fetchAttachmentById, fetchGroupesLocaux, fetchCategories } from "@/lib/api"
 import YouTubeEmbed from "@/components/ui/video"
 import Verbatim from "@/components/verbatim"
+import { formatDate } from "@/lib/utils"
+import { User2, CalendarIcon } from "lucide-react";
+import { Badge } from "@/components/ui/badge"
 import React from "react";
 import {
   DraggableCardBody,
@@ -37,6 +41,9 @@ export default async function Home() {
   const etatsGeneraux = await fetchPageBySlug("etats-generaux-communaux")
   const cartographie = await fetchPageBySlug("cartographie")
 
+  // Utilisation directe de l'ID de playlist pour l'intégration YouTube
+  const playlistId = accueil?.acf?.carte_de_une?.chaine_youtube;
+
   const images = await fetchRandomVerbatimImage()
   const imagesObjects = await Promise.all(
     (images ?? [])
@@ -66,7 +73,10 @@ export default async function Home() {
     },
   }));
 
-  
+  const categories = await fetchCategories()
+  categories.sort((a, b) => b.count - a.count)
+  const posts = await fetchLastThreePosts()
+  const stickyPost = posts[0]
 
 
   return (
@@ -82,6 +92,93 @@ export default async function Home() {
         Wiki du corpus des doléances de 2018/2019
         </p>
       </div>
+
+        <div className="grid grid-cols-3 gap-6 mb-8">
+              {stickyPost && (
+                <div className="lg:col-span-2 col-span-3 flex row-span-2 rounded-lg border bg-card shadow-lg overflow-hidden">
+                  {stickyPost.featuredImage && (
+                  <div className="relative md:block h-full lg:basis-[30%] hidden">
+                    <Image
+                      src={
+                        typeof stickyPost.featuredImage === "string"
+                          ? stickyPost.featuredImage
+                          : "/img/doleance_couv.png"
+                      }
+                      alt={
+                        typeof stickyPost.title === "string"
+                          ? stickyPost.title
+                          : stickyPost.title?.rendered || ""
+                      }
+                      fill
+                      className="object-cover object-center "
+                    />
+                  </div>
+                  )}
+
+                  <div className="flex flex-col lg:basis-[70%] basis-full p-6">
+                    <h2 className="mb-4 pb-3 text-2xl font-serif font-light uppercase border-b-[1px]">à la une</h2>
+                    <>
+                      <h3 className="mb-2 font-medium">
+                        <Link href={`/article/${typeof stickyPost.slug === "string" ? stickyPost.slug : stickyPost.slug?.rendered || ""}`}>
+                          {stickyPost.title
+                                .replace(/&amp;/g, "&")
+                                .replace(/&quot;/g, '"')
+                                .replace(/&rsquo;/g, "'")
+                                .replace(/<[^>]+>/g, "")
+                                .replace(/&#8211;/g, "-")
+                                .replace(/&#8217;/g, "'")}
+                        </Link>
+                      </h3>
+                      <div
+                        className="mb-4 flex-grow text-sm text-muted-foreground"
+                        dangerouslySetInnerHTML={{
+                          __html:
+                            typeof stickyPost.excerpt === "string"
+                              ? stickyPost.excerpt
+                              : stickyPost.excerpt?.rendered || "",
+                        }}
+                      />
+                      <div className="flex flex-wrap gap-2 pt-2">
+                        {stickyPost.categories && stickyPost.categories[0] && (
+                          <Badge variant="secondary" className="mx-0">
+                            <Link href={`/category/${stickyPost.categoriesSlug[0]}`}>
+                              {stickyPost.categories[0]}
+                            </Link>
+                          </Badge>
+                        )}
+                      </div>
+                      <div className="flex w-full items-center justify-between p-2 text-xs text-muted-foreground">
+                        <div className="flex items-center gap-1">
+                          <User2 className="h-3 w-3" />
+                          <span>{stickyPost.author}</span>
+                        </div>
+                        <div className="flex items-center gap-1 pb-2">
+                          <CalendarIcon className="h-3 w-3" />
+                          <span>{formatDate(stickyPost.date)}</span>
+                        </div>
+                      </div>
+                    </>
+                  </div>
+                </div>
+              )}
+            <div className="md:col-span-1 col-span-3 lg:flex flex-col hidden my-8 gap-6">
+              <Verbatim />
+            </div>
+
+
+    <div className="absolute inset-0 -z-10">
+      <div className="absolute top-[700px] left-0 h-[400px] w-[50vw] rounded-full bg-gradient-to-r from-pink-200 to-blue-200 opacity-20 blur-3xl"></div>
+      <div className="absolute top-[1000px] right-0 h-[400px] w-[40vw] rounded-full bg-gradient-to-r from-blue-200 to-pink-200 opacity-20 blur-3xl"></div>
+    </div>
+        <div className="col-span-3 grid grid-cols-6 gap-6">
+          {categories.map((category) => (
+            category.count > 0 && (
+            <CategoryCard key={category.id} category={category}/>
+            )
+          ))}
+        </div>
+
+        </div>
 
 {/* Hero section */}
       <section className="h-max mb-12 grid gap-12 grid-cols-6 place-items-start">
@@ -99,7 +196,21 @@ export default async function Home() {
                 />
               <div className="h-max flex flex-col rounded-lg border bg-card shadow-lg overflow-hidden">
                 <div className="relative w-full">
-                <YouTubeEmbed videoLink={accueil?.acf?.carte_de_une?.video} />
+                {!playlistId && 
+                <YouTubeEmbed videoLink={accueil?.acf?.carte_de_une?.video}/>
+                  }               
+                {/* Intégration de la playlist YouTube via l'ID du champ texte */}
+                {playlistId && (
+                  <iframe
+                    width="100%"
+                    height="315"
+                    src={`https://www.youtube.com/embed?listType=playlist&list=${playlistId}`}
+                    title="Playlist YouTube intégrée"
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  ></iframe>
+                )}
                 </div>
               </div>
           
@@ -126,10 +237,7 @@ export default async function Home() {
             <Button variant="outline" asChild className="mb-8 max-w-max">
               <Link target="_blank" href='/doc/fanzine-doleance_avec-couv-min.pdf'>Découvrir</Link>
             </Button>
-          </div>           
-          <div className="flex flex-col justify-start p-6">
-            <Verbatim />
-          </div>
+          </div>  
         </div>
       </section> 
 

@@ -134,25 +134,6 @@ export default function ClientLayout({
                 </li>
                 <li>
                 <Link
-                  href="/category"
-                  className="flex items-center text-sm font-medium hover:text-primary"
-                  onClick={(e) => {
-                  e.preventDefault(); // Empêche la navigation immédiate
-                  const closeEvent = new CustomEvent("close-sheet");
-                  window.dispatchEvent(closeEvent);
-                
-                  // Attendre un court instant pour que le Sheet se ferme avant de naviguer
-                  setTimeout(() => {
-                    window.location.href = "/category"; // Naviguer manuellement
-                  }, 300); // Ajustez le délai si nécessaire
-                  }}
-                >
-                  <FileText className="mr-2 h-4 w-4" />
-                  Actualités
-                </Link>
-                </li>
-                                <li>
-                <Link
                   href="/festival"
                   className="flex items-center text-sm font-medium hover:text-primary"
                   onClick={(e) => {
