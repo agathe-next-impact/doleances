@@ -2,7 +2,6 @@ import Link from "next/link"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import CategoryCard from "@/components/actualites/category-card"
-import { ArticleCardHome } from "@/components/actualites/article-card-home"
 import { fetchLastThreePosts, fetchPageBySlug, fetchRandomVerbatimImage, fetchAttachmentById, fetchGroupesLocaux, fetchCategories } from "@/lib/api"
 import YouTubeEmbed from "@/components/ui/video"
 import Verbatim from "@/components/verbatim"
@@ -41,8 +40,25 @@ export default async function Home() {
   const etatsGeneraux = await fetchPageBySlug("etats-generaux-communaux")
   const cartographie = await fetchPageBySlug("cartographie")
 
-  // Utilisation directe de l'ID de playlist pour l'intégration YouTube
-  const playlistId = accueil?.acf?.carte_de_une?.chaine_youtube;
+  // Extraction de l'ID de playlist à partir de l'expression 'list=', sinon URL de partage brute
+  let playlistId = "";
+  let playlistEmbedUrl = "";
+  const raw = accueil?.acf?.carte_de_une?.chaine_youtube;
+  if (raw) {
+    const first = raw.split(/[\s,]+/)[0];
+    const match = first.match(/[?&]list=([a-zA-Z0-9_-]+)/);
+    if (match && match[1]) {
+      playlistId = match[1];
+      playlistEmbedUrl = `https://www.youtube.com/embed?listType=playlist&list=${playlistId}`;
+    } else if (/youtu\.be\//.test(first)) {
+      // Si c'est une URL de partage brute, on l'intègre directement
+      // On extrait l'ID vidéo et construit l'URL embed
+      const videoMatch = first.match(/youtu\.be\/([a-zA-Z0-9_-]+)/);
+      if (videoMatch && videoMatch[1]) {
+        playlistEmbedUrl = `https://www.youtube.com/embed/${videoMatch[1]}`;
+      }
+    }
+  }
 
   const images = await fetchRandomVerbatimImage()
   const imagesObjects = await Promise.all(
@@ -196,7 +212,7 @@ export default async function Home() {
                 />
               <div className="h-max flex flex-col rounded-lg border bg-card shadow-lg overflow-hidden">
                 <div className="relative w-full">
-                {!playlistId && 
+                {!playlistId && !playlistEmbedUrl &&
                 <YouTubeEmbed videoLink={accueil?.acf?.carte_de_une?.video}/>
                   }               
                 {/* Intégration de la playlist YouTube via l'ID du champ texte */}
@@ -206,6 +222,17 @@ export default async function Home() {
                     height="315"
                     src={`https://www.youtube.com/embed?listType=playlist&list=${playlistId}`}
                     title="Playlist YouTube intégrée"
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  ></iframe>
+                )}
+                {playlistEmbedUrl && (
+                  <iframe
+                    width="100%"
+                    height="315"
+                    src={playlistEmbedUrl}
+                    title="Vidéo YouTube intégrée"
                     frameBorder="0"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     allowFullScreen
@@ -323,7 +350,7 @@ export default async function Home() {
         <div className="absolute top-[3200px] left-0 h-full w-[50vw] rounded-full bg-gradient-to-r from-pink-200 to-blue-200 opacity-20 blur-3xl"></div>
         <div className="absolute top-[3400px] right-0 h-[400px] w-[50vw] rounded-full bg-gradient-to-r from-blue-200 to-pink-200 opacity-20 blur-3xl"></div>
       </div>
-      <section className="mb-24 ">
+      <section className="mb-24 mt-24">
             <DraggableCardContainer className="relative flex md:min-h-screen min-h-[50rem] w-full md:items-center items-start justify-center">
               <p className="absolute top-1/2 mx-auto max-w-sm -translate-y-3/4 text-center text-2xl font-serif md:text-4xl dark:text-neutral-800">
               Cahier de la colère et de l'espoir
