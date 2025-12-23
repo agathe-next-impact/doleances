@@ -298,6 +298,7 @@ export default async function Home() {
       <div className="absolute top-[2100px] left-0 h-full w-[50vw] rounded-full bg-gradient-to-r from-pink-200 to-blue-200 opacity-20 blur-3xl"></div>
       <div className="absolute top-[2200px] right-0 h-[400px] w-[50vw] rounded-full bg-gradient-to-r from-blue-200 to-pink-200 opacity-20 blur-3xl"></div>
     </div>
+    {/* Section des dernières actualités }
       <section className="my-36 p-6 rounded-lg border bg-card shadow-lg overflow-hidden">
         <div className="mb-6 flex items-center justify-between border-b-[1px] pb-3">
           <h2 className="text-2xl font-serif font-light uppercase">Actualités</h2>
@@ -316,6 +317,7 @@ export default async function Home() {
           </Button>
           </div>
       </section>  
+      */}
 
       <div className="absolute inset-0 -z-10">
         <div className="absolute top-[3200px] left-0 h-full w-[50vw] rounded-full bg-gradient-to-r from-pink-200 to-blue-200 opacity-20 blur-3xl"></div>
