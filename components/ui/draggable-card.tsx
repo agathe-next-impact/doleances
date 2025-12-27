@@ -10,7 +10,7 @@ import {
   animate,
   useVelocity,
   useAnimationControls,
-} from "motion/react";
+} from "framer-motion";
 
 export const DraggableCardBody = ({
   className,
