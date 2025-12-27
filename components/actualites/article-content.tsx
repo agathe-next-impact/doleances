@@ -11,6 +11,7 @@ import StaticMap from "@/components/map/static-map";
 import DateFormat, { TimeFormat } from "@/components/date-format";
 import ShareSocial from "@/components/ui/share-social";
 import { GutenbergContent } from "@/components/gutenberg-content";
+import { decodeWordPressText } from "@/lib/utils";
 import dynamic from "next/dynamic";
 const Viewer = dynamic(
   () => import("@react-pdf-viewer/core").then((mod) => mod.Viewer),
@@ -45,9 +46,15 @@ export default function ArticleContent({ post }: ArticleContentProps) {
   // Récupérer les liens PDF du contenu principal et supprimer les doublons
   const pdfLinks = Array.from(
     new Set([
-      ...(post?.content?.rendered ? extractPdfLinks(post.content.rendered) : []),
-      ...(post.acf?.contenu_de_larticle ? extractPdfLinks(post.acf.contenu_de_larticle) : []),
-      ...(post.acf?.contenu_de_la_publication ? extractPdfLinks(post.acf.contenu_de_la_publication) : []),
+      ...(post?.content?.rendered
+        ? extractPdfLinks(post.content.rendered)
+        : []),
+      ...(post.acf?.contenu_de_larticle
+        ? extractPdfLinks(post.acf.contenu_de_larticle)
+        : []),
+      ...(post.acf?.contenu_de_la_publication
+        ? extractPdfLinks(post.acf.contenu_de_la_publication)
+        : []),
     ])
   );
 
@@ -152,16 +159,15 @@ export default function ArticleContent({ post }: ArticleContentProps) {
   // Récupérer l'adresse du lieu de l'événement (structure imbriquée)
   const eventAddress = (() => {
     try {
-      // Vérifier d'abord la structure imbriquée lieu_de_levenement.adress
-      if (post.acf?.lieu_de_levenement?.adress) {
-        return post.acf.lieu_de_levenement.adress;
+      const lieu = post.acf?.lieu_de_levenement;
+      if (lieu && typeof lieu === 'object' && lieu !== null) {
+        if ('adress' in lieu && typeof lieu.adress === 'string') {
+          return lieu.adress;
+        }
+        if ('address' in lieu && typeof lieu.address === 'string') {
+          return lieu.address;
+        }
       }
-
-      // Vérifier si lieu_de_levenement est un objet avec une propriété address
-      if (post.acf?.lieu_de_levenement?.address) {
-        return post.acf.lieu_de_levenement.address;
-      }
-
       // Fallbacks pour les autres formats possibles
       return (
         post.acf?.adress || post.acf?.adresse || post.acf?.adresse_evenement
@@ -175,19 +181,13 @@ export default function ArticleContent({ post }: ArticleContentProps) {
   // Récupérer le nom du lieu de l'événement
   const eventLocationName = (() => {
     try {
-      // Si lieu_de_levenement est un objet avec une propriété name, utiliser celle-ci
-      if (
-        typeof post.acf?.lieu_de_levenement === "object" &&
-        post.acf?.lieu_de_levenement?.name
-      ) {
-        return post.acf.lieu_de_levenement.name;
+      const lieu = post.acf?.lieu_de_levenement;
+      if (lieu && typeof lieu === 'object' && lieu !== null && 'name' in lieu && typeof lieu.name === 'string') {
+        return lieu.name;
       }
-
-      // Si lieu_de_levenement est une chaîne, l'utiliser directement
-      if (typeof post.acf?.lieu_de_levenement === "string") {
-        return post.acf.lieu_de_levenement;
+      if (typeof lieu === 'string') {
+        return lieu;
       }
-
       // Fallback au champ lieu_evenement
       return post.acf?.lieu_evenement || null;
     } catch (error) {
@@ -199,11 +199,9 @@ export default function ArticleContent({ post }: ArticleContentProps) {
   // Récupérer la ville du lieu de l'événement
   const eventCity = (() => {
     try {
-      if (
-        typeof post.acf?.lieu_de_levenement === "object" &&
-        post.acf?.lieu_de_levenement?.city
-      ) {
-        return post.acf.lieu_de_levenement.city;
+      const lieu = post.acf?.lieu_de_levenement;
+      if (lieu && typeof lieu === 'object' && lieu !== null && 'city' in lieu && typeof lieu.city === 'string') {
+        return lieu.city;
       }
       return null;
     } catch (error) {
@@ -354,7 +352,9 @@ export default function ArticleContent({ post }: ArticleContentProps) {
               </Badge>
               <h1
                 className="text-3xl md:text-4xl mb-4"
-                dangerouslySetInnerHTML={{ __html: post.title.rendered }}
+                dangerouslySetInnerHTML={{
+                  __html: decodeWordPressText(post.title.rendered),
+                }}
               />
               <div className="flex flex-wrap gap-3 text-sm text-muted-foreground mb-6">
                 <div>
@@ -521,7 +521,7 @@ export default function ArticleContent({ post }: ArticleContentProps) {
         <article className="gap-2 mt-4">
           <div
             dangerouslySetInnerHTML={{
-              __html: post.acf?.contenu_de_larticle ?? "",
+              __html: decodeWordPressText(post.acf?.contenu_de_larticle ?? ""),
             }}
           />
         </article>
@@ -530,7 +530,9 @@ export default function ArticleContent({ post }: ArticleContentProps) {
         <article className="gap-2 mt-8">
           <div
             dangerouslySetInnerHTML={{
-              __html: post.acf?.contenu_de_la_publication ?? "",
+              __html: decodeWordPressText(
+                post.acf?.contenu_de_la_publication ?? ""
+              ),
             }}
           />
         </article>
@@ -548,7 +550,7 @@ export default function ArticleContent({ post }: ArticleContentProps) {
                 ? post.acf.latitude
                 : typeof post.acf?.latitude === "string"
                 ? Number.parseFloat(post.acf.latitude)
-                : typeof post.acf?.lieu_de_levenement?.lat === "number"
+                : (post.acf?.lieu_de_levenement && typeof post.acf.lieu_de_levenement === 'object' && post.acf.lieu_de_levenement !== null && 'lat' in post.acf.lieu_de_levenement && typeof post.acf.lieu_de_levenement.lat === 'number')
                 ? post.acf.lieu_de_levenement.lat
                 : undefined
             }
@@ -557,7 +559,7 @@ export default function ArticleContent({ post }: ArticleContentProps) {
                 ? post.acf.longitude
                 : typeof post.acf?.longitude === "string"
                 ? Number.parseFloat(post.acf.longitude)
-                : typeof post.acf?.lieu_de_levenement?.lng === "number"
+                : (post.acf?.lieu_de_levenement && typeof post.acf.lieu_de_levenement === 'object' && post.acf.lieu_de_levenement !== null && 'lng' in post.acf.lieu_de_levenement && typeof post.acf.lieu_de_levenement.lng === 'number')
                 ? post.acf.lieu_de_levenement.lng
                 : undefined
             }
@@ -566,7 +568,7 @@ export default function ArticleContent({ post }: ArticleContentProps) {
           />
         </div>
       )}
-      {/* Affichage des PDF en pleine page */}
+      {/* Affichage des PDF en pleine pa ge 
       {pdfLinks.length > 0 && (
         <div className="mt-8 space-y-8">
           {pdfLinks.map((link, idx) => (
@@ -577,7 +579,7 @@ export default function ArticleContent({ post }: ArticleContentProps) {
             </div>
           ))}
         </div>
-      )}
+      )}*/}
     </div>
   );
 }

@@ -5,7 +5,7 @@ import CategoryCard from "@/components/actualites/category-card"
 import { fetchLastThreePosts, fetchPageBySlug, fetchRandomVerbatimImage, fetchAttachmentById, fetchGroupesLocaux, fetchCategories } from "@/lib/api"
 import YouTubeEmbed from "@/components/ui/video"
 import Verbatim from "@/components/verbatim"
-import { formatDate } from "@/lib/utils"
+import { formatDate, decodeWordPressText } from "@/lib/utils"
 import { User2, CalendarIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge"
 import React from "react";
@@ -136,22 +136,21 @@ export default async function Home() {
                     <>
                       <h3 className="mb-2 font-medium">
                         <Link href={`/article/${typeof stickyPost.slug === "string" ? stickyPost.slug : stickyPost.slug?.rendered || ""}`}>
-                          {stickyPost.title
-                                .replace(/&amp;/g, "&")
-                                .replace(/&quot;/g, '"')
-                                .replace(/&rsquo;/g, "'")
-                                .replace(/<[^>]+>/g, "")
-                                .replace(/&#8211;/g, "-")
-                                .replace(/&#8217;/g, "'")}
+                          {decodeWordPressText(
+                            typeof stickyPost.title === "string"
+                              ? stickyPost.title
+                              : stickyPost.title?.rendered || ""
+                          ).replace(/<[^>]+>/g, "")}
                         </Link>
                       </h3>
                       <div
                         className="mb-4 flex-grow text-sm text-muted-foreground"
                         dangerouslySetInnerHTML={{
-                          __html:
+                          __html: decodeWordPressText(
                             typeof stickyPost.excerpt === "string"
                               ? stickyPost.excerpt
-                              : stickyPost.excerpt?.rendered || "",
+                              : stickyPost.excerpt?.rendered || ""
+                          ),
                         }}
                       />
                       <div className="flex flex-wrap gap-2 pt-2">

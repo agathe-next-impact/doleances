@@ -5,6 +5,7 @@ import Verbatim from "@/components/verbatim";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import { fetchPageBySlug } from "@/lib/api";
+import { decodeWordPressText } from "@/lib/utils";
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
@@ -55,7 +56,7 @@ export default async function Page () {
                 <div
                 className="my-4"
                 dangerouslySetInnerHTML={{
-                  __html: page?.acf?.carte_de_une,
+                  __html: decodeWordPressText(page?.acf?.carte_de_une ?? ""),
                 }}
                 />
                 {/*
@@ -77,7 +78,7 @@ export default async function Page () {
               <div
               className="my-4"
               dangerouslySetInnerHTML={{
-                __html: page?.acf?.plaidoyer,
+                __html: decodeWordPressText(page?.acf?.plaidoyer ?? ""),
               }}
               />
             )}

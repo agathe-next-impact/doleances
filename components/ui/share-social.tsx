@@ -22,7 +22,7 @@ const socialPlatforms = [
     name: "LinkedIn",
     icon: FaLinkedinIn,
     url: (u: string, _t?: string) => {
-      const replacedUrl = u.replace(/wp-starter\.io/g, "lesdoleances.fr")
+      const replacedUrl = u.replace(/wpasso\.fr/g, "lesdoleances.fr")
         .replace(/palegreen-capybara-652133.hostingersite.com/g, "lesdoleances.fr").replace(/([^:]\/)\/+/g, "$1");
         return `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(replacedUrl)}${
         _t ? `&title=${encodeURIComponent(_t.replace(/<[^>]*>/g, "").replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&rsquo;/g, "'"))}` : ""
@@ -33,7 +33,7 @@ const socialPlatforms = [
     name: "WhatsApp",
     icon: FaWhatsapp,
     url: (u: string, t?: string) => {
-      const replacedUrl = u.replace(/wp-starter\.io/g, "lesdoleances.fr")
+      const replacedUrl = u.replace(/wpasso\.fr/g, "lesdoleances.fr")
         .replace(/palegreen-capybara-652133.hostingersite.com/g, "lesdoleances.fr").replace(/([^:]\/)\/+/g, "$1");
       const message =
         (t
@@ -51,7 +51,7 @@ const socialPlatforms = [
     name: "Email",
     icon: FaEnvelope,
     url: (u: string, t?: string) => {
-      const replacedUrl = u.replace(/wp-starter\.io/g, "lesdoleances.fr")
+      const replacedUrl = u.replace(/wpasso\.fr/g, "lesdoleances.fr")
         .replace(/palegreen-capybara-652133.hostingersite.com/g, "lesdoleances.fr").replace(/([^:]\/)\/+/g, "$1");
       const subject = t
         ? t.replace(/<[^>]*>/g, "").replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&rsquo;/g, "'")
@@ -68,7 +68,7 @@ export const ShareSocial: React.FC<ShareSocialProps> = ({
   image,
   className = "",
 }) => {
-  const replacedUrl = url.replace(/wp-starter\.io/g, "www.lesdoleances.fr")
+  const replacedUrl = url.replace(/wpasso\.fr/g, "www.lesdoleances.fr")
         .replace(/palegreen-capybara-652133.hostingersite.com/g, "www.lesdoleances.fr").replace(/([^:]\/)\/+/g, "$1");
   return (
     <div className={`flex gap-2 ${className}`}>

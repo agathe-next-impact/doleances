@@ -5,7 +5,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { formatDate } from "@/lib/utils"
+import { formatDate, decodeWordPressText } from "@/lib/utils"
 import { Badge } from "@/components/ui/badge"
 import { Calendar, Clock, MapPin, Users } from "lucide-react"
 import { useState, useEffect } from "react"
@@ -135,7 +135,7 @@ export default function ArticleCard({ post }: ArticleCardProps) {
       <CardHeader className="pb-2">
         <CardTitle className="text-lg">
           <Link href={`/article/${post.slug}`} className="hover:text-primary">
-            <span dangerouslySetInnerHTML={{ __html: post.title.rendered }} />
+            <span dangerouslySetInnerHTML={{ __html: decodeWordPressText(post.title.rendered) }} />
           </Link>
         </CardTitle>
       </CardHeader>
@@ -183,7 +183,7 @@ export default function ArticleCard({ post }: ArticleCardProps) {
         {!isEvent && (
         <div
           className="text-muted-foreground mb-4"
-          dangerouslySetInnerHTML={{ __html: post.excerpt.rendered || "" }}
+          dangerouslySetInnerHTML={{ __html: decodeWordPressText(post.excerpt.rendered || "") }}
         />
         )}
 

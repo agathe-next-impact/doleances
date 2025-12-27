@@ -15,6 +15,16 @@ export function formatDate(dateString: string): string {
   }).format(date).replace('.', '') 
 }
 
+/**
+ * Décode tout texte WordPress pour afficher correctement les caractères spéciaux et entités HTML.
+ * Utiliser cette fonction pour tout contenu textuel provenant de la base WordPress.
+ */
+export function decodeWordPressText(text: string): string {
+  if (!text) return '';
+  // Utilise 'he' pour décoder toutes les entités HTML (y compris &#8230;)
+  return decode(text);
+}
+
 
 
 

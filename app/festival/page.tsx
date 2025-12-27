@@ -1,4 +1,5 @@
 import { fetchPageBySlug, fetchAttachmentById } from "@/lib/api";
+import { decodeWordPressText } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import Image from "next/image";
@@ -135,7 +136,7 @@ export default async function Page() {
               <span
                 className="mb-4 text-base"
                 dangerouslySetInnerHTML={{
-                  __html: page?.acf?.intro,
+                  __html: decodeWordPressText(page?.acf?.intro ?? ""),
                 }}
               />
             )}

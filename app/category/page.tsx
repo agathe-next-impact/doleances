@@ -1,10 +1,10 @@
-import { fetchCategories, fetchLastThreePosts, fetchCategoryBySlug } from "@/lib/api"
+import { fetchCategories, fetchLastThreePosts } from "@/lib/api"
 import CategoryCard from "@/components/actualites/category-card"
 import { Badge } from "@/components/ui/badge"
 import { CalendarIcon, User2 } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
-import { formatDate } from "@/lib/utils"
+import { formatDate, decodeWordPressText } from "@/lib/utils"
 import Verbatim from "@/components/verbatim"
 import type { Metadata } from "next"
 
@@ -75,22 +75,21 @@ export default async function Home() {
                     <>
                       <h3 className="mb-2 font-medium">
                         <Link href={`/article/${typeof stickyArticle.slug === "string" ? stickyArticle.slug : stickyArticle.slug?.rendered || ""}`}>
-                          {stickyArticle.title
-                                .replace(/&amp;/g, "&")
-                                .replace(/&quot;/g, '"')
-                                .replace(/&rsquo;/g, "'")
-                                .replace(/<[^>]+>/g, "")
-                                .replace(/&#8211;/g, "-")
-                                .replace(/&#8217;/g, "'")}
+                          {decodeWordPressText(
+                            typeof stickyArticle.title === "string"
+                              ? stickyArticle.title
+                              : stickyArticle.title?.rendered || ""
+                          ).replace(/<[^>]+>/g, "")}
                         </Link>
                       </h3>
                       <div
                         className="mb-4 flex-grow text-sm text-muted-foreground"
                         dangerouslySetInnerHTML={{
-                          __html:
+                          __html: decodeWordPressText(
                             typeof stickyArticle.excerpt === "string"
                               ? stickyArticle.excerpt
-                              : stickyArticle.excerpt?.rendered || "",
+                              : stickyArticle.excerpt?.rendered || ""
+                          ),
                         }}
                       />
                       <div className="flex flex-wrap gap-2 pt-2">
