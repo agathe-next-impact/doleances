@@ -1,13 +1,21 @@
 // Améliorer la gestion des erreurs et ajouter des fallbacks pour les données manquantes
-import { fetchPostsByCategory, extractGroupesLocauxCPTFromCategory, fetchCategoryBySlug } from "@/lib/api"
+import { fetchPostsByCategory, extractGroupesLocauxCPTFromCategory, fetchCategoryBySlug, fetchCategories } from "@/lib/api"
 import ArticleList from "@/components/actualites/article-list"
 import CategoryHero from "@/components/actualites/category-hero"
 import SearchFilter from "@/components/actualites/search-filter"
 import { Suspense } from "react"
 import type { Metadata } from "next"
 
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
-  const category = await fetchCategoryBySlug(params.slug)
+export const revalidate = 600;
+
+export async function generateStaticParams() {
+  const categories = await fetchCategories();
+  return categories.map((c) => ({ slug: c.slug }));
+}
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params
+  const category = await fetchCategoryBySlug(slug)
   if (!category) {
     const title = "Actualités - Les Doléances"
     const description = "L'actualité des doléances"
@@ -46,10 +54,10 @@ export async function generateMetadata({ params }: { params: { slug: string } })
 
 
 
-export default async function CategoryPage({ params }: { params: { slug: string } }) {
+export default async function CategoryPage({ params }: { params: Promise<{ slug: string }> }) {
   try {
 
-    const categorySlug = params.slug
+    const { slug: categorySlug } = await params
 
     // Fetch category data with better error handling
     let category
@@ -68,12 +76,16 @@ export default async function CategoryPage({ params }: { params: { slug: string 
     }
 
 
-    // Fetch posts for this category with better error handling
+    // Fetch posts et groupes locaux en parallèle
     let posts: any[] = []
+    let groupesLocauxCPT: any[] = []
     try {
-      posts = await fetchPostsByCategory(category?.id)
+      [posts, groupesLocauxCPT] = await Promise.all([
+        fetchPostsByCategory(category?.id),
+        extractGroupesLocauxCPTFromCategory(category?.id),
+      ])
     } catch (error) {
-      console.error(`Error fetching posts for category ${category?.id}:`, error)
+      console.error(`Error fetching data for category ${category?.id}:`, error)
     }
 
 
@@ -149,9 +161,6 @@ export default async function CategoryPage({ params }: { params: { slug: string 
         }
       })
     }
-
-    // Récupérer les CPT groupe_local associés aux articles de cette catégorie
-    const groupesLocauxCPT = await extractGroupesLocauxCPTFromCategory(category?.id)
 
     return (
     <>

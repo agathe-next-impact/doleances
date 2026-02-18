@@ -9,12 +9,16 @@ import { formatDate, decodeWordPressText } from "@/lib/utils"
 import { User2, CalendarIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge"
 import React from "react";
+import dynamic from "next/dynamic";
 import {
   DraggableCardBody,
   DraggableCardContainer,
 } from "@/components/ui/draggable-card";
-import CardMap from "@/components/map/map-card";
 import type { Metadata } from "next"
+
+const CardMap = dynamic(() => import("@/components/map/map-card"), {
+  loading: () => <div className="flex items-center justify-center h-[400px]"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div></div>,
+})
 
 export const metadata: Metadata = {
   title: "Les Doléances",
@@ -34,11 +38,17 @@ export const metadata: Metadata = {
 export const revalidate = 60;
 
 export default async function Home() {
-  const articles = await fetchLastThreePosts()
-  const accueil = await fetchPageBySlug("accueil")
-  const contribuer = await fetchPageBySlug("contribuer")
-  const etatsGeneraux = await fetchPageBySlug("etats-generaux-communaux")
-  const cartographie = await fetchPageBySlug("cartographie")
+  // Paralléliser tous les fetches indépendants
+  const [articles, accueil, contribuer, etatsGeneraux, cartographie, images, locations, categories] = await Promise.all([
+    fetchLastThreePosts(),
+    fetchPageBySlug("accueil"),
+    fetchPageBySlug("contribuer"),
+    fetchPageBySlug("etats-generaux-communaux"),
+    fetchPageBySlug("cartographie"),
+    fetchRandomVerbatimImage(),
+    fetchGroupesLocaux(),
+    fetchCategories(),
+  ])
 
   // Extraction de l'ID de playlist à partir de l'expression 'list=', sinon URL de partage brute
   let playlistId = "";
@@ -51,8 +61,6 @@ export default async function Home() {
       playlistId = match[1];
       playlistEmbedUrl = `https://www.youtube.com/embed?listType=playlist&list=${playlistId}`;
     } else if (/youtu\.be\//.test(first)) {
-      // Si c'est une URL de partage brute, on l'intègre directement
-      // On extrait l'ID vidéo et construit l'URL embed
       const videoMatch = first.match(/youtu\.be\/([a-zA-Z0-9_-]+)/);
       if (videoMatch && videoMatch[1]) {
         playlistEmbedUrl = `https://www.youtube.com/embed/${videoMatch[1]}`;
@@ -60,26 +68,19 @@ export default async function Home() {
     }
   }
 
-  const images = await fetchRandomVerbatimImage()
   const imagesObjects = await Promise.all(
     (images ?? [])
       .map((image) => image.acf?.image_du_verbatim)
       .map((id) => fetchAttachmentById(Number(id)))
   )
 
-  // Mélanger les images et les retourner en ordre aléatoire en tableau sans index
   const shuffledImages = imagesObjects.sort(() => Math.random() - 0.5)
-  const verbatimImages = shuffledImages.map((image) => {
+  const verbatimImages = shuffledImages.map((image) => ({
+    title: image?.title?.rendered,
+    image: image?.source_url,
+    className: `absolute`,
+  }));
 
-    return {
-      title: image?.title?.rendered,
-      image: image?.source_url,
-      className: `absolute`,
-    };
-  });
-
-  const locations = await fetchGroupesLocaux()
-  // Adapter les données pour correspondre à l'interface attendue par CardMap
   const mapLocations = locations.map((location) => ({
     id: String(location.id),
     slug: location.slug,
@@ -89,10 +90,8 @@ export default async function Home() {
     },
   }));
 
-  const categories = await fetchCategories()
   categories.sort((a, b) => b.count - a.count)
-  const posts = await fetchLastThreePosts()
-  const stickyPost = posts[0]
+  const stickyPost = articles[0]
 
 
   return (

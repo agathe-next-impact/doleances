@@ -9,6 +9,8 @@ import StaticMap from "@/components/map/static-map";
 import DateFormat from "@/components/date-format";
 import type { Metadata } from "next"
 
+export const revalidate = 3600;
+
 export const metadata: Metadata = {
   title: "Le Festival de mai 2025 - Les Doléances",
   description: "Le Festival des doléances, un événement citoyen et artistique",

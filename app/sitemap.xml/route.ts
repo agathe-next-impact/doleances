@@ -1,15 +1,18 @@
-export const dynamic = 'force-dynamic'; // 🔥 indispensable
+export const revalidate = 3600;
 
 export async function GET() {
-  const res = await fetch('https://wpasso.fr/wp-json/wp/v2/groupe_local?_embed&per_page=100', {
-    next: { revalidate: 0 }, // ou cache: 'no-store'
-  });
-  const articles = await fetch('https://wpasso.fr/wp-json/wp/v2/posts?_embed&per_page=100', {
-    next: { revalidate: 0 }, // ou cache: 'no-store'
-  });
-  const pages = await fetch('https://wpasso.fr/wp-json/wp/v2/pages?_embed&per_page=100', {
-    next: { revalidate: 0 }, // ou cache: 'no-store'
-  });
+  const [res, articles, pages] = await Promise.all([
+    fetch('https://wpasso.fr/wp-json/wp/v2/groupe_local?per_page=100&_fields=slug', {
+      next: { revalidate: 3600 },
+    }),
+    fetch('https://wpasso.fr/wp-json/wp/v2/posts?per_page=100&_fields=slug,status', {
+      next: { revalidate: 3600 },
+    }),
+    fetch('https://wpasso.fr/wp-json/wp/v2/pages?per_page=100&_fields=slug,status', {
+      next: { revalidate: 3600 },
+    }),
+  ]);
+
   if (!res.ok || !articles.ok || !pages.ok) {
     return new Response('Failed to fetch data', { status: 500 });
   }
@@ -39,8 +42,6 @@ export async function GET() {
         .join('\n')}
     </urlset>
     `;
-
-
 
   return new Response(sitemap, {
     headers: {

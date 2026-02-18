@@ -8,6 +8,8 @@ import { fetchPageBySlug } from "@/lib/api";
 import { decodeWordPressText } from "@/lib/utils";
 import type { Metadata } from "next"
 
+export const revalidate = 3600;
+
 export const metadata: Metadata = {
   title: "Etats Généraux Communaux - Les Doléances",
   description: "Les Etats Généraux communaux des doléances",

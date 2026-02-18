@@ -191,12 +191,11 @@ export async function fetchCategories(): Promise<Category[]> {
       return categoriesCache.sort((a, b) => b.count - a.count)
     }
 
-    const response = await fetch(`${API_BASE_URL}/categories?per_page=100`, {
-      // Remove 'cache: "no-store"' to allow static rendering and ISR
+    const response = await fetch(`${API_BASE_URL}/categories?per_page=100&_fields=id,slug,name,description,count,acf,link`, {
       headers: {
         Accept: "application/json",
       },
-      // Optionally, you can add: next: { revalidate: 3600 }, // Revalidate every hour
+      next: { revalidate: 3600 },
     })
 
     if (!response.ok) {
@@ -219,11 +218,11 @@ export async function fetchCategories(): Promise<Category[]> {
 // Fetch a specific category by slug
 export async function fetchCategoryBySlug(slug: string): Promise<Category | null> {
   try {
-    const response = await fetch(`${API_BASE_URL}/categories?slug=${slug}`, {
-      
+    const response = await fetch(`${API_BASE_URL}/categories?slug=${slug}&_fields=id,slug,name,description,count,acf,link`, {
       headers: {
         Accept: "application/json",
       },
+      next: { revalidate: 3600 },
     })
 
     if (!response.ok) {
@@ -438,6 +437,7 @@ export async function fetchPostById(id: number): Promise<Post | null> {
       headers: {
         Accept: "application/json",
       },
+      next: { revalidate: 300 },
     })
 
     if (!response.ok) {
@@ -461,6 +461,7 @@ export async function fetchPostBySlug(slug: string): Promise<Post | null> {
       headers: {
         Accept: "application/json",
       },
+      next: { revalidate: 300 },
     })
 
     if (!response.ok) {
@@ -481,10 +482,10 @@ export async function fetchPostBySlug(slug: string): Promise<Post | null> {
 export async function fetchRecentPostsByCategory(categoryId: number): Promise<Post[]> {
   try {
     const response = await fetch(`${API_BASE_URL}/posts?categories=${categoryId}&_embed&per_page=4`, {
-      
       headers: {
         Accept: "application/json",
       },
+      next: { revalidate: 600 },
     })
 
     if (!response.ok) {
@@ -659,10 +660,10 @@ export async function fetchPostsByGroupeLocalCPT(groupeLocalCptId: number): Prom
 
     // Récupérer tous les posts (limité à 100 pour des raisons de performance)
     const response = await fetch(`${API_BASE_URL}/posts?_embed&per_page=100`, {
-      
       headers: {
         Accept: "application/json",
       },
+      next: { revalidate: 600 },
     })
 
     if (!response.ok) {
@@ -673,7 +674,6 @@ export async function fetchPostsByGroupeLocalCPT(groupeLocalCptId: number): Prom
 
     // Filtrer les posts qui ont le CPT groupe_local spécifié dans leur champ ACF
     const filteredPosts = posts.filter((post) => {
-      // Vérifier si le post a un champ ACF groupe_local_tax qui correspond à l'ID du CPT
       if (post.acf?.groupe_local_tax === groupeLocalCptId) {
         return true
       }
@@ -782,11 +782,11 @@ export async function fetchGroupesLocaux(): Promise<GroupeLocalPost[]> {
       return groupesLocauxCache
     }
 
-    const response = await fetch(`${API_BASE_URL}/groupe_local?_embed&per_page=100`, {
-      
+    const response = await fetch(`${API_BASE_URL}/groupe_local?_embed&per_page=100&_fields=id,slug,title,acf,_links,_embedded`, {
       headers: {
         Accept: "application/json",
       },
+      next: { revalidate: 3600 },
     })
 
     if (!response.ok) {

@@ -9,8 +9,14 @@ import Verbatim from "@/components/verbatim";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import CardMap from "@/components/map/map-card";
+import dynamic from "next/dynamic";
 import type { Metadata } from "next";
+
+const CardMap = dynamic(() => import("@/components/map/map-card"), {
+  loading: () => <div className="flex items-center justify-center h-[400px]"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div></div>,
+})
+
+export const revalidate = 3600;
 
 export const metadata: Metadata = {
   title: "A propos de nous - Les Doléances",
@@ -28,26 +34,31 @@ export const metadata: Metadata = {
 }
 
 export default async function DraggableCardDemo() {
-  const images = await fetchRandomVerbatimImage()
+  // Paralléliser les fetches indépendants
+  const [images, apropos, locations] = await Promise.all([
+    fetchRandomVerbatimImage(),
+    fetchPageBySlug("a-propos"),
+    fetchGroupesLocaux(),
+  ])
+
   const imagesObjects = await Promise.all(
     (images ?? [])
       .map((image) => image.acf?.image_du_verbatim)
       .map((id) => fetchAttachmentById(Number(id)))
   )
 
-  // Mélanger les images et les retourner en ordre aléatoire en tableau sans index
   const shuffledImages = imagesObjects.sort(() => Math.random() - 0.5)
 
-  // Créer un tableau au format title, url et className d'images en ordre aléatoire  
   const items = shuffledImages.map((image, index) => ({
     image: image?.source_url,
     className: `absolute`,
   }));
 
-  const apropos = await fetchPageBySlug("a-propos");
-  const imageALaUne = await fetchAttachmentById(apropos?.featured_media);
-  const dossierDePresse = await fetchAttachmentById(apropos?.acf?.infos_documentaire?.dossier_de_presse);
-  const locations = await fetchGroupesLocaux()
+  // Paralléliser les fetches dépendant de apropos
+  const [imageALaUne, dossierDePresse] = await Promise.all([
+    fetchAttachmentById(apropos?.featured_media),
+    fetchAttachmentById(apropos?.acf?.infos_documentaire?.dossier_de_presse),
+  ])
   // Adapter les données pour correspondre à l'interface attendue par CardMap
   const mapLocations = locations.map((location) => ({
     id: String(location.id),

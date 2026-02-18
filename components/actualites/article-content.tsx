@@ -540,7 +540,7 @@ export default function ArticleContent({ post }: ArticleContentProps) {
 
       {isEvent && (post.acf?.lieu_de_levenement || eventAddress) && (
         <div className="my-8">
-          <h2 className="text-xl font-sansserif font-semibold mb-4">
+          <h2 className="text-xl font-sans font-semibold mb-4">
             Localisation
           </h2>
           <StaticMap

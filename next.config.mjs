@@ -7,7 +7,16 @@ const nextConfig = {
     ignoreBuildErrors: true,
   },
   images: {
-    unoptimized: true,
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'wpasso.fr',
+      },
+      {
+        protocol: 'https',
+        hostname: 'palegreen-capybara-652133.hostingersite.com',
+      },
+    ],
   },
   webpack: (config, { isServer }) => {
     if (isServer) {

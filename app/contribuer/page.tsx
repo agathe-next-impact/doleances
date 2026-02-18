@@ -2,6 +2,8 @@ import ContactForm from "@/components/contact-form"
 import { getContactData } from "@/app/actions/contact-actions"
 import type { Metadata } from "next"
 
+export const revalidate = 3600;
+
 export const metadata: Metadata = {
   title: "Contribuer - Les Doléances",
   description: "Participer ou Nous contacter pour faire avancer le projet",

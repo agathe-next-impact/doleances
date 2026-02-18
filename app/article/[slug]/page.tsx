@@ -1,16 +1,24 @@
-import { fetchAttachmentById, fetchPostBySlug } from "@/lib/api";
+import { fetchAttachmentById, fetchPostBySlug, fetchAllPosts } from "@/lib/api";
 import { notFound } from "next/navigation";
 import ArticleContent from "@/components/actualites/article-content";
 import type { Metadata } from "next";
 import ShareSocial from "@/components/ui/share-social";
 import type React from "react";
 
+export const revalidate = 300;
+
+export async function generateStaticParams() {
+  const posts = await fetchAllPosts();
+  return posts.map((post) => ({ slug: post.slug }));
+}
+
 export async function generateMetadata({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
-  const post = await fetchPostBySlug(params.slug);
+  const { slug } = await params;
+  const post = await fetchPostBySlug(slug);
 
   if (!post) {
     return {
@@ -20,7 +28,7 @@ export async function generateMetadata({
         siteName: "Les Doléances",
         title: "Actualités - Les Doléances",
         description: "L'actualité des doléances",
-        url: `https://www.lesdoleances.fr/article/${params.slug}`,
+        url: `https://www.lesdoleances.fr/article/${slug}`,
         type: "article",
         images: [
           {
@@ -73,7 +81,7 @@ export async function generateMetadata({
       siteName: "Les Doléances",
       title,
       description,
-      url: `https://www.lesdoleances.fr/article/${params.slug}`,
+      url: `https://www.lesdoleances.fr/article/${slug}`,
       type: "article",
       images: [
         {
@@ -96,10 +104,11 @@ export async function generateMetadata({
 export default async function ArticlePage({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }): Promise<React.JSX.Element> {
   try {
-    const post = await fetchPostBySlug(params.slug);
+    const { slug } = await params;
+    const post = await fetchPostBySlug(slug);
     const postMedia = post?.featured_media
       ? await fetchAttachmentById(post.featured_media)
       : {};
@@ -114,7 +123,7 @@ export default async function ArticlePage({
 
     const url = `${
       process.env.NEXT_PUBLIC_SITE_URL || "https://les-doleances.fr"
-    }/article/${params.slug}`;
+    }/article/${slug}`;
 
     return (
       <>

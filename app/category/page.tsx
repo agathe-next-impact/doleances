@@ -9,6 +9,8 @@ import Verbatim from "@/components/verbatim"
 import type { Metadata } from "next"
 
 
+export const revalidate = 600;
+
 export const metadata: Metadata = {
   title: "Actualités - Les Doléances",
   description: "L'actualité des doléances",

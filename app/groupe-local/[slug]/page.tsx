@@ -1,4 +1,4 @@
-import { fetchGroupeLocalBySlug, fetchPostsByGroupeLocalTax, fetchCategory } from "@/lib/api"
+import { fetchGroupeLocalBySlug, fetchPostsByGroupeLocalTax, fetchCategory, fetchAllGroupesLocaux } from "@/lib/api"
 import { notFound } from "next/navigation"
 import Link from "next/link"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
@@ -8,6 +8,13 @@ import StaticMap from "@/components/map/static-map"
 import { Badge } from "@/components/ui/badge"
 import type { Post, Category } from "@/lib/api"
 import type { Metadata } from "next"
+
+export const revalidate = 1800;
+
+export async function generateStaticParams() {
+  const { groupesLocaux } = await fetchAllGroupesLocaux();
+  return groupesLocaux.map((g: { slug: string }) => ({ slug: g.slug }));
+}
 
 export const metadata: Metadata = {
   title: "Les groupes locaux - Les Doléances",
@@ -31,9 +38,10 @@ interface PostsByCategory {
   posts: Post[]
 }
 
-export default async function GroupeLocalPage({ params }: { params: { slug: string } }) {
+export default async function GroupeLocalPage({ params }: { params: Promise<{ slug: string }> }) {
   try {
-    const groupeLocal = await fetchGroupeLocalBySlug(params.slug)
+    const { slug } = await params
+    const groupeLocal = await fetchGroupeLocalBySlug(slug)
 
     if (!groupeLocal) {
       notFound()
@@ -41,8 +49,8 @@ export default async function GroupeLocalPage({ params }: { params: { slug: stri
 
     // Vérifier que les propriétés nécessaires existent
     if (!groupeLocal.title || typeof groupeLocal.title !== "object") {
-      console.error(`Le groupe local ${params.slug} a une structure de titre invalide:`, groupeLocal.title)
-      groupeLocal.title = { rendered: `Groupe Local ${params.slug}` }
+      console.error(`Le groupe local ${slug} a une structure de titre invalide:`, groupeLocal.title)
+      groupeLocal.title = { rendered: `Groupe Local ${slug}` }
     }
 
 
@@ -54,7 +62,7 @@ export default async function GroupeLocalPage({ params }: { params: { slug: stri
       try {
         return (
           groupeLocal._embedded?.["wp:featuredmedia"]?.[0]?.source_url ||
-          `/placeholder.svg?height=400&width=800&query=Groupe local ${encodeURIComponent(groupeLocal.title.rendered || `Groupe Local ${params.slug}`)}`
+          `/placeholder.svg?height=400&width=800&query=Groupe local ${encodeURIComponent(groupeLocal.title.rendered || `Groupe Local ${slug}`)}`
         )
       } catch (error) {
         return `/placeholder.svg?height=400&width=800&query=Groupe local`
@@ -216,7 +224,7 @@ export default async function GroupeLocalPage({ params }: { params: { slug: stri
               </Badge>
               <h1
                 className="text-3xl md:text-4xl mb-2 py-2"
-                dangerouslySetInnerHTML={{ __html: groupeLocal.title?.rendered || `Groupe Local ${params.slug}` }}
+                dangerouslySetInnerHTML={{ __html: groupeLocal.title?.rendered || `Groupe Local ${slug}` }}
               />
               {groupeLocal.acf?.departement && (
                 <div className="text-sm md:text-base max-w-2xl">{groupeLocal?.acf.departement}</div>
