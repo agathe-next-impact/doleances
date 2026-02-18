@@ -15,6 +15,7 @@ import {
   DraggableCardContainer,
 } from "@/components/ui/draggable-card";
 import type { Metadata } from "next"
+import { AnimatedSection, AnimatedGrid, AnimatedGridItem } from "@/components/ui/animated-section"
 
 const CardMap = dynamic(() => import("@/components/map/map-card"), {
   loading: () => <div className="flex items-center justify-center h-[400px]"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div></div>,
@@ -184,18 +185,20 @@ export default async function Home() {
       <div className="absolute top-[700px] left-0 h-[400px] w-[50vw] rounded-full bg-gradient-to-r from-pink-200 to-blue-200 opacity-20 blur-3xl"></div>
       <div className="absolute top-[1000px] right-0 h-[400px] w-[40vw] rounded-full bg-gradient-to-r from-blue-200 to-pink-200 opacity-20 blur-3xl"></div>
     </div>
-        <div className="col-span-3 grid grid-cols-6 gap-6">
+        <AnimatedGrid className="col-span-3 grid grid-cols-2 gap-6">
           {categories.map((category) => (
             category.count > 0 && (
-            <CategoryCard key={category.id} category={category}/>
+            <AnimatedGridItem key={category.id}>
+              <CategoryCard category={category}/>
+            </AnimatedGridItem>
             )
           ))}
-        </div>
+        </AnimatedGrid>
 
         </div>
 
 {/* Hero section */}
-      <section className="h-max mb-12 grid gap-12 grid-cols-6 place-items-start">
+      <AnimatedSection className="h-max mb-12 grid gap-12 grid-cols-6 place-items-start">
         {accueil && (
         <div className="flex flex-col lg:col-span-4 col-span-6 h-full justify-between rounded-lg border bg-card shadow-lg overflow-hidden">
             <div className="flex flex-col p-6">
@@ -264,14 +267,14 @@ export default async function Home() {
             </Button>
           </div>  
         </div>
-      </section> 
+      </AnimatedSection>
 
 {/* Section des cartes d'introduction */}
     <div className="absolute inset-0 -z-10">
       <div className="absolute top-[900px] left-0 h-full w-[50vw] rounded-full bg-gradient-to-r from-pink-200 to-blue-200 opacity-20 blur-3xl"></div>
       <div className="absolute top-[1400px] right-0 h-[400px] w-[50vw] rounded-full bg-gradient-to-r from-blue-200 to-pink-200 opacity-20 blur-3xl"></div>
     </div>
-      <section className="mb-8 grid gap-12 lg:grid-cols-4">
+      <AnimatedSection className="mb-8 grid gap-12 lg:grid-cols-4">
         <div className="h-max flex flex-col lg:col-span-2 md:row-span-1 shrink rounded-lg border bg-card shadow-lg overflow-hidden">
           <div className="flex flex-col flex-grow justify-between p-6">
               <div>
@@ -316,8 +319,8 @@ export default async function Home() {
                       <Link href='/contribuer'>Envoyer un message</Link>
                     </Button>
             </div>
-            </div>           
-      </section>
+            </div>
+      </AnimatedSection>
 
     <div className="absolute inset-0 -z-10">
       <div className="absolute top-[2100px] left-0 h-full w-[50vw] rounded-full bg-gradient-to-r from-pink-200 to-blue-200 opacity-20 blur-3xl"></div>
@@ -348,7 +351,7 @@ export default async function Home() {
         <div className="absolute top-[3200px] left-0 h-full w-[50vw] rounded-full bg-gradient-to-r from-pink-200 to-blue-200 opacity-20 blur-3xl"></div>
         <div className="absolute top-[3400px] right-0 h-[400px] w-[50vw] rounded-full bg-gradient-to-r from-blue-200 to-pink-200 opacity-20 blur-3xl"></div>
       </div>
-      <section className="mb-24 mt-24">
+      <AnimatedSection className="mb-24 mt-24">
             <DraggableCardContainer className="relative flex md:min-h-screen min-h-[50rem] w-full md:items-center items-start justify-center">
               <p className="absolute top-1/2 mx-auto max-w-sm -translate-y-3/4 text-center text-2xl font-serif md:text-4xl dark:text-neutral-800">
               Cahier de la colère et de l'espoir
@@ -363,7 +366,7 @@ export default async function Home() {
               </DraggableCardBody>
               ))}
             </DraggableCardContainer>
-      </section>
+      </AnimatedSection>
     </div>
     </>
   )

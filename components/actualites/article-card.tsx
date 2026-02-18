@@ -145,7 +145,7 @@ export default function ArticleCard({ post }: ArticleCardProps) {
           <div className="flex items-start gap-1.5 my-4">
             <div>
               {isLoadingGroupe ? (
-                <span className="text-muted-foreground">Chargement du groupe local...</span>
+                <div className="h-5 w-32 animate-pulse rounded bg-muted" />
               ) : (
                 <Badge variant="secondary">
                 <Link href={`/groupe-local/${groupeLocalSlug}`}>

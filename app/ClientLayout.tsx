@@ -11,7 +11,7 @@ import { ThemeProvider } from "@/components/theme-provider"
 import { Button } from "@/components/ui/button"
 import { FileText, Info, Library, Pen, Map, Menu, User } from "lucide-react"
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
-import { SearchAutocomplete } from "@/components/search-autocomplete"
+
 import LottieAnimation from "@/components/ui/lottie-animation"
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" })
@@ -204,9 +204,6 @@ export default function ClientLayout({
             </Link>
           </div>
           <div className="flex items-center gap-4">
-            <div className="relative hidden md:block">
-            <SearchAutocomplete placeholder="Rechercher dans notre actu..." className="w-64" showButton={false} />
-            </div>
           </div>
           </div>
         </header>

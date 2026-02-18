@@ -7,6 +7,7 @@ import Image from "next/image"
 import { formatDate, decodeWordPressText } from "@/lib/utils"
 import Verbatim from "@/components/verbatim"
 import type { Metadata } from "next"
+import { AnimatedGrid, AnimatedGridItem } from "@/components/ui/animated-section"
 
 
 export const revalidate = 600;
@@ -126,13 +127,15 @@ export default async function Home() {
       <div className="absolute top-[700px] left-0 h-[400px] w-[50vw] rounded-full bg-gradient-to-r from-pink-200 to-blue-200 opacity-20 blur-3xl"></div>
       <div className="absolute top-[1000px] right-0 h-[400px] w-[40vw] rounded-full bg-gradient-to-r from-blue-200 to-pink-200 opacity-20 blur-3xl"></div>
     </div>
-        <div className="col-span-3 grid grid-cols-6 gap-6">
+        <AnimatedGrid className="col-span-3 grid grid-cols-6 gap-6">
           {categories.map((category) => (
             category.count > 0 && (
-            <CategoryCard key={category.id} category={category}/>
+            <AnimatedGridItem key={category.id}>
+              <CategoryCard category={category}/>
+            </AnimatedGridItem>
             )
           ))}
-        </div>
+        </AnimatedGrid>
 
         </div>
       )}

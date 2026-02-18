@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import { GoogleMap, useJsApiLoader, Marker, MarkerClusterer } from "@react-google-maps/api";
 
 
@@ -23,10 +23,6 @@ const containerStyle = {
   height: "400px",
 };
 
-
-
-const googleMapsApiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || process.env.GOOGLE_MAPS_API_KEY || "";
-
 export default function CardMap({
   locations,
   height = 400,
@@ -34,10 +30,46 @@ export default function CardMap({
   zoom = 5,
   center = defaultCenter,
 }: StaticMapProps) {
+  const [apiKey, setApiKey] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetch("/api/google-maps-key")
+      .then((res) => res.json())
+      .then((data) => setApiKey(data.apiKey || ""))
+      .catch(() => setApiKey(""));
+  }, []);
+
+  if (apiKey === null) {
+    return (
+      <div className="flex items-center justify-center" style={{ height, width }}>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+
+  if (!apiKey) {
+    return (
+      <div className="flex items-center justify-center text-muted-foreground text-sm" style={{ height, width }}>
+        Carte indisponible
+      </div>
+    );
+  }
+
+  return <CardMapInner apiKey={apiKey} locations={locations} height={height} width={width} zoom={zoom} center={center} />;
+}
+
+function CardMapInner({
+  apiKey,
+  locations,
+  height,
+  width,
+  zoom,
+  center,
+}: StaticMapProps & { apiKey: string }) {
   const mapRef = useRef<google.maps.Map | null>(null);
-  
+
   const { isLoaded } = useJsApiLoader({
-    googleMapsApiKey,
+    googleMapsApiKey: apiKey,
     preventGoogleFontsLoading: true,
   });
 
@@ -57,14 +89,12 @@ export default function CardMap({
         zoom={zoom}
         options={{
           draggable: false,
-          zoomControl: false,
-          scrollwheel: false,
           disableDoubleClickZoom: true,
           streetViewControl: false,
           mapTypeControl: true,
-          fullscreenControl: false,          
-          zoomControl: true, // Ajoute les boutons de zoom/dézoom
-          scrollwheel: true, // Active le zoom avec la molette de la souris
+          fullscreenControl: false,
+          zoomControl: true,
+          scrollwheel: true,
         }}
         onLoad={(map) => { mapRef.current = map; }}
       >

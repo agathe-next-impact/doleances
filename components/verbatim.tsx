@@ -49,7 +49,14 @@ export default function Verbatim() {
   }, [showFullVerbatim]);
 
   if (loading) {
-    return <p>Chargement d'un verbatim...</p>;
+    return (
+      <div className="flex flex-col animate-pulse gap-3">
+        <div className="h-4 w-full rounded bg-muted" />
+        <div className="h-4 w-5/6 rounded bg-muted" />
+        <div className="h-4 w-2/3 rounded bg-muted" />
+        <div className="h-4 w-1/3 rounded bg-muted self-end mt-4" />
+      </div>
+    );
   }
 
   if (error) {
