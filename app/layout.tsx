@@ -30,5 +30,8 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return <ClientLayout>{children}</ClientLayout>;
+  const gaId = process.env.GA_ID;
+  const clarityId = process.env.CLARITY_ID;
+
+  return <ClientLayout gaId={gaId} clarityId={clarityId}>{children}</ClientLayout>;
 }

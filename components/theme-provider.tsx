@@ -11,10 +11,15 @@ import MicrosoftClarity from './microsoft-clarity'
 
 const CookieBanner = dynamic(() => import('./cookies-banner'), { ssr: false })
 
-export function ThemeProvider({ children, ...props }: ThemeProviderProps) {
+interface AnalyticsProviderProps extends ThemeProviderProps {
+  gaId?: string
+  clarityId?: string
+}
+
+export function ThemeProvider({ children, gaId, clarityId, ...props }: AnalyticsProviderProps) {
   return <NextThemesProvider {...props}>{children}
   <CookieBanner />
-  <GoogleAnalytics />
-  <MicrosoftClarity />
+  <GoogleAnalytics gaId={gaId} />
+  <MicrosoftClarity clarityId={clarityId} />
   </NextThemesProvider>
 }

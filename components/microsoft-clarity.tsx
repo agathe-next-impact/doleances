@@ -3,9 +3,7 @@
 import Script from "next/script";
 import { useEffect, useState } from "react";
 
-const CLARITY_ID = process.env.NEXT_PUBLIC_CLARITY_ID;
-
-export default function MicrosoftClarity() {
+export default function MicrosoftClarity({ clarityId }: { clarityId?: string }) {
   const [consent, setConsent] = useState(false);
 
   useEffect(() => {
@@ -17,7 +15,7 @@ export default function MicrosoftClarity() {
     }
   }, []);
 
-  if (!consent || !CLARITY_ID) return null;
+  if (!consent || !clarityId) return null;
 
   return (
     <Script id="clarity-init" strategy="afterInteractive">
@@ -26,7 +24,7 @@ export default function MicrosoftClarity() {
           c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
           t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
           y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-        })(window,document,"clarity","script","${CLARITY_ID}");
+        })(window,document,"clarity","script","${clarityId}");
       `}
     </Script>
   );

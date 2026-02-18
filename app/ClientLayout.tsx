@@ -21,8 +21,12 @@ const varelaRound = Varela_Round({ weight: "400", subsets: ["latin"], variable: 
 
 export default function ClientLayout({
   children,
+  gaId,
+  clarityId,
 }: Readonly<{
   children: React.ReactNode
+  gaId?: string
+  clarityId?: string
 }>) {
   // Configuration pour Leaflet
   useEffect(() => {
@@ -66,7 +70,7 @@ export default function ClientLayout({
       `}</style>
       </head>
       <body className="font-sans overflow-x-hidden">
-      <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+      <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange gaId={gaId} clarityId={clarityId}>
         <div className="flex min-h-screen flex-col">
         <header className="sticky top-0 z-10 border-b bg-white/90 backdrop-blur-md transition-colors duration-">
           <div className="container mx-auto flex h-16 items-center justify-between px-4">

@@ -3,9 +3,7 @@
 import Script from "next/script";
 import { useEffect, useState } from "react";
 
-const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
-
-export default function GoogleAnalytics() {
+export default function GoogleAnalytics({ gaId }: { gaId?: string }) {
   const [consent, setConsent] = useState(false);
 
   useEffect(() => {
@@ -17,12 +15,12 @@ export default function GoogleAnalytics() {
     }
   }, []);
 
-  if (!consent || !GA_ID) return null;
+  if (!consent || !gaId) return null;
 
   return (
     <>
       <Script
-        src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
+        src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}
         strategy="afterInteractive"
       />
       <Script id="ga-init" strategy="afterInteractive">
@@ -30,7 +28,7 @@ export default function GoogleAnalytics() {
           window.dataLayer = window.dataLayer || [];
           function gtag(){dataLayer.push(arguments);}
           gtag('js', new Date());
-          gtag('config', '${GA_ID}');
+          gtag('config', '${gaId}');
         `}
       </Script>
     </>
