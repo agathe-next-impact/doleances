@@ -13,6 +13,10 @@ export default function GoogleAnalytics({ gaId }: { gaId?: string }) {
     if (value?.includes("true")) {
       setConsent(true);
     }
+
+    const handler = () => setConsent(true);
+    window.addEventListener("cookie-consent-accepted", handler);
+    return () => window.removeEventListener("cookie-consent-accepted", handler);
   }, []);
 
   if (!consent || !gaId) return null;
