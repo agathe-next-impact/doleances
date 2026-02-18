@@ -6,13 +6,15 @@ import {
   ThemeProvider as NextThemesProvider,
   type ThemeProviderProps,
 } from 'next-themes'
-import Analytics from './google-analytics'
+import GoogleAnalytics from './google-analytics'
+import MicrosoftClarity from './microsoft-clarity'
 
 const CookieBanner = dynamic(() => import('./cookies-banner'), { ssr: false })
 
 export function ThemeProvider({ children, ...props }: ThemeProviderProps) {
   return <NextThemesProvider {...props}>{children}
   <CookieBanner />
-  <Analytics />
+  <GoogleAnalytics />
+  <MicrosoftClarity />
   </NextThemesProvider>
 }
