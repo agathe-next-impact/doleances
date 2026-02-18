@@ -8,6 +8,7 @@ import StaticMap from "@/components/map/static-map"
 import { Badge } from "@/components/ui/badge"
 import type { Post, Category } from "@/lib/api"
 import type { Metadata } from "next"
+import { buildMetadata, cleanWPText } from "@/lib/metadata"
 
 export const revalidate = 1800;
 
@@ -16,19 +17,18 @@ export async function generateStaticParams() {
   return groupesLocaux.map((g: { slug: string }) => ({ slug: g.slug }));
 }
 
-export const metadata: Metadata = {
-  title: "Les groupes locaux - Les Doléances",
-  description: "Les groupes locaux des Doléances",
-  openGraph: {
-    title: "Les groupes locaux - Les Doléances",
-    description: "Découvrez les groupes locaux des Doléances, leurs activités et comment les rejoindre.",
-    images: [
-      {
-        url: "https://doleances.fr/img/doleances_couv.png",
-        alt: "Les groupes locaux - Les Doléances",
-      },
-    ],
-  },
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params
+  const groupe = await fetchGroupeLocalBySlug(slug)
+  const title = groupe ? cleanWPText(groupe.title?.rendered) : "Les groupes locaux"
+
+  return buildMetadata({
+    title: `${title} - Les Doléances`,
+    description: groupe
+      ? `Découvrez le groupe local ${title}, ses activités et comment le rejoindre.`
+      : "Découvrez les groupes locaux des Doléances, leurs activités et comment les rejoindre.",
+    path: `/groupe-local/${slug}`,
+  })
 }
 
 

@@ -8,24 +8,16 @@ import { formatDate, decodeWordPressText } from "@/lib/utils"
 import Verbatim from "@/components/verbatim"
 import type { Metadata } from "next"
 import { AnimatedGrid, AnimatedGridItem } from "@/components/ui/animated-section"
+import { buildStaticMetadata } from "@/lib/metadata"
 
 
 export const revalidate = 600;
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildStaticMetadata({
   title: "Actualités - Les Doléances",
   description: "L'actualité des doléances",
-  openGraph: {
-    title: "Actualités - Les Doléances",
-    description: "L'actualité des doléances",
-    images: [
-      {
-        url: "https://www.doleances.fr/img/doleances_couv.png",
-        alt: "Actualités - Les Doléances",
-      },
-    ],
-  },
-}
+  path: "/category",
+})
 
 
 export default async function Home() {

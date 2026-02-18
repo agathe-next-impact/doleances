@@ -16,25 +16,15 @@ import {
 } from "@/components/ui/draggable-card";
 import type { Metadata } from "next"
 import { AnimatedSection, AnimatedGrid, AnimatedGridItem } from "@/components/ui/animated-section"
+import { buildStaticMetadata } from "@/lib/metadata"
 
 const CardMap = dynamic(() => import("@/components/map/map-card"), {
   loading: () => <div className="flex items-center justify-center h-[400px]"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div></div>,
 })
 
-export const metadata: Metadata = {
-  title: "Les Doléances",
-  description: "Wiki du corpus des doléances de 2018/2019",
-  openGraph: {
-    title: "Les Doléances",
-    description: "Wiki du corpus des doléances de 2018/2019",
-    images: [
-      {
-        url: "https://doleances.fr/img/doleances_couv.png",
-        alt: "Les Doléances",
-      },
-    ],
-  },
-}
+export const metadata: Metadata = buildStaticMetadata({
+  path: "/",
+})
 
 export const revalidate = 60;
 

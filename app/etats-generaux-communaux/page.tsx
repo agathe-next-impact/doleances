@@ -7,23 +7,15 @@ import dynamic from "next/dynamic";
 import { fetchPageBySlug } from "@/lib/api";
 import { decodeWordPressText } from "@/lib/utils";
 import type { Metadata } from "next"
+import { buildStaticMetadata } from "@/lib/metadata"
 
 export const revalidate = 3600;
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildStaticMetadata({
   title: "Etats Généraux Communaux - Les Doléances",
   description: "Les Etats Généraux communaux des doléances",
-  openGraph: {
-    title: "Etats Généraux Communaux - Les Doléances",
-    description: "Les Etats Généraux communaux des doléances",
-    images: [
-      {
-        url: "https://doleances.fr/img/doleances_couv.png",
-        alt: "Etats Généraux Communaux",
-      },
-    ],
-  },
-}
+  path: "/etats-generaux-communaux",
+})
 
 
 const KitTabs = dynamic(() => import("@/components/kit-tabs"), { ssr: true });

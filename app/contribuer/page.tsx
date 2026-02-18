@@ -1,23 +1,15 @@
 import ContactForm from "@/components/contact-form"
 import { getContactData } from "@/app/actions/contact-actions"
 import type { Metadata } from "next"
+import { buildStaticMetadata } from "@/lib/metadata"
 
 export const revalidate = 3600;
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildStaticMetadata({
   title: "Contribuer - Les Doléances",
   description: "Participer ou Nous contacter pour faire avancer le projet",
-  openGraph: {
-    title: "Contribuer - Les Doléances",
-    description: "Participer ou Nous contacter pour faire avancer le projet",
-    images: [
-      {
-        url: "https://doleances.fr/img/doleances_couv.png",
-        alt: "Contribuer - Les Doléances",
-      },
-    ],
-  },
-}
+  path: "/contribuer",
+})
 
 
 export default async function ContactPage() {

@@ -4,6 +4,7 @@ import ArticleContent from "@/components/actualites/article-content";
 import type { Metadata } from "next";
 import ShareSocial from "@/components/ui/share-social";
 import type React from "react";
+import { buildMetadata, cleanWPText, SITE_URL, DEFAULT_IMAGE } from "@/lib/metadata";
 
 export const revalidate = 300;
 
@@ -21,84 +22,22 @@ export async function generateMetadata({
   const post = await fetchPostBySlug(slug);
 
   if (!post) {
-    return {
+    return buildMetadata({
       title: "Actualités - Les Doléances",
       description: "L'actualité des doléances",
-      openGraph: {
-        siteName: "Les Doléances",
-        title: "Actualités - Les Doléances",
-        description: "L'actualité des doléances",
-        url: `https://www.lesdoleances.fr/article/${slug}`,
-        type: "article",
-        images: [
-          {
-            url: "https://www.lesdoleances.fr/img/doleances_couv.png",
-            alt: "Actualités - Les Doléances",
-          },
-        ],
-      },
-    };
+      path: `/article/${slug}`,
+      type: "article",
+    });
   }
 
-  // Post exists, generate metadata
-  const title = post.title?.rendered
-    ? post.title.rendered
-        .replace(/<[^>]*>/g, "") // Supprime les balises HTML
-        .replace(/&amp;/g, "&")
-        .replace(/&quot;/g, '"')
-        .replace(/&rsquo;/g, "'")
-        .replace(/&hellip;/g, "...")
-        .replace(/&ndash;/g, "–")
-        .replace(/&mdash;/g, "—")
-        .trim()
-    : "Actualités - Les Doléances";
-
-  const description = post.excerpt?.rendered
-    ? post.excerpt.rendered
-        .replace(/<[^>]*>/g, "") // Supprime les balises HTML
-        .replace(/&amp;/g, "&")
-        .replace(/&quot;/g, '"')
-        .replace(/&rsquo;/g, "'")
-        .replace(/&hellip;/g, "...")
-        .replace(/&ndash;/g, "–")
-        .replace(/&mdash;/g, "—")
-        .replace(/\s+/g, " ") // Remplace les espaces multiples par un seul
-        .trim()
-        .substring(0, 160) // Limite à 160 caractères pour les méta descriptions
-    : "L'actualité des doléances";
-
-  // Fetch featured image if available
-  const img = post.featured_media
-    ? await fetchAttachmentById(post.featured_media)
-    : null;
-  const imageUrl =
-    img?.source_url || "https://www.lesdoleances.fr/img/doleances_couv.png";
-
-  return {
-    title,
-    description,
-    openGraph: {
-      siteName: "Les Doléances",
-      title,
-      description,
-      url: `https://www.lesdoleances.fr/article/${slug}`,
-      type: "article",
-      images: [
-        {
-          url: imageUrl,
-          alt: title,
-          width: 1200,
-          height: 630,
-        },
-      ],
-    },
-    twitter: {
-      card: "summary_large_image",
-      title,
-      description,
-      images: [imageUrl],
-    },
-  };
+  return buildMetadata({
+    title: post.title?.rendered,
+    description: post.excerpt?.rendered,
+    path: `/article/${slug}`,
+    type: "article",
+    featuredMediaId: post.featured_media,
+    acfOverrides: post.acf,
+  });
 }
 
 export default async function ArticlePage({
@@ -114,16 +53,10 @@ export default async function ArticlePage({
       : {};
 
     // OpenGraph data fallback
-    const ogTitle = post?.acf?.opengraph_title || post?.title?.rendered || "";
-    const ogDescription =
-      post?.acf?.opengraph_description ||
-      post?.excerpt?.rendered?.replace(/<[^>]+>/g, "") ||
-      "";
-    const ogImage = postMedia.source_url || "/img/logo.svg";
-
-    const url = `${
-      process.env.NEXT_PUBLIC_SITE_URL || "https://les-doleances.fr"
-    }/article/${slug}`;
+    const ogTitle = cleanWPText(post?.acf?.opengraph_title || post?.title?.rendered);
+    const ogDescription = cleanWPText(post?.acf?.opengraph_description || post?.excerpt?.rendered);
+    const ogImage = postMedia.source_url || DEFAULT_IMAGE;
+    const url = `${SITE_URL}/article/${slug}`;
 
     return (
       <>

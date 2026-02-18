@@ -1,6 +1,7 @@
 import { fetchPageBySlug } from "@/lib/api"
 import type { Metadata } from "next"
 import dynamic from "next/dynamic"
+import { buildStaticMetadata } from "@/lib/metadata"
 
 const MapComponent = dynamic(() => import("@/components/map/map-component"), {
   loading: () => <div className="flex items-center justify-center h-[600px]"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div></div>,
@@ -9,20 +10,11 @@ const MapComponent = dynamic(() => import("@/components/map/map-component"), {
 
 export const revalidate = 3600;
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildStaticMetadata({
   title: "Cartographie - Les Doléances",
   description: "Cartographie des groupes locaux",
-  openGraph: {
-    title: "Cartographie - Les Doléances",
-    description: "Cartographie des groupes locaux",
-    images: [
-      {
-        url: "https://www.doleances.fr/img/doleances_couv.png",
-        alt: "Cartographie des groupes locaux",
-      },
-    ],
-  },
-}
+  path: "/cartographie",
+})
 
 
 export default async function CartographiePage() {
