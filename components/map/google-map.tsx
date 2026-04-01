@@ -76,6 +76,8 @@ export default function GoogleMap({
               center: position,
               zoom: zoom,
               mapId: "DEMO_MAP_ID",
+              scrollwheel: true,
+              gestureHandling: "auto",
             })
             new Marker({
               position,
@@ -99,6 +101,8 @@ export default function GoogleMap({
                     center: position,
                     zoom: zoom,
                     mapId: "DEMO_MAP_ID",
+                    scrollwheel: true,
+                    gestureHandling: "auto",
                   })
                   new Marker({
                     position,

@@ -349,6 +349,8 @@ function MapComponentInner({ apiKey }: { apiKey: string }) {
               mapTypeControl: true,
               streetViewControl: true,
               fullscreenControl: true,
+              scrollwheel: true,
+              gestureHandling: "auto",
             }}
           >
             <MarkerClusterer>
