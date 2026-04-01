@@ -48,7 +48,7 @@ const nextConfig = {
               "img-src 'self' data: blob: https://wpasso.fr https://palegreen-capybara-652133.hostingersite.com https://maps.googleapis.com https://maps.gstatic.com https://*.google.com https://*.googleusercontent.com",
               "font-src 'self' https://fonts.gstatic.com",
               "connect-src 'self' https://wpasso.fr https://palegreen-capybara-652133.hostingersite.com https://www.google-analytics.com https://maps.googleapis.com https://www.clarity.ms",
-              "frame-src 'self' https://www.google.com https://maps.google.com",
+              "frame-src 'self' https://www.google.com https://maps.google.com https://www.youtube.com https://www.youtube-nocookie.com",
               "object-src 'none'",
               "base-uri 'self'",
             ].join('; '),

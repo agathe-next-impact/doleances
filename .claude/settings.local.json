@@ -3,7 +3,8 @@
     "allow": [
       "mcp__claude_ai_Vercel__list_teams",
       "mcp__claude_ai_Vercel__deploy_to_vercel",
-      "Bash(npm audit:*)"
+      "Bash(npm audit:*)",
+      "Bash(grep -E \"\\\\.\\(json|txt|md\\)$\")"
     ]
   }
 }

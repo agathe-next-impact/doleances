@@ -2,7 +2,7 @@ import Link from "next/link"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import CategoryCard from "@/components/actualites/category-card"
-import { fetchLastThreePosts, fetchPageBySlug, fetchRandomVerbatimImage, fetchAttachmentById, fetchGroupesLocaux, fetchCategories } from "@/lib/api"
+import { fetchLastThreePosts, fetchPageBySlug, fetchRandomVerbatimImage, fetchRandomVerbatim, fetchAttachmentById, fetchGroupesLocaux, fetchCategories } from "@/lib/api"
 import YouTubeEmbed from "@/components/ui/video"
 import Verbatim from "@/components/verbatim"
 import { formatDate, decodeWordPressText } from "@/lib/utils"
@@ -32,7 +32,7 @@ export const revalidate = 60;
 
 export default async function Home() {
   // Paralléliser tous les fetches indépendants
-  const [articles, accueil, contribuer, etatsGeneraux, cartographie, images, locations, categories] = await Promise.all([
+  const [articles, accueil, contribuer, etatsGeneraux, cartographie, images, locations, categories, verbatim] = await Promise.all([
     fetchLastThreePosts(),
     fetchPageBySlug("accueil"),
     fetchPageBySlug("contribuer"),
@@ -41,6 +41,7 @@ export default async function Home() {
     fetchRandomVerbatimImage(),
     fetchGroupesLocaux(),
     fetchCategories(),
+    fetchRandomVerbatim(),
   ])
 
   // Extraction de l'ID de playlist à partir de l'expression 'list=', sinon URL de partage brute
@@ -173,7 +174,7 @@ export default async function Home() {
                 </div>
               )}
             <div className="md:col-span-1 col-span-3 lg:flex flex-col hidden my-8 gap-6">
-              <Verbatim />
+              <Verbatim verbatim={verbatim} />
             </div>
 
 

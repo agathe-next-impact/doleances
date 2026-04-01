@@ -1,4 +1,4 @@
-import { fetchPageBySlug, fetchAttachmentById } from "@/lib/api";
+import { fetchPageBySlug, fetchAttachmentById, fetchRandomVerbatim } from "@/lib/api";
 import { decodeWordPressText } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -25,7 +25,10 @@ export async function generateMetadata(): Promise<Metadata> {
 
 
 export default async function Page() {
-  const page = await fetchPageBySlug("festival-mai-2025");
+  const [page, verbatim] = await Promise.all([
+    fetchPageBySlug("festival-mai-2025"),
+    fetchRandomVerbatim(),
+  ]);
   const bd: { id: number }[] = page?.acf?.bd ?? [];
   const imagesBd = await Promise.all(
     bd.map((image) => fetchAttachmentById(image))
@@ -199,7 +202,7 @@ export default async function Page() {
                     __html: page?.acf?.edito_helene,
                   }}
                 />
-                <Verbatim />
+                <Verbatim verbatim={verbatim} />
               </div>
             )}
           </div>

@@ -1,4 +1,4 @@
-import { fetchCategories, fetchLastThreePosts } from "@/lib/api"
+import { fetchCategories, fetchLastThreePosts, fetchRandomVerbatim } from "@/lib/api"
 import CategoryCard from "@/components/actualites/category-card"
 import { Badge } from "@/components/ui/badge"
 import { CalendarIcon, User2 } from "lucide-react"
@@ -21,9 +21,12 @@ export const metadata: Metadata = buildStaticMetadata({
 
 
 export default async function Home() {
-  const categories = await fetchCategories()
+  const [categories, articles, verbatim] = await Promise.all([
+    fetchCategories(),
+    fetchLastThreePosts(),
+    fetchRandomVerbatim(),
+  ])
   categories.sort((a, b) => b.count - a.count)
-  const articles = await fetchLastThreePosts()
   const stickyArticle = articles[0]
 
   return (
@@ -111,7 +114,7 @@ export default async function Home() {
                 </div>
               )}
             <div className="md:col-span-1 col-span-3 lg:flex flex-col hidden my-8 gap-6">
-              <Verbatim />
+              <Verbatim verbatim={verbatim} />
             </div>
 
 

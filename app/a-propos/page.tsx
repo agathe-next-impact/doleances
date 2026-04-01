@@ -3,7 +3,7 @@ import {
   DraggableCardBody,
   DraggableCardContainer,
 } from "@/components/ui/draggable-card";
-import { fetchPageBySlug, fetchRandomVerbatimImage, fetchAttachmentById, fetchGroupesLocaux, fetchPostById } from "@/lib/api";
+import { fetchPageBySlug, fetchRandomVerbatimImage, fetchRandomVerbatim, fetchAttachmentById, fetchGroupesLocaux, fetchPostById } from "@/lib/api";
 import YouTubeEmbed from "@/components/ui/video";
 import Verbatim from "@/components/verbatim";
 import Image from "next/image";
@@ -31,10 +31,11 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function DraggableCardDemo() {
   // Paralléliser les fetches indépendants
-  const [images, apropos, locations] = await Promise.all([
+  const [images, apropos, locations, verbatim] = await Promise.all([
     fetchRandomVerbatimImage(),
     fetchPageBySlug("a-propos"),
     fetchGroupesLocaux(),
+    fetchRandomVerbatim(),
   ])
 
   const imagesObjects = await Promise.all(
@@ -126,7 +127,7 @@ console.log("Vignettes:", vignettes);
         />
       </div>
       <div className="flex flex-col flex-grow justify-center p-6">
-        <Verbatim />
+        <Verbatim verbatim={verbatim} />
       </div>
     </div>
     </section> 
