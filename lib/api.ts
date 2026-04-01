@@ -169,6 +169,36 @@ export interface VerbatimImage {
 
 const API_BASE_URL = env.NEXT_PUBLIC_API_BASE_URL || "https://wpasso.fr/wp-json/wp/v2"
 
+// ─── Draft Mode helpers ───────────────────────────────────────────
+
+/**
+ * Construit les headers pour les requêtes WordPress.
+ * En draft mode, ajoute l'authentification pour accéder aux brouillons.
+ */
+function buildWPHeaders(isDraft: boolean): HeadersInit {
+  const headers: HeadersInit = { Accept: "application/json" }
+  if (isDraft && env.WORDPRESS_AUTH_TOKEN) {
+    headers["Authorization"] = `Basic ${env.WORDPRESS_AUTH_TOKEN}`
+  }
+  return headers
+}
+
+/**
+ * Construit les options de fetch. En draft mode, désactive le cache ISR.
+ */
+function buildFetchOptions(isDraft: boolean, revalidate: number): RequestInit {
+  if (isDraft) {
+    return {
+      headers: buildWPHeaders(true),
+      cache: "no-store",
+    }
+  }
+  return {
+    headers: buildWPHeaders(false),
+    next: { revalidate },
+  }
+}
+
 // Cache for categories to avoid multiple requests
 let categoriesCache: Category[] | null = null
 let categoriesCacheTime = 0
@@ -455,14 +485,13 @@ export async function fetchPostById(id: number): Promise<Post | null> {
 }
 
 // Fetch a specific post by slug
-export async function fetchPostBySlug(slug: string): Promise<Post | null> {
+export async function fetchPostBySlug(slug: string, draft = false): Promise<Post | null> {
   try {
-    const response = await fetch(`${API_BASE_URL}/posts?slug=${slug}&_embed`, {
-      headers: {
-        Accept: "application/json",
-      },
-      next: { revalidate: 300 },
-    })
+    const statusParam = draft ? "&status=draft,publish" : ""
+    const response = await fetch(
+      `${API_BASE_URL}/posts?slug=${slug}&_embed${statusParam}`,
+      buildFetchOptions(draft, 300),
+    )
 
     if (!response.ok) {
       throw new Error(`Failed to fetch post by slug: ${response.status}`)
@@ -579,14 +608,13 @@ export async function fetchSearchSuggestions(query: string): Promise<{
 }
 
 // récupérer le contenu des pages
-export async function fetchPageBySlug(slug: string): Promise<Page | null> {
+export async function fetchPageBySlug(slug: string, draft = false): Promise<Page | null> {
   try {
-    const response = await fetch(`${API_BASE_URL}/pages?slug=${slug}`, {
-      headers: {
-        Accept: "application/json",
-      },
-      next: { revalidate: 3600 }, // Revalidate every hour
-    })
+    const statusParam = draft ? "&status=draft,publish" : ""
+    const response = await fetch(
+      `${API_BASE_URL}/pages?slug=${slug}${statusParam}`,
+      buildFetchOptions(draft, 3600),
+    )
 
     if (!response.ok) {
       throw new Error(`Failed to fetch page by slug: ${response.status}`)
@@ -849,23 +877,23 @@ export async function fetchAllGroupesLocaux(
 }
 
 // Récupérer un groupe local spécifique par son slug
-export async function fetchGroupeLocalBySlug(slug: string): Promise<GroupeLocalPost | null> {
+export async function fetchGroupeLocalBySlug(slug: string, draft = false): Promise<GroupeLocalPost | null> {
   try {
-    // D'abord essayer de récupérer depuis le cache
-    const allGroupesLocaux = await fetchGroupesLocaux()
-    const groupeFromCache = allGroupesLocaux.find((groupe) => groupe.slug === slug)
-
-    if (groupeFromCache) {
-      return groupeFromCache
+    // En draft mode, appel direct à l'API pour inclure les brouillons
+    if (!draft) {
+      const allGroupesLocaux = await fetchGroupesLocaux()
+      const groupeFromCache = allGroupesLocaux.find((groupe) => groupe.slug === slug)
+      if (groupeFromCache) {
+        return groupeFromCache
+      }
     }
 
-    // Si non trouvé dans le cache, essayer un appel API direct
-    const response = await fetch(`${API_BASE_URL}/groupe_local?slug=${slug}&_embed`, {
-      
-      headers: {
-        Accept: "application/json",
-      },
-    })
+    // Si non trouvé dans le cache ou en draft mode, essayer un appel API direct
+    const statusParam = draft ? "&status=draft,publish" : ""
+    const response = await fetch(
+      `${API_BASE_URL}/groupe_local?slug=${slug}&_embed${statusParam}`,
+      buildFetchOptions(draft, 3600),
+    )
 
     if (!response.ok) {
       throw new Error(`Failed to fetch groupe local: ${response.status}`)

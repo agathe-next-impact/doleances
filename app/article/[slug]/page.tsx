@@ -7,6 +7,7 @@ import type React from "react";
 import { buildMetadata, cleanWPText, SITE_URL, DEFAULT_IMAGE } from "@/lib/metadata";
 import JsonLd from "@/components/json-ld";
 import { buildArticleJsonLd, buildBreadcrumbJsonLd } from "@/lib/jsonld";
+import { draftMode } from "next/headers";
 
 export const revalidate = 300;
 
@@ -49,7 +50,8 @@ export default async function ArticlePage({
 }): Promise<React.JSX.Element> {
   try {
     const { slug } = await params;
-    const post = await fetchPostBySlug(slug);
+    const { isEnabled: isDraft } = await draftMode();
+    const post = await fetchPostBySlug(slug, isDraft);
     const postMedia = post?.featured_media
       ? await fetchAttachmentById(post.featured_media)
       : {};

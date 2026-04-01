@@ -11,6 +11,7 @@ import type { Metadata } from "next"
 import { buildMetadata, cleanWPText, SITE_URL } from "@/lib/metadata"
 import JsonLd from "@/components/json-ld"
 import { buildLocalGroupJsonLd, buildBreadcrumbJsonLd } from "@/lib/jsonld"
+import { draftMode } from "next/headers"
 
 export const revalidate = 1800;
 
@@ -47,7 +48,8 @@ interface PostsByCategory {
 export default async function GroupeLocalPage({ params }: { params: Promise<{ slug: string }> }) {
   try {
     const { slug } = await params
-    const groupeLocal = await fetchGroupeLocalBySlug(slug)
+    const { isEnabled: isDraft } = await draftMode()
+    const groupeLocal = await fetchGroupeLocalBySlug(slug, isDraft)
 
     if (!groupeLocal) {
       notFound()
