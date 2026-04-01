@@ -10,7 +10,7 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'wpasso.fr',
+        hostname: 'admin.lesdoleances.fr',
       },
       {
         protocol: 'https',
@@ -45,9 +45,9 @@ const nextConfig = {
               "default-src 'self'",
               "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://maps.googleapis.com https://www.clarity.ms",
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-              "img-src 'self' data: blob: https://wpasso.fr https://palegreen-capybara-652133.hostingersite.com https://maps.googleapis.com https://maps.gstatic.com https://*.google.com https://*.googleusercontent.com",
+              "img-src 'self' data: blob: https://admin.lesdoleances.fr https://palegreen-capybara-652133.hostingersite.com https://maps.googleapis.com https://maps.gstatic.com https://*.google.com https://*.googleusercontent.com",
               "font-src 'self' https://fonts.gstatic.com",
-              "connect-src 'self' https://wpasso.fr https://palegreen-capybara-652133.hostingersite.com https://www.google-analytics.com https://maps.googleapis.com https://www.clarity.ms",
+              "connect-src 'self' https://admin.lesdoleances.fr https://palegreen-capybara-652133.hostingersite.com https://www.google-analytics.com https://maps.googleapis.com https://www.clarity.ms",
               "frame-src 'self' https://www.google.com https://maps.google.com https://www.youtube.com https://www.youtube-nocookie.com",
               "object-src 'none'",
               "base-uri 'self'",

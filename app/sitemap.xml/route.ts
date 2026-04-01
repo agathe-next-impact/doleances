@@ -15,13 +15,13 @@ const STATIC_ROUTES = [
 
 export async function GET() {
   const [res, articles, pages] = await Promise.all([
-    fetch(`https://wpasso.fr/wp-json/wp/v2/groupe_local?per_page=100&_fields=slug,date,modified`, {
+    fetch(`https://admin.lesdoleances.fr/wp-json/wp/v2/groupe_local?per_page=100&_fields=slug,date,modified`, {
       next: { revalidate: 3600 },
     }),
-    fetch(`https://wpasso.fr/wp-json/wp/v2/posts?per_page=100&_fields=slug,status,date,modified`, {
+    fetch(`https://admin.lesdoleances.fr/wp-json/wp/v2/posts?per_page=100&_fields=slug,status,date,modified`, {
       next: { revalidate: 3600 },
     }),
-    fetch(`https://wpasso.fr/wp-json/wp/v2/pages?per_page=100&_fields=slug,status,date,modified`, {
+    fetch(`https://admin.lesdoleances.fr/wp-json/wp/v2/pages?per_page=100&_fields=slug,status,date,modified`, {
       next: { revalidate: 3600 },
     }),
   ]);

@@ -73,7 +73,7 @@ const containerStyle = {
 const defaultCenter = { lat: 46.603354, lng: 2.3522 };
 const defaultZoom = 6;
 
-const WORDPRESS_API_URL = process.env.WORDPRESS_API_URL || "https://wpasso.fr/wp-json/wp/v2";
+const WORDPRESS_API_URL = process.env.WORDPRESS_API_URL || "https://admin.lesdoleances.fr/wp-json/wp/v2";
 
 // Wrapper qui récupère la clé API côté serveur puis rend la carte
 export default function MapComponent() {

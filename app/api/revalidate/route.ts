@@ -2,7 +2,7 @@ import { revalidatePath } from "next/cache"
 import { NextRequest, NextResponse } from "next/server"
 
 const ALLOWED_ORIGINS = [
-  "https://wpasso.fr",
+  "https://admin.lesdoleances.fr",
   "https://palegreen-capybara-652133.hostingersite.com",
 ]
 
