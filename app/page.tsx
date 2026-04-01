@@ -16,7 +16,9 @@ import {
 } from "@/components/ui/draggable-card";
 import type { Metadata } from "next"
 import { AnimatedSection, AnimatedGrid, AnimatedGridItem } from "@/components/ui/animated-section"
-import { buildStaticMetadata } from "@/lib/metadata"
+import { buildStaticMetadata, SITE_URL } from "@/lib/metadata"
+import JsonLd from "@/components/json-ld"
+import { buildWebSiteJsonLd, buildBreadcrumbJsonLd } from "@/lib/jsonld"
 
 const CardMap = dynamic(() => import("@/components/map/map-card"), {
   loading: () => <div className="flex items-center justify-center h-[400px]"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div></div>,
@@ -87,6 +89,10 @@ export default async function Home() {
 
   return (
     <>
+    <JsonLd data={[
+      buildWebSiteJsonLd(),
+      buildBreadcrumbJsonLd([{ name: "Accueil", url: SITE_URL }]),
+    ]} />
     <div className="absolute inset-0 -z-10">
       <div className="absolute top-0 left-0 h-[500px] w-[40vw] rounded-full bg-gradient-to-r from-pink-200 to-blue-200 opacity-20 blur-3xl"></div>
       <div className="absolute bottom-0 right-0 h-[400px] w-[40vw] rounded-full bg-gradient-to-r from-blue-200 to-pink-200 opacity-20 blur-3xl"></div>

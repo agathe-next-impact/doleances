@@ -8,7 +8,9 @@ import StaticMap from "@/components/map/static-map"
 import { Badge } from "@/components/ui/badge"
 import type { Post, Category } from "@/lib/api"
 import type { Metadata } from "next"
-import { buildMetadata, cleanWPText } from "@/lib/metadata"
+import { buildMetadata, cleanWPText, SITE_URL } from "@/lib/metadata"
+import JsonLd from "@/components/json-ld"
+import { buildLocalGroupJsonLd, buildBreadcrumbJsonLd } from "@/lib/jsonld"
 
 export const revalidate = 1800;
 
@@ -22,12 +24,16 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const groupe = await fetchGroupeLocalBySlug(slug)
   const title = groupe ? cleanWPText(groupe.title?.rendered) : "Les groupes locaux"
 
+  const imageUrl = groupe?._embedded?.["wp:featuredmedia"]?.[0]?.source_url
+
   return buildMetadata({
     title: `${title} - Les Doléances`,
     description: groupe
       ? `Découvrez le groupe local ${title}, ses activités et comment le rejoindre.`
       : "Découvrez les groupes locaux des Doléances, leurs activités et comment les rejoindre.",
     path: `/groupe-local/${slug}`,
+    imageUrl: imageUrl || undefined,
+    imageAlt: title,
   })
 }
 
@@ -206,8 +212,29 @@ export default async function GroupeLocalPage({ params }: { params: Promise<{ sl
     // Trier les catégories par nombre d'articles (décroissant)
     postsByCategory.sort((a, b) => b.posts.length - a.posts.length)
 
+    const groupTitle = typeof groupeLocal.title?.rendered === "string"
+      ? groupeLocal.title.rendered.replace(/<[^>]+>/g, "")
+      : `Groupe Local ${slug}`
+
     return (
     <>
+    <JsonLd data={[
+      buildLocalGroupJsonLd({
+        name: groupTitle,
+        description: `Groupe local ${groupTitle} - Les Doléances`,
+        url: `${SITE_URL}/groupe-local/${slug}`,
+        address: address,
+        geo: coordinates,
+        imageUrl: featuredImage?.startsWith("/placeholder") ? null : featuredImage,
+        email: contact.email,
+        telephone: contact.telephone,
+      }),
+      buildBreadcrumbJsonLd([
+        { name: "Accueil", url: SITE_URL },
+        { name: "Cartographie", url: `${SITE_URL}/cartographie` },
+        { name: groupTitle, url: `${SITE_URL}/groupe-local/${slug}` },
+      ]),
+    ]} />
     <div className="absolute inset-0 -z-10">
       <div className="absolute top-0 left-0 h-[500px] w-[40vw] rounded-full bg-gradient-to-r from-pink-200 to-blue-200 opacity-20 blur-3xl"></div>
       <div className="absolute bottom-0 right-0 h-[400px] w-[40vw] rounded-full bg-gradient-to-r from-blue-200 to-pink-200 opacity-20 blur-3xl"></div>

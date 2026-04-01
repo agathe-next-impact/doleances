@@ -8,17 +8,20 @@ import Verbatim from "@/components/verbatim";
 import StaticMap from "@/components/map/static-map";
 import DateFormat from "@/components/date-format";
 import type { Metadata } from "next"
-import { buildStaticMetadata, SITE_URL } from "@/lib/metadata"
+import { buildMetadata, SITE_URL } from "@/lib/metadata"
 
 export const revalidate = 3600;
 
-export const metadata: Metadata = buildStaticMetadata({
-  title: "Le Festival de mai 2025 - Les Doléances",
-  description: "Le Festival des doléances, un événement citoyen et artistique",
-  path: "/festival",
-  imageUrl: `${SITE_URL}/img/festival_verso.jpg`,
-  imageAlt: "Festival des doléances",
-})
+export async function generateMetadata(): Promise<Metadata> {
+  const page = await fetchPageBySlug("festival-mai-2025")
+  return buildMetadata({
+    title: page?.title?.rendered || "Le Festival de mai 2025 - Les Doléances",
+    description: page?.content?.rendered || "Le Festival des doléances, un événement citoyen et artistique",
+    path: "/festival",
+    imageUrl: `${SITE_URL}/img/festival_verso.jpg`,
+    imageAlt: "Festival des doléances",
+  })
+}
 
 
 export default async function Page() {

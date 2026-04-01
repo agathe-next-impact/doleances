@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import type { Metadata } from "next";
-import { buildStaticMetadata } from "@/lib/metadata";
+import { buildMetadata } from "@/lib/metadata";
 
 const CardMap = dynamic(() => import("@/components/map/map-card"), {
   loading: () => <div className="flex items-center justify-center h-[400px]"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div></div>,
@@ -19,11 +19,15 @@ const CardMap = dynamic(() => import("@/components/map/map-card"), {
 
 export const revalidate = 3600;
 
-export const metadata: Metadata = buildStaticMetadata({
-  title: "A propos de nous - Les Doléances",
-  description: "Présentation de la démarche et des groupes locaux",
-  path: "/a-propos",
-})
+export async function generateMetadata(): Promise<Metadata> {
+  const page = await fetchPageBySlug("a-propos")
+  return buildMetadata({
+    title: page?.title?.rendered || "A propos de nous - Les Doléances",
+    description: page?.content?.rendered || "Présentation de la démarche et des groupes locaux",
+    path: "/a-propos",
+    featuredMediaId: page?.featured_media,
+  })
+}
 
 export default async function DraggableCardDemo() {
   // Paralléliser les fetches indépendants

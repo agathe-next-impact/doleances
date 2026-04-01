@@ -3,6 +3,8 @@ import type React from "react";
 import ClientLayout from "./ClientLayout";
 import "./globals.css";
 import { SITE_NAME, DEFAULT_DESCRIPTION, SITE_URL, DEFAULT_IMAGE, DEFAULT_LOCALE } from "@/lib/metadata";
+import JsonLd from "@/components/json-ld";
+import { buildOrganizationJsonLd } from "@/lib/jsonld";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -34,5 +36,10 @@ export default function RootLayout({
   const gaId = process.env.GA_ID;
   const clarityId = process.env.CLARITY_ID;
 
-  return <ClientLayout gaId={gaId} clarityId={clarityId}>{children}</ClientLayout>;
+  return (
+    <>
+      <JsonLd data={buildOrganizationJsonLd()} />
+      <ClientLayout gaId={gaId} clarityId={clarityId}>{children}</ClientLayout>
+    </>
+  );
 }

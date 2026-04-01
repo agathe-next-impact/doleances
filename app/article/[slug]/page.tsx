@@ -5,6 +5,8 @@ import type { Metadata } from "next";
 import ShareSocial from "@/components/ui/share-social";
 import type React from "react";
 import { buildMetadata, cleanWPText, SITE_URL, DEFAULT_IMAGE } from "@/lib/metadata";
+import JsonLd from "@/components/json-ld";
+import { buildArticleJsonLd, buildBreadcrumbJsonLd } from "@/lib/jsonld";
 
 export const revalidate = 300;
 
@@ -60,6 +62,21 @@ export default async function ArticlePage({
 
     return (
       <>
+        <JsonLd data={[
+          buildArticleJsonLd({
+            title: ogTitle,
+            description: ogDescription,
+            url,
+            datePublished: post?.date || "",
+            dateModified: post?.modified || post?.date || "",
+            imageUrl: ogImage,
+          }),
+          buildBreadcrumbJsonLd([
+            { name: "Accueil", url: SITE_URL },
+            { name: "Actualités", url: `${SITE_URL}/category` },
+            { name: ogTitle, url },
+          ]),
+        ]} />
         <div className="absolute inset-0 -z-10">
           <div className="absolute top-[100px] left-0 h-[500px] w-[50vw] rounded-full bg-gradient-to-r from-pink-200 to-blue-200 opacity-20 blur-3xl"></div>
           <div className="absolute top-[500px] right-0 h-[400px] w-[40vw] rounded-full bg-gradient-to-r from-blue-200 to-pink-200 opacity-20 blur-3xl"></div>

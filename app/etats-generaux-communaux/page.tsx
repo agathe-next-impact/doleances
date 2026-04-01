@@ -7,15 +7,19 @@ import dynamic from "next/dynamic";
 import { fetchPageBySlug } from "@/lib/api";
 import { decodeWordPressText } from "@/lib/utils";
 import type { Metadata } from "next"
-import { buildStaticMetadata } from "@/lib/metadata"
+import { buildMetadata } from "@/lib/metadata"
 
 export const revalidate = 3600;
 
-export const metadata: Metadata = buildStaticMetadata({
-  title: "Etats Généraux Communaux - Les Doléances",
-  description: "Les Etats Généraux communaux des doléances",
-  path: "/etats-generaux-communaux",
-})
+export async function generateMetadata(): Promise<Metadata> {
+  const page = await fetchPageBySlug("etats-generaux-communaux")
+  return buildMetadata({
+    title: page?.title?.rendered || "Etats Généraux Communaux - Les Doléances",
+    description: page?.content?.rendered || "Les Etats Généraux communaux des doléances",
+    path: "/etats-generaux-communaux",
+    featuredMediaId: page?.featured_media,
+  })
+}
 
 
 const KitTabs = dynamic(() => import("@/components/kit-tabs"), { ssr: true });

@@ -5,7 +5,9 @@ import CategoryHero from "@/components/actualites/category-hero"
 import SearchFilter from "@/components/actualites/search-filter"
 import { Suspense } from "react"
 import type { Metadata } from "next"
-import { buildMetadata } from "@/lib/metadata"
+import { buildMetadata, SITE_URL } from "@/lib/metadata"
+import JsonLd from "@/components/json-ld"
+import { buildBreadcrumbJsonLd } from "@/lib/jsonld"
 
 export const revalidate = 600;
 
@@ -22,6 +24,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     title: category?.name || "Actualités - Les Doléances",
     description: category?.description || "L'actualité des doléances",
     path: `/category/${slug}`,
+    imageUrl: category?.acf?.image_categorie || undefined,
+    imageAlt: category?.name,
   })
 }
 
@@ -137,6 +141,11 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
 
     return (
     <>
+    <JsonLd data={buildBreadcrumbJsonLd([
+      { name: "Accueil", url: SITE_URL },
+      { name: "Actualités", url: `${SITE_URL}/category` },
+      { name: category?.name || "Catégorie", url: `${SITE_URL}/category/${categorySlug}` },
+    ])} />
     <div className="absolute inset-0 -z-10">
       <div className="absolute top-[100px] left-0 h-[500px] w-[50vw] rounded-full bg-gradient-to-r from-pink-200 to-blue-200 opacity-20 blur-3xl"></div>
       <div className="absolute top-[500px] right-0 h-[400px] w-[40vw] rounded-full bg-gradient-to-r from-blue-200 to-pink-200 opacity-20 blur-3xl"></div>
