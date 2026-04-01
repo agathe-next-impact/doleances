@@ -38,9 +38,6 @@ export default async function Page () {
     <div className="container mx-auto md:p-8 p-4">
       <div className="py-4 text-center">
         <h1 className="mb-4 text-43xl font-light tracking-tight">Etats Généraux communaux</h1> 
-        <p className="mx-auto mb-6 max-w-2xl text-lg text-muted-foreground">
-        Wiki du corpus des doléances de 2018/2019
-        </p>
       </div>
 
         <section className="w-full h-max mb-12 flex flex-col gap-12 md:grid md:grid-cols-6 md:gap-12">                     

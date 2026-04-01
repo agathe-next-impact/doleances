@@ -77,37 +77,12 @@ const WORDPRESS_API_URL = process.env.WORDPRESS_API_URL || "https://wpasso.fr/wp
 
 // Wrapper qui récupère la clé API côté serveur puis rend la carte
 export default function MapComponent() {
-  const [apiKey, setApiKey] = useState<string | null>(null);
-  const [keyError, setKeyError] = useState(false);
-
-  useEffect(() => {
-    fetch("/api/google-maps-key")
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.apiKey) {
-          setApiKey(data.apiKey);
-        } else {
-          setKeyError(true);
-        }
-      })
-      .catch(() => setKeyError(true));
-  }, []);
-
-  if (keyError) {
-    return (
-      <div className="p-4 text-red-500">
-        Clé API Google Maps manquante.
-      </div>
-    );
-  }
+  const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "";
 
   if (!apiKey) {
     return (
-      <div className="flex items-center justify-center h-screen">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
-          <p className="mt-4">Chargement de la carte...</p>
-        </div>
+      <div className="p-4 text-red-500">
+        Clé API Google Maps manquante.
       </div>
     );
   }

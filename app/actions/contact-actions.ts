@@ -2,6 +2,39 @@
 
 import { z } from "zod"
 import nodemailer from "nodemailer"
+import { headers } from "next/headers"
+
+/** Échappe les caractères HTML pour prévenir les injections XSS */
+function escapeHtml(str: string): string {
+  return str
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;")
+}
+
+/** Rate limiting simple en mémoire (par IP) */
+const rateLimitMap = new Map<string, { count: number; resetTime: number }>()
+const RATE_LIMIT_MAX = 5 // max 5 emails
+const RATE_LIMIT_WINDOW = 15 * 60 * 1000 // par fenêtre de 15 minutes
+
+function checkRateLimit(ip: string): boolean {
+  const now = Date.now()
+  const entry = rateLimitMap.get(ip)
+
+  if (!entry || now > entry.resetTime) {
+    rateLimitMap.set(ip, { count: 1, resetTime: now + RATE_LIMIT_WINDOW })
+    return true
+  }
+
+  if (entry.count >= RATE_LIMIT_MAX) {
+    return false
+  }
+
+  entry.count++
+  return true
+}
 
 // Schéma de validation
 const formSchema = z.object({
@@ -97,6 +130,16 @@ export async function getContactData() {
 
 // Fonction pour envoyer le formulaire de contact
 export async function sendContactForm(formData: FormData) {
+  // Rate limiting
+  const headersList = await headers()
+  const ip = headersList.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown"
+  if (!checkRateLimit(ip)) {
+    return {
+      success: false,
+      message: "Trop de messages envoyés. Veuillez réessayer dans quelques minutes.",
+    }
+  }
+
   // Valider les données du formulaire
   const validatedData = formSchema.parse(formData)
 
@@ -109,14 +152,18 @@ export async function sendContactForm(formData: FormData) {
       throw new Error("Aucun email destinataire trouvé")
     }
 
-    // Configuration de Nodemailer (à remplacer par vos propres informations SMTP)
+    // Configuration SMTP — les variables d'environnement sont obligatoires
+    if (!process.env.SMTP_HOST || !process.env.SMTP_USER || !process.env.SMTP_PASSWORD) {
+      throw new Error("Configuration SMTP manquante")
+    }
+
     const transporter = nodemailer.createTransport({
-      host: process.env.SMTP_HOST || "smtp.gmail.com",
+      host: process.env.SMTP_HOST,
       port: Number.parseInt(process.env.SMTP_PORT || "587"),
-      secure: process.env.SMTP_SECURE === "false",
+      secure: process.env.SMTP_SECURE === "true",
       auth: {
-        user: process.env.SMTP_USER || "am.agathe.martin@gmail.com",
-        pass: process.env.SMTP_PASSWORD || "dvzhmncnrcljqntr",
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASSWORD,
       },
     })
 
@@ -135,17 +182,17 @@ export async function sendContactForm(formData: FormData) {
         Nom: ${validatedData.name}
         Email: ${validatedData.email}
         Objet: ${validatedData.subject}
-        
+
         Message:
         ${validatedData.message}
       `,
       html: `
         <div>
-          <p><strong>Nom:</strong> ${validatedData.name}</p>
-          <p><strong>Email:</strong> ${validatedData.email}</p>
-          <p><strong>Objet:</strong> ${validatedData.subject}</p>
+          <p><strong>Nom:</strong> ${escapeHtml(validatedData.name)}</p>
+          <p><strong>Email:</strong> ${escapeHtml(validatedData.email)}</p>
+          <p><strong>Objet:</strong> ${escapeHtml(validatedData.subject)}</p>
           <p><strong>Message:</strong></p>
-          <p>${validatedData.message.replace(/\n/g, "<br>")}</p>
+          <p>${escapeHtml(validatedData.message).replace(/\n/g, "<br>")}</p>
         </div>
       `,
     })

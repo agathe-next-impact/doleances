@@ -1,15 +1,24 @@
 import { revalidatePath } from "next/cache"
 import { NextRequest, NextResponse } from "next/server"
 
-const CORS_HEADERS = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Methods": "POST, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type, x-webhook-secret",
+const ALLOWED_ORIGINS = [
+  "https://wpasso.fr",
+  "https://palegreen-capybara-652133.hostingersite.com",
+]
+
+function getCorsHeaders(origin?: string | null) {
+  const allowedOrigin = origin && ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0]
+  return {
+    "Access-Control-Allow-Origin": allowedOrigin,
+    "Access-Control-Allow-Methods": "POST, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type, x-webhook-secret",
+  }
 }
 
 /** Preflight CORS */
-export async function OPTIONS() {
-  return new NextResponse(null, { status: 204, headers: CORS_HEADERS })
+export async function OPTIONS(request: NextRequest) {
+  const origin = request.headers.get("origin")
+  return new NextResponse(null, { status: 204, headers: getCorsHeaders(origin) })
 }
 
 /**
@@ -20,10 +29,12 @@ export async function OPTIONS() {
  * Body JSON: { post_type, slug, post_id, action }
  */
 export async function POST(request: NextRequest) {
+  const origin = request.headers.get("origin")
+  const corsHeaders = getCorsHeaders(origin)
   const secret = request.headers.get("x-webhook-secret")
 
   if (secret !== process.env.WORDPRESS_WEBHOOK_SECRET) {
-    return NextResponse.json({ error: "Invalid secret" }, { status: 401, headers: CORS_HEADERS })
+    return NextResponse.json({ error: "Invalid secret" }, { status: 401, headers: corsHeaders })
   }
 
   try {
@@ -77,12 +88,12 @@ export async function POST(request: NextRequest) {
       paths: revalidated,
       action,
       timestamp: new Date().toISOString(),
-    }, { headers: CORS_HEADERS })
+    }, { headers: corsHeaders })
   } catch (error) {
     console.error("Revalidation error:", error)
     return NextResponse.json(
-      { error: "Failed to revalidate", details: error instanceof Error ? error.message : String(error) },
-      { status: 500, headers: CORS_HEADERS },
+      { error: "Failed to revalidate" },
+      { status: 500, headers: corsHeaders },
     )
   }
 }

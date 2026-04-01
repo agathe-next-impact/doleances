@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, useEffect } from "react";
+import { useRef } from "react";
 import { GoogleMap, useJsApiLoader, Marker, MarkerClusterer } from "@react-google-maps/api";
 
 
@@ -30,22 +30,7 @@ export default function CardMap({
   zoom = 5,
   center = defaultCenter,
 }: StaticMapProps) {
-  const [apiKey, setApiKey] = useState<string | null>(null);
-
-  useEffect(() => {
-    fetch("/api/google-maps-key")
-      .then((res) => res.json())
-      .then((data) => setApiKey(data.apiKey || ""))
-      .catch(() => setApiKey(""));
-  }, []);
-
-  if (apiKey === null) {
-    return (
-      <div className="flex items-center justify-center" style={{ height, width }}>
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-      </div>
-    );
-  }
+  const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "";
 
   if (!apiKey) {
     return (
