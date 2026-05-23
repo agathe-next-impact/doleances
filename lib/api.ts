@@ -1,4 +1,4 @@
-import { env } from "process"
+import { API_BASE_URL } from "@/lib/constants"
 
 // Types for WordPress API responses
 export interface Category {
@@ -166,8 +166,6 @@ export interface VerbatimImage {
     image_du_verbatim?: string;
   };
 }
-
-const API_BASE_URL = env.NEXT_PUBLIC_API_BASE_URL || "https://wpasso.fr/wp-json/wp/v2"
 
 // Cache for categories to avoid multiple requests
 let categoriesCache: Category[] | null = null

@@ -6,6 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import LocationSidebar from "./location-sidebar";
 import { AlertCircle } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { API_BASE_URL } from "@/lib/constants";
 
 
 // Types
@@ -71,7 +72,7 @@ const defaultZoom = 6;
 
 // Clé API Google Maps
 const googleMapsApiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || process.env.GOOGLE_MAPS_API_KEY;
-const WORDPRESS_API_URL = process.env.WORDPRESS_API_URL || "https://wpasso.fr/wp-json/wp/v2";
+const WORDPRESS_API_URL = API_BASE_URL;
 
 export default function MapComponent() {
   const [selectedDepartement, setSelectedDepartement] = useState<string | null>(null);

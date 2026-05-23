@@ -2,6 +2,7 @@
 
 import { z } from "zod"
 import nodemailer from "nodemailer"
+import { API_BASE_URL } from "@/lib/constants"
 
 // Schéma de validation
 const formSchema = z.object({
@@ -18,7 +19,7 @@ type FormData = z.infer<typeof formSchema>
 export async function getContactData() {
   try {
     const response = await fetch(
-      "https://wpasso.fr/wp-json/wp/v2/pages?slug=contribuer",
+      `${API_BASE_URL}/pages?slug=contribuer`,
       { next: { revalidate: 3600 } }, // Revalider toutes les heures
     )
 
