@@ -182,7 +182,7 @@ export default async function Home() {
       <div className="absolute top-[700px] left-0 h-[400px] w-[50vw] rounded-full bg-gradient-to-r from-pink-200 to-blue-200 opacity-20 blur-3xl"></div>
       <div className="absolute top-[1000px] right-0 h-[400px] w-[40vw] rounded-full bg-gradient-to-r from-blue-200 to-pink-200 opacity-20 blur-3xl"></div>
     </div>
-        <AnimatedGrid className="col-span-3 grid grid-cols-2 gap-6">
+        <AnimatedGrid className="col-span-3 grid md:grid-cols-2 gap-6">
           {categories.map((category) => (
             category.count > 0 && (
             <AnimatedGridItem key={category.id}>
