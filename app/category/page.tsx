@@ -1,4 +1,4 @@
-import { fetchCategories, fetchLastThreePosts } from "@/lib/api"
+import { fetchCategories, fetchLastThreePosts, fetchRandomVerbatim } from "@/lib/api"
 import CategoryCard from "@/components/actualites/category-card"
 import { Badge } from "@/components/ui/badge"
 import { CalendarIcon, User2 } from "lucide-react"
@@ -7,28 +7,26 @@ import Image from "next/image"
 import { formatDate, decodeWordPressText } from "@/lib/utils"
 import Verbatim from "@/components/verbatim"
 import type { Metadata } from "next"
+import { AnimatedGrid, AnimatedGridItem } from "@/components/ui/animated-section"
+import { buildStaticMetadata } from "@/lib/metadata"
 
 
-export const metadata: Metadata = {
+export const revalidate = 600;
+
+export const metadata: Metadata = buildStaticMetadata({
   title: "Actualités - Les Doléances",
   description: "L'actualité des doléances",
-  openGraph: {
-    title: "Actualités - Les Doléances",
-    description: "L'actualité des doléances",
-    images: [
-      {
-        url: "https://www.doleances.fr/img/doleances_couv.png",
-        alt: "Actualités - Les Doléances",
-      },
-    ],
-  },
-}
+  path: "/category",
+})
 
 
 export default async function Home() {
-  const categories = await fetchCategories()
+  const [categories, articles, verbatim] = await Promise.all([
+    fetchCategories(),
+    fetchLastThreePosts(),
+    fetchRandomVerbatim(),
+  ])
   categories.sort((a, b) => b.count - a.count)
-  const articles = await fetchLastThreePosts()
   const stickyArticle = articles[0]
 
   return (
@@ -116,7 +114,7 @@ export default async function Home() {
                 </div>
               )}
             <div className="md:col-span-1 col-span-3 lg:flex flex-col hidden my-8 gap-6">
-              <Verbatim />
+              <Verbatim verbatim={verbatim} />
             </div>
 
 
@@ -124,13 +122,15 @@ export default async function Home() {
       <div className="absolute top-[700px] left-0 h-[400px] w-[50vw] rounded-full bg-gradient-to-r from-pink-200 to-blue-200 opacity-20 blur-3xl"></div>
       <div className="absolute top-[1000px] right-0 h-[400px] w-[40vw] rounded-full bg-gradient-to-r from-blue-200 to-pink-200 opacity-20 blur-3xl"></div>
     </div>
-        <div className="col-span-3 grid grid-cols-6 gap-6">
+        <AnimatedGrid className="col-span-3 grid grid-cols-6 gap-6">
           {categories.map((category) => (
             category.count > 0 && (
-            <CategoryCard key={category.id} category={category}/>
+            <AnimatedGridItem key={category.id}>
+              <CategoryCard category={category}/>
+            </AnimatedGridItem>
             )
           ))}
-        </div>
+        </AnimatedGrid>
 
         </div>
       )}

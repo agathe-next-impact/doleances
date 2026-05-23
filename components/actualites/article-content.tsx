@@ -12,14 +12,6 @@ import DateFormat, { TimeFormat } from "@/components/date-format";
 import ShareSocial from "@/components/ui/share-social";
 import { GutenbergContent } from "@/components/gutenberg-content";
 import { decodeWordPressText } from "@/lib/utils";
-import dynamic from "next/dynamic";
-const Viewer = dynamic(
-  () => import("@react-pdf-viewer/core").then((mod) => mod.Viewer),
-  { ssr: false }
-);
-import { Worker } from "@react-pdf-viewer/core";
-import "@react-pdf-viewer/core/lib/styles/index.css";
-import "@react-pdf-viewer/default-layout/lib/styles/index.css";
 
 interface ArticleContentProps {
   post: Post;
@@ -31,34 +23,7 @@ export default function ArticleContent({ post }: ArticleContentProps) {
   const [isLoadingGroupe, setIsLoadingGroupe] = useState(false);
   const [attachedFile, setAttachedFile] = useState<string | null>(null);
 
-  // Fonction utilitaire pour extraire les liens PDF du contenu HTML
-  const extractPdfLinks = (html: string): string[] => {
-    if (!html) return [];
-    const regex = /href=["']([^"']+\.pdf)["']/gi;
-    const links: string[] = [];
-    let match;
-    while ((match = regex.exec(html))) {
-      links.push(match[1]);
-    }
-    return links;
-  };
 
-  // Récupérer les liens PDF du contenu principal et supprimer les doublons
-  const pdfLinks = Array.from(
-    new Set([
-      ...(post?.content?.rendered
-        ? extractPdfLinks(post.content.rendered)
-        : []),
-      ...(post.acf?.contenu_de_larticle
-        ? extractPdfLinks(post.acf.contenu_de_larticle)
-        : []),
-      ...(post.acf?.contenu_de_la_publication
-        ? extractPdfLinks(post.acf.contenu_de_la_publication)
-        : []),
-    ])
-  );
-
-  console.log("PDF Links:", pdfLinks);
 
   // retrouve le nom et le slug de la catégorie de l'article
   const categoryName = post._embedded?.["wp:term"]?.[0]?.[0]?.name;
@@ -540,7 +505,7 @@ export default function ArticleContent({ post }: ArticleContentProps) {
 
       {isEvent && (post.acf?.lieu_de_levenement || eventAddress) && (
         <div className="my-8">
-          <h2 className="text-xl font-sansserif font-semibold mb-4">
+          <h2 className="text-xl font-sans font-semibold mb-4">
             Localisation
           </h2>
           <StaticMap
@@ -568,18 +533,6 @@ export default function ArticleContent({ post }: ArticleContentProps) {
           />
         </div>
       )}
-      {/* Affichage des PDF en pleine pa ge 
-      {pdfLinks.length > 0 && (
-        <div className="mt-8 space-y-8">
-          {pdfLinks.map((link, idx) => (
-            <div key={idx} className="w-full h-[80vh] border rounded-lg overflow-hidden bg-white">
-              <Worker workerUrl="/pdf.worker.min.mjs">
-                <Viewer fileUrl={link} />
-              </Worker>
-            </div>
-          ))}
-        </div>
-      )}*/}
     </div>
   );
 }

@@ -11,10 +11,10 @@ const config: Config = {
   theme: {
   	extend: {
 		fontFamily: {
-			serif: ['Crimson Pro', 'serif'],
-			sansserif: ['Inter', 'sans-serif'],
-			handwritten: ['Caveat', 'cursive'],
-			cta: ['Varela Round', 'sans-serif'],
+			sans: ['var(--font-inter)', 'sans-serif'],
+			serif: ['var(--font-serif)', 'serif'],
+			handwritten: ['var(--font-handwritten)', 'cursive'],
+			cta: ['var(--font-cta)', 'sans-serif'],
 		},
   		colors: {
   			background: 'hsl(var(--background))',

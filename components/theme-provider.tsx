@@ -1,17 +1,25 @@
 'use client'
 
 import * as React from 'react'
+import dynamic from 'next/dynamic'
 import {
   ThemeProvider as NextThemesProvider,
   type ThemeProviderProps,
 } from 'next-themes'
-// Update the import path if needed; for example, if cookies-banner.tsx is in the same folder:
-import CookieBanner from './cookies-banner'
-import Analytics from './google-analytics'
+import GoogleAnalytics from './google-analytics'
+import MicrosoftClarity from './microsoft-clarity'
 
-export function ThemeProvider({ children, ...props }: ThemeProviderProps) {
+const CookieBanner = dynamic(() => import('./cookies-banner'), { ssr: false })
+
+interface AnalyticsProviderProps extends ThemeProviderProps {
+  gaId?: string
+  clarityId?: string
+}
+
+export function ThemeProvider({ children, gaId, clarityId, ...props }: AnalyticsProviderProps) {
   return <NextThemesProvider {...props}>{children}
   <CookieBanner />
-  <Analytics />
+  <GoogleAnalytics gaId={gaId} />
+  <MicrosoftClarity clarityId={clarityId} />
   </NextThemesProvider>
 }

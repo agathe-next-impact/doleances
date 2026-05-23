@@ -1,55 +1,40 @@
 // Améliorer la gestion des erreurs et ajouter des fallbacks pour les données manquantes
-import { fetchPostsByCategory, extractGroupesLocauxCPTFromCategory, fetchCategoryBySlug } from "@/lib/api"
+import { fetchPostsByCategory, extractGroupesLocauxCPTFromCategory, fetchCategoryBySlug, fetchCategories } from "@/lib/api"
 import ArticleList from "@/components/actualites/article-list"
 import CategoryHero from "@/components/actualites/category-hero"
 import SearchFilter from "@/components/actualites/search-filter"
 import { Suspense } from "react"
 import type { Metadata } from "next"
+import { buildMetadata, SITE_URL } from "@/lib/metadata"
+import JsonLd from "@/components/json-ld"
+import { buildBreadcrumbJsonLd } from "@/lib/jsonld"
 
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
-  const category = await fetchCategoryBySlug(params.slug)
-  if (!category) {
-    const title = "Actualités - Les Doléances"
-    const description = "L'actualité des doléances"
-    return {
-      title,
-      description,
-      openGraph: {
-        title,
-        description,
-        images: [
-          {
-            url: "https://www.doleances.fr/img/doleances_couv.png",
-            alt: title,
-          },
-        ],
-      },
-    }
-  }
-  const title = category.title?.rendered || "Actualités - Les Doléances"
-  const description = category.excerpt?.rendered || "L'actualité des doléances"
-  return {
-    title: title.replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&rsquo;/g, "'"),
-    description: description.replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&rsquo;/g, "'") || "L'actualité des doléances",
-    openGraph: {
-      title: title.replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&rsquo;/g, "'"),
-      description: description.replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&rsquo;/g, "'") || "L'actualité des doléances",
-      images: [
-        {
-          url: "/img/logo.svg",
-          alt: title.replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&rsquo;/g, "'"),
-        },
-      ],
-    },
-  }
+export const revalidate = 600;
+
+export async function generateStaticParams() {
+  const categories = await fetchCategories();
+  return categories.map((c) => ({ slug: c.slug }));
+}
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params
+  const category = await fetchCategoryBySlug(slug)
+
+  return buildMetadata({
+    title: category?.name || "Actualités - Les Doléances",
+    description: category?.description || "L'actualité des doléances",
+    path: `/category/${slug}`,
+    imageUrl: category?.acf?.image_categorie || undefined,
+    imageAlt: category?.name,
+  })
 }
 
 
 
-export default async function CategoryPage({ params }: { params: { slug: string } }) {
+export default async function CategoryPage({ params }: { params: Promise<{ slug: string }> }) {
   try {
 
-    const categorySlug = params.slug
+    const { slug: categorySlug } = await params
 
     // Fetch category data with better error handling
     let category
@@ -68,12 +53,16 @@ export default async function CategoryPage({ params }: { params: { slug: string 
     }
 
 
-    // Fetch posts for this category with better error handling
+    // Fetch posts et groupes locaux en parallèle
     let posts: any[] = []
+    let groupesLocauxCPT: any[] = []
     try {
-      posts = await fetchPostsByCategory(category?.id)
+      [posts, groupesLocauxCPT] = await Promise.all([
+        fetchPostsByCategory(category?.id),
+        extractGroupesLocauxCPTFromCategory(category?.id),
+      ])
     } catch (error) {
-      console.error(`Error fetching posts for category ${category?.id}:`, error)
+      console.error(`Error fetching data for category ${category?.id}:`, error)
     }
 
 
@@ -150,11 +139,13 @@ export default async function CategoryPage({ params }: { params: { slug: string 
       })
     }
 
-    // Récupérer les CPT groupe_local associés aux articles de cette catégorie
-    const groupesLocauxCPT = await extractGroupesLocauxCPTFromCategory(category?.id)
-
     return (
     <>
+    <JsonLd data={buildBreadcrumbJsonLd([
+      { name: "Accueil", url: SITE_URL },
+      { name: "Actualités", url: `${SITE_URL}/category` },
+      { name: category?.name || "Catégorie", url: `${SITE_URL}/category/${categorySlug}` },
+    ])} />
     <div className="absolute inset-0 -z-10">
       <div className="absolute top-[100px] left-0 h-[500px] w-[50vw] rounded-full bg-gradient-to-r from-pink-200 to-blue-200 opacity-20 blur-3xl"></div>
       <div className="absolute top-[500px] right-0 h-[400px] w-[40vw] rounded-full bg-gradient-to-r from-blue-200 to-pink-200 opacity-20 blur-3xl"></div>

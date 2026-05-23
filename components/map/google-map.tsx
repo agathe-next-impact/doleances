@@ -29,8 +29,8 @@ export default function GoogleMap({
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  // Utiliser la clé API fournie ou celle de l'environnement
-  const effectiveApiKey = apiKey || process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || process.env.GOOGLE_MAPS_API_KEY
+  // Utiliser la clé API fournie en prop
+  const effectiveApiKey = apiKey
 
   useEffect(() => {
     let isMounted = true
@@ -76,6 +76,8 @@ export default function GoogleMap({
               center: position,
               zoom: zoom,
               mapId: "DEMO_MAP_ID",
+              scrollwheel: true,
+              gestureHandling: "auto",
             })
             new Marker({
               position,
@@ -99,6 +101,8 @@ export default function GoogleMap({
                     center: position,
                     zoom: zoom,
                     mapId: "DEMO_MAP_ID",
+                    scrollwheel: true,
+                    gestureHandling: "auto",
                   })
                   new Marker({
                     position,

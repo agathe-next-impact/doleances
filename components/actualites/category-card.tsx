@@ -57,7 +57,18 @@ export default function CategoryCard({ category }: CategoryCardProps) {
       </CardHeader>
       <CardContent className="flex-grow pt-4 cards">
         {loading ? (
-          <p>Chargement des articles...</p>
+          <div className="space-y-6">
+            {[1, 2].map((i) => (
+              <div key={i} className="flex md:gap-8 gap-2 md:flex-row flex-col animate-pulse">
+                <div className="h-28 md:w-1/3 w-full rounded bg-muted" />
+                <div className="flex flex-col md:w-2/3 w-full gap-2">
+                  <div className="h-5 w-3/4 rounded bg-muted" />
+                  <div className="h-4 w-full rounded bg-muted" />
+                  <div className="h-3 w-1/4 rounded bg-muted" />
+                </div>
+              </div>
+            ))}
+          </div>
         ) : error ? (
           <p className="text-sm text-muted-foreground">{error}</p>
         ) : recentPosts.length > 0 ? (

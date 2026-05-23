@@ -2,7 +2,7 @@
 
 import type React from "react"
 import "@/app/globals.css"
-import { Inter } from "next/font/google"
+import { Inter, Crimson_Pro, Caveat, Varela_Round } from "next/font/google"
 import Link from "next/link"
 import { Suspense, useEffect } from "react"
 import { resetCookieConsent } from "@/lib/cookies";
@@ -11,15 +11,22 @@ import { ThemeProvider } from "@/components/theme-provider"
 import { Button } from "@/components/ui/button"
 import { FileText, Info, Library, Pen, Map, Menu, User } from "lucide-react"
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
-import { SearchAutocomplete } from "@/components/search-autocomplete"
+
 import LottieAnimation from "@/components/ui/lottie-animation"
 
-const inter = Inter({ subsets: ["latin"] })
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter" })
+const crimsonPro = Crimson_Pro({ subsets: ["latin"], variable: "--font-serif" })
+const caveat = Caveat({ subsets: ["latin"], variable: "--font-handwritten" })
+const varelaRound = Varela_Round({ weight: "400", subsets: ["latin"], variable: "--font-cta" })
 
 export default function ClientLayout({
   children,
+  gaId,
+  clarityId,
 }: Readonly<{
   children: React.ReactNode
+  gaId?: string
+  clarityId?: string
 }>) {
   // Configuration pour Leaflet
   useEffect(() => {
@@ -46,7 +53,7 @@ export default function ClientLayout({
   }, [])
 
   return (
-    <html lang="fr" suppressHydrationWarning className="scroll-smooth">
+    <html lang="fr" suppressHydrationWarning className={`scroll-smooth ${inter.variable} ${crimsonPro.variable} ${caveat.variable} ${varelaRound.variable}`}>
       <head>
       <meta charSet="UTF-8" />
       <link rel="icon" href="/img/logo.svg" />
@@ -62,8 +69,8 @@ export default function ClientLayout({
         }
       `}</style>
       </head>
-      <body className={`${inter.className} overflow-x-hidden`}>
-      <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+      <body className="font-sans overflow-x-hidden">
+      <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange gaId={gaId} clarityId={clarityId}>
         <div className="flex min-h-screen flex-col">
         <header className="sticky top-0 z-10 border-b bg-white/90 backdrop-blur-md transition-colors duration-">
           <div className="container mx-auto flex h-16 items-center justify-between px-4">
@@ -201,9 +208,6 @@ export default function ClientLayout({
             </Link>
           </div>
           <div className="flex items-center gap-4">
-            <div className="relative hidden md:block">
-            <SearchAutocomplete placeholder="Rechercher dans notre actu..." className="w-64" showButton={false} />
-            </div>
           </div>
           </div>
         </header>

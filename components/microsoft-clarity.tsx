@@ -3,7 +3,7 @@
 import Script from "next/script";
 import { useEffect, useState } from "react";
 
-export default function GoogleAnalytics({ gaId }: { gaId?: string }) {
+export default function MicrosoftClarity({ clarityId }: { clarityId?: string }) {
   const [consent, setConsent] = useState(false);
 
   useEffect(() => {
@@ -19,22 +19,17 @@ export default function GoogleAnalytics({ gaId }: { gaId?: string }) {
     return () => window.removeEventListener("cookie-consent-accepted", handler);
   }, []);
 
-  if (!consent || !gaId) return null;
+  if (!consent || !clarityId) return null;
 
   return (
-    <>
-      <Script
-        src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}
-        strategy="afterInteractive"
-      />
-      <Script id="ga-init" strategy="afterInteractive">
-        {`
-          window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
-          gtag('js', new Date());
-          gtag('config', '${gaId}');
-        `}
-      </Script>
-    </>
+    <Script id="clarity-init" strategy="afterInteractive">
+      {`
+        (function(c,l,a,r,i,t,y){
+          c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+          t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+          y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+        })(window,document,"clarity","script","${clarityId}");
+      `}
+    </Script>
   );
 }

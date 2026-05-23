@@ -1,21 +1,23 @@
 import { fetchPageBySlug } from "@/lib/api"
 import type { Metadata } from "next"
-import MapComponent from "@/components/map/map-component"
+import dynamic from "next/dynamic"
+import { buildMetadata } from "@/lib/metadata"
+
+const MapComponent = dynamic(() => import("@/components/map/map-component"), {
+  loading: () => <div className="flex items-center justify-center h-[600px]"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div></div>,
+})
 
 
-export const metadata: Metadata = {
-  title: "Cartographie - Les Doléances",
-  description: "Cartographie des groupes locaux",
-  openGraph: {
-    title: "Cartographie - Les Doléances",
-    description: "Cartographie des groupes locaux",
-    images: [
-      {
-        url: "https://www.doleances.fr/img/doleances_couv.png",
-        alt: "Cartographie des groupes locaux",
-      },
-    ],
-  },
+export const revalidate = 3600;
+
+export async function generateMetadata(): Promise<Metadata> {
+  const page = await fetchPageBySlug("cartographie")
+  return buildMetadata({
+    title: page?.title?.rendered || "Cartographie - Les Doléances",
+    description: page?.content?.rendered || "Cartographie des groupes locaux",
+    path: "/cartographie",
+    featuredMediaId: page?.featured_media,
+  })
 }
 
 

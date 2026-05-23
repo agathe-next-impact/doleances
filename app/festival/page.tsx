@@ -1,4 +1,4 @@
-import { fetchPageBySlug, fetchAttachmentById } from "@/lib/api";
+import { fetchPageBySlug, fetchAttachmentById, fetchRandomVerbatim } from "@/lib/api";
 import { decodeWordPressText } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -8,25 +8,27 @@ import Verbatim from "@/components/verbatim";
 import StaticMap from "@/components/map/static-map";
 import DateFormat from "@/components/date-format";
 import type { Metadata } from "next"
+import { buildMetadata, SITE_URL } from "@/lib/metadata"
 
-export const metadata: Metadata = {
-  title: "Le Festival de mai 2025 - Les Doléances",
-  description: "Le Festival des doléances, un événement citoyen et artistique",
-  openGraph: {
-    title: "Le Festival de mai 2025 - Les Doléances",
-    description: "Le Festival des doléances, un événement citoyen et artistique",
-    images: [
-      {
-        url: "https://doleances.fr/img/festival_verso.jpg",
-        alt: "Festival des doléances",
-      },
-    ],
-  },
+export const revalidate = 3600;
+
+export async function generateMetadata(): Promise<Metadata> {
+  const page = await fetchPageBySlug("festival-mai-2025")
+  return buildMetadata({
+    title: page?.title?.rendered || "Le Festival de mai 2025 - Les Doléances",
+    description: page?.content?.rendered || "Le Festival des doléances, un événement citoyen et artistique",
+    path: "/festival",
+    imageUrl: `${SITE_URL}/img/festival_verso.jpg`,
+    imageAlt: "Festival des doléances",
+  })
 }
 
 
 export default async function Page() {
-  const page = await fetchPageBySlug("festival-mai-2025");
+  const [page, verbatim] = await Promise.all([
+    fetchPageBySlug("festival-mai-2025"),
+    fetchRandomVerbatim(),
+  ]);
   const bd: { id: number }[] = page?.acf?.bd ?? [];
   const imagesBd = await Promise.all(
     bd.map((image) => fetchAttachmentById(image))
@@ -200,7 +202,7 @@ export default async function Page() {
                     __html: page?.acf?.edito_helene,
                   }}
                 />
-                <Verbatim />
+                <Verbatim verbatim={verbatim} />
               </div>
             )}
           </div>

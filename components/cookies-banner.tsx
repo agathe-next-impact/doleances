@@ -29,7 +29,10 @@ export default function CookieBanner() {
             enableDeclineButton
             cookieName="userConsent"
             expires={365}
-            onAccept={() => setVisible(false)}
+            onAccept={() => {
+              setVisible(false);
+              window.dispatchEvent(new Event("cookie-consent-accepted"));
+            }}
             onDecline={() => setVisible(false)}
             style={{
               background: "#FFFFFF",

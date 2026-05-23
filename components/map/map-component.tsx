@@ -16,9 +16,15 @@ interface Location {
   title: { rendered: string };
   acf: {
     personne: string;
+    personne_contact?: string;
+    personne_contact_2?: string;
     personne2?: string;
+    telephone: string;
     telephone2?: string;
+    telephone_2?: string;
+    email: string;
     email2?: string;
+    email_2?: string;
     localisation: {
       lat: string | number;
       lng: string | number;
@@ -26,8 +32,6 @@ interface Location {
     };
     departement: string;
     adresse: string;
-    telephone: string;
-    email: string;
     site_web: string;
   };
   featured_media?: number;
@@ -70,11 +74,24 @@ const containerStyle = {
 const defaultCenter = { lat: 46.603354, lng: 2.3522 };
 const defaultZoom = 6;
 
-// Clé API Google Maps
-const googleMapsApiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || process.env.GOOGLE_MAPS_API_KEY;
 const WORDPRESS_API_URL = API_BASE_URL;
 
+// Wrapper qui récupère la clé API côté serveur puis rend la carte
 export default function MapComponent() {
+  const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "";
+
+  if (!apiKey) {
+    return (
+      <div className="p-4 text-red-500">
+        Clé API Google Maps manquante.
+      </div>
+    );
+  }
+
+  return <MapComponentInner apiKey={apiKey} />;
+}
+
+function MapComponentInner({ apiKey }: { apiKey: string }) {
   const [selectedDepartement, setSelectedDepartement] = useState<string | null>(null);
   const [selectedLocation, setSelectedLocation] = useState<ProcessedLocation | null>(null);
   const [groupDepartements, setGroupDepartements] = useState<GroupDepartement[]>([]);
@@ -83,19 +100,10 @@ export default function MapComponent() {
   const mapRef = useRef<google.maps.Map | null>(null);
   const [viewingAllFrance, setViewingAllFrance] = useState<boolean>(true);
 
-  // Utiliser useJsApiLoader au lieu de LoadScript pour une meilleure gestion des erreurs
-  if (!googleMapsApiKey) {
-  return (
-    <div className="p-4 text-red-500">
-      Clé API Google Maps manquante. Veuillez configurer NEXT_PUBLIC_GOOGLE_MAPS_API_KEY.
-    </div>
-  );
-}
-
-const { isLoaded, loadError } = useJsApiLoader({
-  googleMapsApiKey,
-  preventGoogleFontsLoading: true,
-});
+  const { isLoaded, loadError } = useJsApiLoader({
+    googleMapsApiKey: apiKey,
+    preventGoogleFontsLoading: true,
+  });
 
   // Récupérer les données des groupes locaux depuis l'API WordPress
   useEffect(() => {
@@ -342,6 +350,8 @@ const { isLoaded, loadError } = useJsApiLoader({
               mapTypeControl: true,
               streetViewControl: true,
               fullscreenControl: true,
+              scrollwheel: true,
+              gestureHandling: "auto",
             }}
           >
             <MarkerClusterer>
@@ -371,4 +381,3 @@ const { isLoaded, loadError } = useJsApiLoader({
     </div>
   );
 }
-

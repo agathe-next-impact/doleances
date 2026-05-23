@@ -2,43 +2,47 @@ import Link from "next/link"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import CategoryCard from "@/components/actualites/category-card"
-import { fetchLastThreePosts, fetchPageBySlug, fetchRandomVerbatimImage, fetchAttachmentById, fetchGroupesLocaux, fetchCategories } from "@/lib/api"
+import { fetchLastThreePosts, fetchPageBySlug, fetchRandomVerbatimImage, fetchRandomVerbatim, fetchAttachmentById, fetchGroupesLocaux, fetchCategories } from "@/lib/api"
 import YouTubeEmbed from "@/components/ui/video"
 import Verbatim from "@/components/verbatim"
 import { formatDate, decodeWordPressText } from "@/lib/utils"
 import { User2, CalendarIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge"
 import React from "react";
+import dynamic from "next/dynamic";
 import {
   DraggableCardBody,
   DraggableCardContainer,
 } from "@/components/ui/draggable-card";
-import CardMap from "@/components/map/map-card";
 import type { Metadata } from "next"
+import { AnimatedSection, AnimatedGrid, AnimatedGridItem } from "@/components/ui/animated-section"
+import { buildStaticMetadata, SITE_URL } from "@/lib/metadata"
+import JsonLd from "@/components/json-ld"
+import { buildWebSiteJsonLd, buildBreadcrumbJsonLd } from "@/lib/jsonld"
 
-export const metadata: Metadata = {
-  title: "Les Doléances",
-  description: "Wiki du corpus des doléances de 2018/2019",
-  openGraph: {
-    title: "Les Doléances",
-    description: "Wiki du corpus des doléances de 2018/2019",
-    images: [
-      {
-        url: "https://doleances.fr/img/doleances_couv.png",
-        alt: "Les Doléances",
-      },
-    ],
-  },
-}
+const CardMap = dynamic(() => import("@/components/map/map-card"), {
+  loading: () => <div className="flex items-center justify-center h-[400px]"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div></div>,
+})
+
+export const metadata: Metadata = buildStaticMetadata({
+  path: "/",
+})
 
 export const revalidate = 60;
 
 export default async function Home() {
-  const articles = await fetchLastThreePosts()
-  const accueil = await fetchPageBySlug("accueil")
-  const contribuer = await fetchPageBySlug("contribuer")
-  const etatsGeneraux = await fetchPageBySlug("etats-generaux-communaux")
-  const cartographie = await fetchPageBySlug("cartographie")
+  // Paralléliser tous les fetches indépendants
+  const [articles, accueil, contribuer, etatsGeneraux, cartographie, images, locations, categories, verbatim] = await Promise.all([
+    fetchLastThreePosts(),
+    fetchPageBySlug("accueil"),
+    fetchPageBySlug("contribuer"),
+    fetchPageBySlug("etats-generaux-communaux"),
+    fetchPageBySlug("cartographie"),
+    fetchRandomVerbatimImage(),
+    fetchGroupesLocaux(),
+    fetchCategories(),
+    fetchRandomVerbatim(),
+  ])
 
   // Extraction de l'ID de playlist à partir de l'expression 'list=', sinon URL de partage brute
   let playlistId = "";
@@ -51,8 +55,6 @@ export default async function Home() {
       playlistId = match[1];
       playlistEmbedUrl = `https://www.youtube.com/embed?listType=playlist&list=${playlistId}`;
     } else if (/youtu\.be\//.test(first)) {
-      // Si c'est une URL de partage brute, on l'intègre directement
-      // On extrait l'ID vidéo et construit l'URL embed
       const videoMatch = first.match(/youtu\.be\/([a-zA-Z0-9_-]+)/);
       if (videoMatch && videoMatch[1]) {
         playlistEmbedUrl = `https://www.youtube.com/embed/${videoMatch[1]}`;
@@ -60,26 +62,19 @@ export default async function Home() {
     }
   }
 
-  const images = await fetchRandomVerbatimImage()
   const imagesObjects = await Promise.all(
     (images ?? [])
       .map((image) => image.acf?.image_du_verbatim)
       .map((id) => fetchAttachmentById(Number(id)))
   )
 
-  // Mélanger les images et les retourner en ordre aléatoire en tableau sans index
   const shuffledImages = imagesObjects.sort(() => Math.random() - 0.5)
-  const verbatimImages = shuffledImages.map((image) => {
+  const verbatimImages = shuffledImages.map((image) => ({
+    title: image?.title?.rendered,
+    image: image?.source_url,
+    className: `absolute`,
+  }));
 
-    return {
-      title: image?.title?.rendered,
-      image: image?.source_url,
-      className: `absolute`,
-    };
-  });
-
-  const locations = await fetchGroupesLocaux()
-  // Adapter les données pour correspondre à l'interface attendue par CardMap
   const mapLocations = locations.map((location) => ({
     id: String(location.id),
     slug: location.slug,
@@ -89,14 +84,16 @@ export default async function Home() {
     },
   }));
 
-  const categories = await fetchCategories()
   categories.sort((a, b) => b.count - a.count)
-  const posts = await fetchLastThreePosts()
-  const stickyPost = posts[0]
+  const stickyPost = articles[0]
 
 
   return (
     <>
+    <JsonLd data={[
+      buildWebSiteJsonLd(),
+      buildBreadcrumbJsonLd([{ name: "Accueil", url: SITE_URL }]),
+    ]} />
     <div className="absolute inset-0 -z-10">
       <div className="absolute top-0 left-0 h-[500px] w-[40vw] rounded-full bg-gradient-to-r from-pink-200 to-blue-200 opacity-20 blur-3xl"></div>
       <div className="absolute bottom-0 right-0 h-[400px] w-[40vw] rounded-full bg-gradient-to-r from-blue-200 to-pink-200 opacity-20 blur-3xl"></div>
@@ -177,7 +174,7 @@ export default async function Home() {
                 </div>
               )}
             <div className="md:col-span-1 col-span-3 lg:flex flex-col hidden my-8 gap-6">
-              <Verbatim />
+              <Verbatim verbatim={verbatim} />
             </div>
 
 
@@ -185,18 +182,20 @@ export default async function Home() {
       <div className="absolute top-[700px] left-0 h-[400px] w-[50vw] rounded-full bg-gradient-to-r from-pink-200 to-blue-200 opacity-20 blur-3xl"></div>
       <div className="absolute top-[1000px] right-0 h-[400px] w-[40vw] rounded-full bg-gradient-to-r from-blue-200 to-pink-200 opacity-20 blur-3xl"></div>
     </div>
-        <div className="col-span-3 grid grid-cols-6 gap-6">
+        <AnimatedGrid className="col-span-3 grid grid-cols-2 gap-6">
           {categories.map((category) => (
             category.count > 0 && (
-            <CategoryCard key={category.id} category={category}/>
+            <AnimatedGridItem key={category.id}>
+              <CategoryCard category={category}/>
+            </AnimatedGridItem>
             )
           ))}
-        </div>
+        </AnimatedGrid>
 
         </div>
 
 {/* Hero section */}
-      <section className="h-max mb-12 grid gap-12 grid-cols-6 place-items-start">
+      <AnimatedSection className="h-max mb-12 grid gap-12 grid-cols-6 place-items-start">
         {accueil && (
         <div className="flex flex-col lg:col-span-4 col-span-6 h-full justify-between rounded-lg border bg-card shadow-lg overflow-hidden">
             <div className="flex flex-col p-6">
@@ -265,14 +264,14 @@ export default async function Home() {
             </Button>
           </div>  
         </div>
-      </section> 
+      </AnimatedSection>
 
 {/* Section des cartes d'introduction */}
     <div className="absolute inset-0 -z-10">
       <div className="absolute top-[900px] left-0 h-full w-[50vw] rounded-full bg-gradient-to-r from-pink-200 to-blue-200 opacity-20 blur-3xl"></div>
       <div className="absolute top-[1400px] right-0 h-[400px] w-[50vw] rounded-full bg-gradient-to-r from-blue-200 to-pink-200 opacity-20 blur-3xl"></div>
     </div>
-      <section className="mb-8 grid gap-12 lg:grid-cols-4">
+      <AnimatedSection className="mb-8 grid gap-12 lg:grid-cols-4">
         <div className="h-max flex flex-col lg:col-span-2 md:row-span-1 shrink rounded-lg border bg-card shadow-lg overflow-hidden">
           <div className="flex flex-col flex-grow justify-between p-6">
               <div>
@@ -317,8 +316,8 @@ export default async function Home() {
                       <Link href='/contribuer'>Envoyer un message</Link>
                     </Button>
             </div>
-            </div>           
-      </section>
+            </div>
+      </AnimatedSection>
 
     <div className="absolute inset-0 -z-10">
       <div className="absolute top-[2100px] left-0 h-full w-[50vw] rounded-full bg-gradient-to-r from-pink-200 to-blue-200 opacity-20 blur-3xl"></div>
@@ -349,7 +348,7 @@ export default async function Home() {
         <div className="absolute top-[3200px] left-0 h-full w-[50vw] rounded-full bg-gradient-to-r from-pink-200 to-blue-200 opacity-20 blur-3xl"></div>
         <div className="absolute top-[3400px] right-0 h-[400px] w-[50vw] rounded-full bg-gradient-to-r from-blue-200 to-pink-200 opacity-20 blur-3xl"></div>
       </div>
-      <section className="mb-24 mt-24">
+      <AnimatedSection className="mb-24 mt-24">
             <DraggableCardContainer className="relative flex md:min-h-screen min-h-[50rem] w-full md:items-center items-start justify-center">
               <p className="absolute top-1/2 mx-auto max-w-sm -translate-y-3/4 text-center text-2xl font-serif md:text-4xl dark:text-neutral-800">
               Cahier de la colère et de l'espoir
@@ -364,7 +363,7 @@ export default async function Home() {
               </DraggableCardBody>
               ))}
             </DraggableCardContainer>
-      </section>
+      </AnimatedSection>
     </div>
     </>
   )

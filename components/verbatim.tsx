@@ -1,36 +1,18 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
-import { fetchRandomVerbatim } from "@/lib/api";
-import type { Verbatim } from "@/lib/api";
+import type { Verbatim as VerbatimType } from "@/lib/api";
 import DateFormat from "@/components/date-format";
 import { motion } from "framer-motion";
 import LottieAnimation from "./ui/lottie-animation";
 
-export default function Verbatim() {
-  const [verbatim, setVerbatim] = useState<Verbatim | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+interface VerbatimProps {
+  verbatim: VerbatimType | null;
+}
+
+export default function Verbatim({ verbatim }: VerbatimProps) {
   const [showFullVerbatim, setShowFullVerbatim] = useState<boolean>(false);
   const popupRef = useRef<HTMLDivElement | null>(null);
-
-  useEffect(() => {
-    const loadVerbatim = async () => {
-      setLoading(true);
-      setError(null);
-
-      try {
-        const randomVerbatim = await fetchRandomVerbatim();
-        setVerbatim(randomVerbatim);
-      } catch (err) {
-        setError("Impossible de charger un verbatim.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadVerbatim();
-  }, []);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -47,14 +29,6 @@ export default function Verbatim() {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [showFullVerbatim]);
-
-  if (loading) {
-    return <p>Chargement d'un verbatim...</p>;
-  }
-
-  if (error) {
-    return <p className="text-red-500">{error}</p>;
-  }
 
   if (!verbatim) {
     return <p>Aucun verbatim disponible.</p>;
@@ -87,7 +61,7 @@ export default function Verbatim() {
                 <p className="font-handwritten text-lg">
                 {verbatim.acf.texte_du_verbatim}
                 </p>
-                
+
                 <p className="mt-8 font-serif font-medium text-xl text-right">
                 {verbatim.acf.departement}
                 </p>
@@ -116,7 +90,7 @@ export default function Verbatim() {
         ) : (
           ""
         )}
-            {verbatim.acf?.texte_du_verbatim.length > 150 && ( 
+            {verbatim.acf?.texte_du_verbatim.length > 150 && (
       <button
         className="item-right text-right uppercase font-medium text-sm text-primary underline-offset-4 hover:underline"
         onClick={() => setShowFullVerbatim(true)}

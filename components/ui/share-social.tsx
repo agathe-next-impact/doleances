@@ -1,13 +1,7 @@
 "use client"
 
 import React from "react"
-import {
-  FaFacebookF,
-  FaLinkedinIn,
-  FaEnvelope,
-  FaWhatsapp,
-  FaShareAlt,
-} from "react-icons/fa"
+import { LinkedinIcon, Mail, MessageCircle, Share2 } from "lucide-react"
 
 type ShareSocialProps = {
   url: string
@@ -20,7 +14,7 @@ type ShareSocialProps = {
 const socialPlatforms = [
   {
     name: "LinkedIn",
-    icon: FaLinkedinIn,
+    icon: LinkedinIcon,
     url: (u: string, _t?: string) => {
       const replacedUrl = u.replace(/wpasso\.fr/g, "lesdoleances.fr")
         .replace(/palegreen-capybara-652133.hostingersite.com/g, "lesdoleances.fr").replace(/([^:]\/)\/+/g, "$1");
@@ -31,7 +25,7 @@ const socialPlatforms = [
   },
   {
     name: "WhatsApp",
-    icon: FaWhatsapp,
+    icon: MessageCircle,
     url: (u: string, t?: string) => {
       const replacedUrl = u.replace(/wpasso\.fr/g, "lesdoleances.fr")
         .replace(/palegreen-capybara-652133.hostingersite.com/g, "lesdoleances.fr").replace(/([^:]\/)\/+/g, "$1");
@@ -49,7 +43,7 @@ const socialPlatforms = [
   },
   {
     name: "Email",
-    icon: FaEnvelope,
+    icon: Mail,
     url: (u: string, t?: string) => {
       const replacedUrl = u.replace(/wpasso\.fr/g, "lesdoleances.fr")
         .replace(/palegreen-capybara-652133.hostingersite.com/g, "lesdoleances.fr").replace(/([^:]\/)\/+/g, "$1");
@@ -75,7 +69,7 @@ export const ShareSocial: React.FC<ShareSocialProps> = ({
       {socialPlatforms.map((platform) => (
         <a
           key={platform.name}
-          href={platform.url(replacedUrl, text || title, image)}
+          href={platform.url(replacedUrl, text || title)}
           target="_blank"
           rel="noopener noreferrer"
           aria-label={`Partager sur ${platform.name}`}
@@ -95,7 +89,7 @@ export const ShareSocial: React.FC<ShareSocialProps> = ({
         className="text-primary bg-primary-foreground hover:bg-white rounded-full p-2 transition-colors"
         title="Copier le lien"
       >
-        <FaShareAlt size={16} />
+        <Share2 size={16} />
       </button>
     </div>
   )

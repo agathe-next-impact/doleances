@@ -1,4 +1,12 @@
 import { fetchPageBySlug } from "@/lib/api";
+import type { Metadata } from "next";
+import { buildStaticMetadata } from "@/lib/metadata";
+
+export const metadata: Metadata = buildStaticMetadata({
+  title: "Mentions légales - Les Doléances",
+  description: "Mentions légales et politique de confidentialité",
+  path: "/rgpd/mentions-legales",
+})
 
 export default async function MentionsLegalesPage() {
     const mentionsLegales = await fetchPageBySlug("mentions-legales");

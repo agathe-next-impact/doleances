@@ -2,7 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Varela+Round&display=swap&family=Caveat:wght@400..700&family=Cormorant+Garamond&family=Crimson+Pro:ital,wght@0,200..900;1,200..900&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
 
 @layer base {
   :root {
@@ -35,31 +34,7 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground font-sansserif;
-  }
-  h1, h2 {
-    @apply font-serif leading-tight tracking-tight text-foreground;
-  }
-  h1 {
-    @apply text-4xl;
-  }
-  h2 {
-    @apply text-3xl;
-  }
-  p {
-    @apply py-2 font-sansserif text-base leading-normal;
-  }
-  li {
-    @apply ml-4 pl-4 py-2 list-disc;
-  }
-}
-
-@layer base {
-  * {
-    @apply border-border;
-  }
-  body {
-    @apply bg-background text-foreground font-sansserif;
+    @apply bg-background text-foreground font-sans;
   }
   h1, h2 {
     @apply font-serif font-light leading-tight tracking-tight text-foreground pt-6 pb-2;
@@ -71,7 +46,7 @@
     @apply text-2xl;
   }
   p {
-    @apply py-2 font-sansserif leading-normal;
+    @apply py-2 font-sans leading-normal;
   }
   li {
     @apply ml-4 pl-4 py-2 list-disc;

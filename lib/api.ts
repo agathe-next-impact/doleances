@@ -167,6 +167,37 @@ export interface VerbatimImage {
   };
 }
 
+// ─── Draft Mode helpers ───────────────────────────────────────────
+
+/**
+ * Construit les headers pour les requêtes WordPress.
+ * En draft mode, ajoute l'authentification pour accéder aux brouillons.
+ */
+function buildWPHeaders(isDraft: boolean): HeadersInit {
+  const headers: Record<string, string> = { Accept: "application/json" }
+  if (isDraft && process.env.WORDPRESS_AUTH_TOKEN) {
+    headers["Authorization"] = `Basic ${process.env.WORDPRESS_AUTH_TOKEN}`
+  }
+  return headers
+}
+
+/**
+ * Construit les options de fetch. En draft mode, désactive le cache ISR.
+ */
+function buildFetchOptions(isDraft: boolean, revalidate: number): RequestInit {
+  if (isDraft) {
+    return {
+      headers: buildWPHeaders(true),
+      cache: "no-store",
+    }
+  }
+  return {
+    headers: buildWPHeaders(false),
+    next: { revalidate },
+  }
+}
+
+
 // Cache for categories to avoid multiple requests
 let categoriesCache: Category[] | null = null
 let categoriesCacheTime = 0
@@ -189,12 +220,11 @@ export async function fetchCategories(): Promise<Category[]> {
       return categoriesCache.sort((a, b) => b.count - a.count)
     }
 
-    const response = await fetch(`${API_BASE_URL}/categories?per_page=100`, {
-      // Remove 'cache: "no-store"' to allow static rendering and ISR
+    const response = await fetch(`${API_BASE_URL}/categories?per_page=100&_fields=id,slug,name,description,count,acf,link`, {
       headers: {
         Accept: "application/json",
       },
-      // Optionally, you can add: next: { revalidate: 3600 }, // Revalidate every hour
+      next: { revalidate: 3600 },
     })
 
     if (!response.ok) {
@@ -217,11 +247,11 @@ export async function fetchCategories(): Promise<Category[]> {
 // Fetch a specific category by slug
 export async function fetchCategoryBySlug(slug: string): Promise<Category | null> {
   try {
-    const response = await fetch(`${API_BASE_URL}/categories?slug=${slug}`, {
-      
+    const response = await fetch(`${API_BASE_URL}/categories?slug=${slug}&_fields=id,slug,name,description,count,acf,link`, {
       headers: {
         Accept: "application/json",
       },
+      next: { revalidate: 3600 },
     })
 
     if (!response.ok) {
@@ -292,7 +322,6 @@ export async function fetchAllPosts(): Promise<Post[]> {
       return allPostsCache
     }
 
-    console.log("Récupération de tous les posts depuis l'API")
 
     // Récupérer le nombre total de pages
     const countResponse = await fetch(`${API_BASE_URL}/posts?per_page=1`, {
@@ -309,7 +338,6 @@ export async function fetchAllPosts(): Promise<Post[]> {
     const totalPosts = Number.parseInt(countResponse.headers.get("X-WP-Total") || "0", 10)
     const totalPages = Number.parseInt(countResponse.headers.get("X-WP-TotalPages") || "1", 10)
 
-    console.log(`Total posts: ${totalPosts}, Total pages: ${totalPages}`)
 
     // Récupérer tous les posts avec pagination
     let allPosts: Post[] = []
@@ -318,7 +346,6 @@ export async function fetchAllPosts(): Promise<Post[]> {
     const maxPages = Math.min(totalPages, 5)
 
     for (let page = 1; page <= maxPages; page++) {
-      console.log(`Récupération de la page ${page}/${maxPages}`)
 
       const response = await fetch(`${API_BASE_URL}/posts?_embed&per_page=100&page=${page}`, {
         
@@ -436,6 +463,7 @@ export async function fetchPostById(id: number): Promise<Post | null> {
       headers: {
         Accept: "application/json",
       },
+      next: { revalidate: 300 },
     })
 
     if (!response.ok) {
@@ -453,13 +481,13 @@ export async function fetchPostById(id: number): Promise<Post | null> {
 }
 
 // Fetch a specific post by slug
-export async function fetchPostBySlug(slug: string): Promise<Post | null> {
+export async function fetchPostBySlug(slug: string, draft = false): Promise<Post | null> {
   try {
-    const response = await fetch(`${API_BASE_URL}/posts?slug=${slug}&_embed`, {
-      headers: {
-        Accept: "application/json",
-      },
-    })
+    const statusParam = draft ? "&status=draft,publish" : ""
+    const response = await fetch(
+      `${API_BASE_URL}/posts?slug=${slug}&_embed${statusParam}`,
+      buildFetchOptions(draft, 300),
+    )
 
     if (!response.ok) {
       throw new Error(`Failed to fetch post by slug: ${response.status}`)
@@ -479,10 +507,10 @@ export async function fetchPostBySlug(slug: string): Promise<Post | null> {
 export async function fetchRecentPostsByCategory(categoryId: number): Promise<Post[]> {
   try {
     const response = await fetch(`${API_BASE_URL}/posts?categories=${categoryId}&_embed&per_page=4`, {
-      
       headers: {
         Accept: "application/json",
       },
+      next: { revalidate: 600 },
     })
 
     if (!response.ok) {
@@ -533,7 +561,6 @@ export async function fetchSearchSuggestions(query: string): Promise<{
   }
 
   try {
-    console.log("Fetching search suggestions for query:", query);
     // Fetch articles matching the search query
     const articlesResponse = await fetch(
       `${API_BASE_URL}/posts?search=${encodeURIComponent(query)}&_embed&per_page=10`
@@ -544,7 +571,6 @@ export async function fetchSearchSuggestions(query: string): Promise<{
     }
 
     const articles = await articlesResponse.json();
-    console.log("Articles fetched:", articles);
 
     // Group articles by category
     const groupedArticles: { [category: string]: { id: number; title: string; slug: string }[] } =
@@ -576,14 +602,13 @@ export async function fetchSearchSuggestions(query: string): Promise<{
 }
 
 // récupérer le contenu des pages
-export async function fetchPageBySlug(slug: string): Promise<Page | null> {
+export async function fetchPageBySlug(slug: string, draft = false): Promise<Page | null> {
   try {
-    const response = await fetch(`${API_BASE_URL}/pages?slug=${slug}`, {
-      headers: {
-        Accept: "application/json",
-      },
-      next: { revalidate: 3600 }, // Revalidate every hour
-    })
+    const statusParam = draft ? "&status=draft,publish" : ""
+    const response = await fetch(
+      `${API_BASE_URL}/pages?slug=${slug}${statusParam}`,
+      buildFetchOptions(draft, 3600),
+    )
 
     if (!response.ok) {
       throw new Error(`Failed to fetch page by slug: ${response.status}`)
@@ -611,7 +636,6 @@ export async function fetchAttachmentById(id: number) {
 
     if (!response.ok) {
       throw new Error(`Failed to fetch attachment: ${response.status}`);
-      console.log
     }
 
     const data = await response.json();
@@ -628,7 +652,6 @@ export async function fetchPostsByCategoryAndGroupeLocalCPT(
   groupeLocalCptId: number,
 ): Promise<Post[]> {
   try {
-    console.log(`Fetching posts for category ${categoryId} and groupe_local CPT ${groupeLocalCptId}`)
 
     // Récupérer d'abord tous les posts de la catégorie
     const allPosts = await fetchPostsByCategory(categoryId)
@@ -642,7 +665,6 @@ export async function fetchPostsByCategoryAndGroupeLocalCPT(
       return false
     })
 
-    console.log(`Found ${filteredPosts.length} posts matching groupe_local CPT ${groupeLocalCptId}`)
     return filteredPosts
   } catch (error) {
     console.error(`Error fetching posts for category ${categoryId} and groupe_local CPT ${groupeLocalCptId}:`, error)
@@ -653,14 +675,13 @@ export async function fetchPostsByCategoryAndGroupeLocalCPT(
 // Mettre à jour la fonction fetchPostsByGroupeLocalCPT pour utiliser groupe_local_tax
 export async function fetchPostsByGroupeLocalCPT(groupeLocalCptId: number): Promise<Post[]> {
   try {
-    console.log(`Fetching posts for groupe_local CPT ${groupeLocalCptId}`)
 
     // Récupérer tous les posts (limité à 100 pour des raisons de performance)
     const response = await fetch(`${API_BASE_URL}/posts?_embed&per_page=100`, {
-      
       headers: {
         Accept: "application/json",
       },
+      next: { revalidate: 600 },
     })
 
     if (!response.ok) {
@@ -671,14 +692,12 @@ export async function fetchPostsByGroupeLocalCPT(groupeLocalCptId: number): Prom
 
     // Filtrer les posts qui ont le CPT groupe_local spécifié dans leur champ ACF
     const filteredPosts = posts.filter((post) => {
-      // Vérifier si le post a un champ ACF groupe_local_tax qui correspond à l'ID du CPT
       if (post.acf?.groupe_local_tax === groupeLocalCptId) {
         return true
       }
       return false
     })
 
-    console.log(`Found ${filteredPosts.length} posts for groupe_local CPT ${groupeLocalCptId}`)
     return filteredPosts
   } catch (error) {
     console.error(`Error fetching posts for groupe_local CPT ${groupeLocalCptId}:`, error)
@@ -710,28 +729,23 @@ export async function fetchCategoriesForPost(postId: number): Promise<Category[]
 // Modifier la fonction fetchPostsByGroupeLocalTax pour inclure les catégories
 export async function fetchPostsByGroupeLocalTax(groupeLocalId: number): Promise<Post[]> {
   try {
-    console.log(`Fetching posts for groupe_local CPT ${groupeLocalId} via tax_groupe_local field`)
 
     // Récupérer tous les posts
     const allPosts = await fetchAllPosts()
-    console.log(`Nombre total de posts récupérés: ${allPosts.length}`)
 
     // Filtrer les posts qui ont le CPT groupe_local spécifié dans l'un des champs ACF possibles
     const filteredPosts = allPosts.filter((post) => {
       // Vérifier tous les champs possibles qui pourraient contenir l'ID du groupe local
       if (post.acf?.tax_groupe_local === groupeLocalId) {
-        console.log(`Post ${post.id} a tax_groupe_local = ${groupeLocalId}`)
         return true
       }
       if (post.acf?.groupe_local_tax === groupeLocalId) {
-        console.log(`Post ${post.id} a groupe_local_tax = ${groupeLocalId}`)
         return true
       }
       // Vérifier si le champ groupe_local est une chaîne qui contient l'ID
       if (post.acf?.groupe_local && typeof post.acf.groupe_local === "string") {
         const groupeLocalIds = post.acf.groupe_local.split(",").map((id) => Number.parseInt(id.trim(), 10))
         if (groupeLocalIds.includes(groupeLocalId)) {
-          console.log(`Post ${post.id} a groupe_local contenant ${groupeLocalId}`)
           return true
         }
       }
@@ -763,7 +777,6 @@ export async function fetchPostsByGroupeLocalTax(groupeLocalId: number): Promise
       }),
     )
 
-    console.log(`Found ${postsWithCategories.length} posts for groupe_local CPT ${groupeLocalId} via any field`)
     return postsWithCategories
   } catch (error) {
     console.error(`Error fetching posts for groupe_local CPT ${groupeLocalId}:`, error)
@@ -780,11 +793,11 @@ export async function fetchGroupesLocaux(): Promise<GroupeLocalPost[]> {
       return groupesLocauxCache
     }
 
-    const response = await fetch(`${API_BASE_URL}/groupe_local?_embed&per_page=100`, {
-      
+    const response = await fetch(`${API_BASE_URL}/groupe_local?_embed&per_page=100&_fields=id,slug,title,acf,_links,_embedded`, {
       headers: {
         Accept: "application/json",
       },
+      next: { revalidate: 3600 },
     })
 
     if (!response.ok) {
@@ -847,23 +860,23 @@ export async function fetchAllGroupesLocaux(
 }
 
 // Récupérer un groupe local spécifique par son slug
-export async function fetchGroupeLocalBySlug(slug: string): Promise<GroupeLocalPost | null> {
+export async function fetchGroupeLocalBySlug(slug: string, draft = false): Promise<GroupeLocalPost | null> {
   try {
-    // D'abord essayer de récupérer depuis le cache
-    const allGroupesLocaux = await fetchGroupesLocaux()
-    const groupeFromCache = allGroupesLocaux.find((groupe) => groupe.slug === slug)
-
-    if (groupeFromCache) {
-      return groupeFromCache
+    // En draft mode, appel direct à l'API pour inclure les brouillons
+    if (!draft) {
+      const allGroupesLocaux = await fetchGroupesLocaux()
+      const groupeFromCache = allGroupesLocaux.find((groupe) => groupe.slug === slug)
+      if (groupeFromCache) {
+        return groupeFromCache
+      }
     }
 
-    // Si non trouvé dans le cache, essayer un appel API direct
-    const response = await fetch(`${API_BASE_URL}/groupe_local?slug=${slug}&_embed`, {
-      
-      headers: {
-        Accept: "application/json",
-      },
-    })
+    // Si non trouvé dans le cache ou en draft mode, essayer un appel API direct
+    const statusParam = draft ? "&status=draft,publish" : ""
+    const response = await fetch(
+      `${API_BASE_URL}/groupe_local?slug=${slug}&_embed${statusParam}`,
+      buildFetchOptions(draft, 3600),
+    )
 
     if (!response.ok) {
       throw new Error(`Failed to fetch groupe local: ${response.status}`)
@@ -881,15 +894,12 @@ export async function fetchGroupeLocalBySlug(slug: string): Promise<GroupeLocalP
 // Améliorer la fonction fetchGroupeLocalById pour mieux gérer les erreurs et ajouter des logs
 export async function fetchGroupeLocalById(id: number): Promise<GroupeLocalPost | null> {
   try {
-    console.log(`Tentative de récupération du groupe local avec l'ID ${id}`)
 
     // D'abord essayer de récupérer depuis le cache
     const allGroupesLocaux = await fetchGroupesLocaux()
-    console.log(`Nombre de groupes locaux dans le cache: ${allGroupesLocaux.length}`)
 
     const groupeFromCache = allGroupesLocaux.find((groupe) => groupe.id === id)
     if (groupeFromCache) {
-      console.log(`Groupe local trouvé dans le cache: ${groupeFromCache.title?.rendered || "Sans titre"}`)
 
       // Vérifier que les propriétés nécessaires existent
       if (!groupeFromCache.title || typeof groupeFromCache.title !== "object") {
@@ -903,10 +913,7 @@ export async function fetchGroupeLocalById(id: number): Promise<GroupeLocalPost 
       return groupeFromCache
     }
 
-    // Si non trouvé dans le cache, faire un appel API direct à l'endpoint spécifique
-    console.log(
-      `Groupe local non trouvé dans le cache, tentative d'appel API direct à ${API_BASE_URL}/groupe_local/${id}`,
-    )
+    // Si non trouvé dans le cache, faire un appel API direct
     const response = await fetch(`${API_BASE_URL}/groupe_local/${id}?_embed`, {
       
       headers: {
@@ -916,14 +923,12 @@ export async function fetchGroupeLocalById(id: number): Promise<GroupeLocalPost 
 
     if (!response.ok) {
       if (response.status === 404) {
-        console.log(`Groupe local avec l'ID ${id} non trouvé (404)`)
         return null
       }
       throw new Error(`Failed to fetch groupe local: ${response.status}`)
     }
 
     const data = await response.json()
-    console.log(`Données brutes du groupe local ${id}:`, data)
 
     // Vérifier si les données ont la structure attendue
     if (!data || typeof data !== "object") {
@@ -958,7 +963,6 @@ export async function fetchGroupeLocalById(id: number): Promise<GroupeLocalPost 
       safeData.content = { rendered: "" }
     }
 
-    console.log(`Groupe local récupéré via API: ${safeData.title?.rendered || "Sans titre"}`)
     return safeData
   } catch (error) {
     console.error(`Error fetching groupe local by ID ${id}:`, error)
@@ -996,7 +1000,6 @@ export async function extractGroupesLocauxCPTFromCategory(categoryId: number): P
     // Filtrer les CPT groupe_local qui sont référencés dans les articles
     const filteredGroupesLocaux = allGroupesLocaux.filter((groupe) => groupeLocalCptIds.has(groupe.id))
 
-    console.log(`Extracted ${filteredGroupesLocaux.length} groupe_local CPTs from category ${categoryId}`)
     return filteredGroupesLocaux
   } catch (error) {
     console.error(`Error extracting groupe_local CPTs from category ${categoryId}:`, error)

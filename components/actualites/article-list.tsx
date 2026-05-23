@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation"
 import { useEffect, useState, useMemo } from "react"
 import ArticleCard from "./article-card"
 import { fetchPostsByCategoryAndGroupeLocalCPT } from "@/lib/api"
+import { motion } from "framer-motion"
 
 
 interface ArticleListProps {
@@ -208,17 +209,39 @@ export default function ArticleList({ initialPosts, categoryId, isEventCategory 
 
   if (filteredPosts.length === 0) {
     return (
-      <div className="text-center py-12">
-        <p className="text-lg text-muted-foreground">Aucun article ne correspond à votre recherche</p>
+      <div className="flex flex-col items-center justify-center py-16 text-center">
+        <div className="mb-4 rounded-full bg-muted p-4">
+          <svg className="h-8 w-8 text-muted-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m5.231 13.481L15 17.25m-4.5-15H5.625c-.621 0-1.125.504-1.125 1.125v16.5c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9zm3.75 11.625a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
+          </svg>
+        </div>
+        <p className="text-lg font-medium mb-1">Aucun article trouvé</p>
+        <p className="text-sm text-muted-foreground">Essayez de modifier vos critères de recherche ou vos filtres.</p>
       </div>
     )
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <motion.div
+      initial="hidden"
+      animate="visible"
+      variants={{
+        hidden: {},
+        visible: { transition: { staggerChildren: 0.06 } },
+      }}
+      className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+    >
       {filteredPosts.map((post) => (
-        <ArticleCard key={post.slug} post={post} />
+        <motion.div
+          key={post.slug}
+          variants={{
+            hidden: { opacity: 0, y: 20, scale: 0.97 },
+            visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.4, ease: "easeOut" } },
+          }}
+        >
+          <ArticleCard post={post} />
+        </motion.div>
       ))}
-    </div>
+    </motion.div>
   )
 }
